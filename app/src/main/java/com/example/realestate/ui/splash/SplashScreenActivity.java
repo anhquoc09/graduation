@@ -2,16 +2,18 @@ package com.example.realestate.ui.splash;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.realestate.R;
 import com.example.realestate.ui.login.LoginActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * @author anhquoc09
  * @since 06/03/2019
  */
+
 public class SplashScreenActivity extends AppCompatActivity implements SplashScreenView {
 
     private static final long SPLASH_SCREEN_DURATION = 500L;
@@ -32,7 +34,8 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    startActivity(LoginActivity.intenfor(SplashScreenActivity.this));
+                    startActivity(LoginActivity.intentFor(SplashScreenActivity.this));
+                    finish();
                 }
             }
         }, SPLASH_SCREEN_DURATION);

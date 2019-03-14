@@ -3,4 +3,21 @@
     <string name="slogan">BEST PLACE FOR DECISION</string>
     <string name="login_google">Login with Google</string>
     <string name="go_home">GO TO HOMEPAGE</string>
+    <string name="no_network_connection">No network connection</string>
+    <string name="google_connection_error">Cannot connect to Google Service.</string>
+    <string name="login_fail">Login failed!</string>
+    <string name="slow_network_connection">Please check your network connection and try again.</string>
+    <string name="message_cannot_connect_server">Failed to connect to server.</string>
+    <string name="google_plus">Google+</string>
+    <string name="message_login_fail">Failed to login %1$s. Error: %2$s.</string>
+    <string name="cancel_sign_in_gg">Cancel login Google+.</string>
+    <string name="google_client_id">776676760586-uditqih2nvr13to7v9f25cjak84abgdk.apps.googleusercontent.com</string>
+    <string name="loading">Loading...</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="btn_view_map">VIEW ESTATE ON MAP</string>
+    <string name="btn_forum">FORUM</string>
+    <string name="btn_exchange">EXCHANGE</string>
+    <string name="btn_project">PROJECT</string>
+    <string name="btn_consultancy">CONSULTANCY</string>
+    <string name="search_hint">Enter address, keyword, ....</string>
 </resources>
