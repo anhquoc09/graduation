@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "776676760586",
+    "firebase_url": "https://local-receiver-234415.firebaseio.com",
+    "project_id": "local-receiver-234415",
+    "storage_bucket": "local-receiver-234415.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776676760586:android:ec24e0afca5aa529",
+        "android_client_info": {
+          "package_name": "com.example.realestate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776676760586-flh71ktfcbhocbpeukp0ggv4vtc190on.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.realestate",
+            "certificate_hash": "0478c09d590269efb512771731f61c3e16f9e4a1"
+          }
+        },
+        {
+          "client_id": "776676760586-oeh418goat5ve4ng1r7dt0c2l9s5ihhv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvkuPm46eA4VNlLKtPPvb6oSXCN0AoWGw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776676760586-oeh418goat5ve4ng1r7dt0c2l9s5ihhv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

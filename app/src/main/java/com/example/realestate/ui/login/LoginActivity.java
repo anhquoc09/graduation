@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-        AndroidUtilities.showToast("Login success, GoogleToken: " + UserManager.getGoogleToken());
+//        AndroidUtilities.showToast("Login success, GoogleToken: " + UserManager.getGoogleToken());
         goToHome();
     }
 
