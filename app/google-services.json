@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "776676760586-flh71ktfcbhocbpeukp0ggv4vtc190on.apps.googleusercontent.com",
+          "client_id": "776676760586-d33giurkva6jivosu2fb49go62ni1ivh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.realestate",
             "certificate_hash": "0478c09d590269efb512771731f61c3e16f9e4a1"
+          }
+        },
+        {
+          "client_id": "776676760586-rhsk0kpqkd4voq9cajsnv0atqj42v4o1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.realestate",
+            "certificate_hash": "2d3f773d05bb26658037f82b66677c30d921e052"
           }
         },
         {
