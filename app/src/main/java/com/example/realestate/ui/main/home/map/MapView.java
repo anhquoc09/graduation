@@ -1,4 +1,4 @@
-package com.example.realestate.ui.map;
+package com.example.realestate.ui.main.home.map;
 
 /**
  * @author anhquoc09

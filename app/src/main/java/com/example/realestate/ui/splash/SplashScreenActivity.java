@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.ui.login.LoginActivity;
+import com.example.realestate.ui.main.MainActivity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +36,11 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    startActivity(LoginActivity.intentFor(SplashScreenActivity.this));
+                    if (UserManager.isUserLoggedIn()) {
+                        startActivity(MainActivity.intentFor(SplashScreenActivity.this));
+                    } else {
+                        startActivity(LoginActivity.intentFor(SplashScreenActivity.this));
+                    }
                     finish();
                 }
             }

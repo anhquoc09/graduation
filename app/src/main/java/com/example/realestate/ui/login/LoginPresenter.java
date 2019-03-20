@@ -60,7 +60,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
 
 
     private void loginGoogle(String accessToken) {
-//        UserManager.setGoogleToken(accessToken);
+        UserManager.setGoogleToken(accessToken);
         mView.onLoginSuccess();
 //        showLoadingProgress();
 //        Subscription subscription = mUserService.loginGoogle(accessToken,

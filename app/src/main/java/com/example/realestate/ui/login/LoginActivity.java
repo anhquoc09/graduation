@@ -3,6 +3,7 @@ package com.example.realestate.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
@@ -12,6 +13,7 @@ import com.example.realestate.utils.NetworkUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -24,6 +26,9 @@ import butterknife.Unbinder;
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
+
+    @BindView(R.id.tv_go_home)
+    TextView mTvGoHome;
 
     private Unbinder mUnbinder;
 
@@ -89,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-//        AndroidUtilities.showToast("Login success, GoogleToken: " + UserManager.getGoogleToken());
+        AndroidUtilities.showToast("Login success, GoogleToken: " + UserManager.getGoogleToken());
         goToHome();
     }
 
@@ -113,9 +118,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @OnClick(R.id.tv_go_home)
     public void goHome() {
         goToHome();
+        mTvGoHome.setClickable(false);
     }
 
     private void goToHome() {
         startActivity(MainActivity.intentFor(this));
+        finish();
     }
 }

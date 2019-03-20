@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navigation Title Array -->
+    <string-array name="navigation_title">
+        <item>@string/navigation_home</item>
+        <item>@string/navigation_profile</item>
+    </string-array>
+    
+    <!-- Navigation Icon Array -->
+    <array name="navigation_icon">
+        <item>@drawable/ic_login_google</item>
+        <item>@drawable/ic_login_google</item>
+    </array>
+
+    <string-array name="home_title">
+        <item>@string/view_on_map</item>
+        <item>@string/view_ont_list</item>
+    </string-array>
+</resources>

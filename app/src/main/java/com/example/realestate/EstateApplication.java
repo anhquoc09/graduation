@@ -10,6 +10,8 @@ import com.example.realestate.utils.PlatformUtils;
 
 import java.util.Locale;
 
+import androidx.multidex.MultiDex;
+
 /**
  * @author anhquoc09
  * @since 06/03/2019
@@ -26,7 +28,7 @@ public class EstateApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-//        MultiDex.install(this);
+        MultiDex.install(this);
     }
 
     @Override
@@ -37,6 +39,7 @@ public class EstateApplication extends Application {
 
         Context applicationContext = getApplicationContext();
 
+        UserManager.init(applicationContext);
     }
 
     @Override
