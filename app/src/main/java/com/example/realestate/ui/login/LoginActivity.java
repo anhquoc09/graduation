@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.realestate.LoginManager;
 import com.example.realestate.R;
-import com.example.realestate.UserManager;
 import com.example.realestate.ui.main.MainActivity;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
@@ -38,14 +38,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private LoginManager.LoginResultCallback mResultCallback = new LoginManager.LoginResultCallback() {
         @Override
-        public void onLoginError(String errorMessage, int loginMethod) {
+        public void onLoginError(String errorMessage) {
             AndroidUtilities.showToast(errorMessage);
         }
 
         @Override
-        public void onLoginSuccess(String accessToken, int loginMethod) {
+        public void onLoginSuccess(String accessToken) {
             if (mPresenter != null) {
-                mPresenter.login(accessToken, loginMethod);
+                mPresenter.login(accessToken);
             }
         }
     };
@@ -84,6 +84,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             mUnbinder.unbind();
         }
 
+        if (mLoginManager != null) {
+            mLoginManager.cleanUp();
+            mLoginManager = null;
+        }
+
         super.onDestroy();
     }
 
@@ -94,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void onLoginSuccess() {
-        AndroidUtilities.showToast("Login success, GoogleToken: " + UserManager.getGoogleToken());
         goToHome();
     }
 

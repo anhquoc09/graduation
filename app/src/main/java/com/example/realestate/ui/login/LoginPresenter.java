@@ -1,16 +1,15 @@
 package com.example.realestate.ui.login;
 
 import android.content.Context;
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.example.realestate.EstateApplication;
+import com.example.realestate.LoginManager;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.LoginData;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.LoginResponse;
-import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.data.remote.rest.UserService;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.AndroidUtilities;
@@ -19,7 +18,6 @@ import com.example.realestate.utils.SimpleSubscriber;
 
 import java.net.SocketTimeoutException;
 
-import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -42,16 +40,14 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         mUserService = ServiceProvider.getUserService();
     }
 
-    public void login(String accessToken, int loginMethod) {
+    public void login(String accessToken) {
         if (!canLogin(accessToken)) {
             if (isViewAttached()) {
                 mView.showNoNetworkConnection();
             }
         }
 
-        if (loginMethod == LoginManager.LOGIN_GOOGLE) {
-            loginGoogle(accessToken);
-        }
+        loginGoogle(accessToken);
     }
 
     private boolean canLogin(String accessToken) {

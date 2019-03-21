@@ -39,5 +39,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_tab_layout" />
+        app:layout_constraintTop_toBottomOf="@id/filter_box" />
 </androidx.constraintlayout.widget.ConstraintLayout>

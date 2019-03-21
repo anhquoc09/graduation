@@ -1,13 +1,10 @@
-package com.example.realestate.ui.login;
+package com.example.realestate;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.example.realestate.EstateApplication;
-import com.example.realestate.R;
 import com.example.realestate.utils.NetworkUtils;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,10 +25,6 @@ public class LoginManager {
 
     public static final String TAG = LoginManager.class.getSimpleName();
 
-    public static final int LOGIN_NONE = 0;
-
-    public static final int LOGIN_GOOGLE = 1;
-
     private static final int LOGIN_GG_REQUEST_CODE = 9001;
 
     private Resources mResources;
@@ -46,7 +39,7 @@ public class LoginManager {
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             onError(mResources.getString(R.string.google_connection_error) + " "
-                    + connectionResult.getErrorMessage(), LOGIN_GOOGLE);
+                    + connectionResult.getErrorMessage());
         }
     };
 
@@ -63,32 +56,32 @@ public class LoginManager {
                 String idToken = signInAccount.getIdToken();
 
                 if (!TextUtils.isEmpty(idToken)) {
-                    onSuccess(idToken, LOGIN_GOOGLE);
+                    onSuccess(idToken);
                 } else {
-                    onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), "NoTK"), LOGIN_GOOGLE);
+                    onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), "NoTK"));
                 }
             } else {
-                onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), "NoAcc"), LOGIN_GOOGLE);
+                onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), "NoAcc"));
             }
         } else {
 
             if (NetworkUtils.isNetworkConnected(EstateApplication.getInstance())) {
-                onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), String.valueOf(result.getStatus().getStatusCode())), LOGIN_GOOGLE);
+                onError(mResources.getString(R.string.message_login_fail, mResources.getString(R.string.google_plus), String.valueOf(result.getStatus().getStatusCode())));
             } else {
-                onError(mResources.getString(R.string.no_network_connection), LOGIN_GOOGLE);
+                onError(mResources.getString(R.string.no_network_connection));
             }
         }
     }
 
-    private void onError(String errorMessage, int method) {
+    private void onError(String errorMessage) {
         if (mResultCallback != null) {
-            mResultCallback.onLoginError(errorMessage, method);
+            mResultCallback.onLoginError(errorMessage);
         }
     }
 
-    private void onSuccess(String token, int method) {
+    private void onSuccess(String token) {
         if (mResultCallback != null) {
-            mResultCallback.onLoginSuccess(token, method);
+            mResultCallback.onLoginSuccess(token);
         }
     }
 
@@ -112,7 +105,7 @@ public class LoginManager {
 
     public void loginGoogle() {
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
-            onError(mResources.getString(R.string.google_connection_error), LOGIN_GOOGLE);
+            onError(mResources.getString(R.string.google_connection_error));
             return;
         }
 
@@ -120,7 +113,7 @@ public class LoginManager {
         if (null != ggSignInIntent.resolveActivity(mActivity.getPackageManager())) {
             mActivity.startActivityForResult(ggSignInIntent, LOGIN_GG_REQUEST_CODE);
         } else {
-            onError(mResources.getString(R.string.google_connection_error), LOGIN_GOOGLE);
+            onError(mResources.getString(R.string.google_connection_error));
         }
     }
 
@@ -130,7 +123,7 @@ public class LoginManager {
             if (Activity.RESULT_OK == resultCode) {
                 handleGGSignInResult(Auth.GoogleSignInApi.getSignInResultFromIntent(data));
             } else if (Activity.RESULT_CANCELED == resultCode) {
-                onError(mResources.getString(R.string.cancel_sign_in_gg), LOGIN_GOOGLE);
+                onError(mResources.getString(R.string.cancel_sign_in_gg));
             }
             return true;
         }
@@ -138,12 +131,22 @@ public class LoginManager {
         return false;
     }
 
+    public void cleanUp() {
+        if (mGoogleApiClient != null) {
+            if (mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.disconnect();
+            }
+            mGoogleApiClient.stopAutoManage(mActivity);
+            mGoogleApiClient = null;
+        }
+    }
+
     /**
      * {@link LoginResultCallback}
      */
     public interface LoginResultCallback {
-        void onLoginError(String errorMessage, int loginMethod);
+        void onLoginError(String errorMessage);
 
-        void onLoginSuccess(String accessToken, int loginMethod);
+        void onLoginSuccess(String accessToken);
     }
 }

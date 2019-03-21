@@ -5,4 +5,5 @@ package com.example.realestate.ui.main;
  * @since 06/03/2019
  */
 public interface MainView {
+    void goToLoginScreen();
 }

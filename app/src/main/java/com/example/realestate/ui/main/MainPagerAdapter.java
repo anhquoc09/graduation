@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import com.example.realestate.R;
 import com.example.realestate.ui.main.home.HomePagerFragment;
 import com.example.realestate.ui.main.home.map.MapFragment;
+import com.example.realestate.ui.widget.MainTabLayout;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,17 +18,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int HOME_INDEX = 0;
-    private static final int PROFILE_INDEX = 1;
-
-    private final List<String> mTitleArray;
-
-    private final TypedArray mIconArray;
-
-    public MainPagerAdapter(FragmentManager fm, Context context) {
+    private MainTabLayout mTabs;
+    public MainPagerAdapter(FragmentManager fm, MainTabLayout tabs) {
         super(fm);
-        mTitleArray = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.navigation_title));
-        mIconArray = context.getApplicationContext().getResources().obtainTypedArray(R.array.navigation_icon);
+        mTabs = tabs;
     }
 
     @Override
@@ -35,10 +29,10 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
 
-            case PROFILE_INDEX:
+            case MainTabLayout.NEWEST_INDEX:
                 return HomePagerFragment.newInstance();
 
-            case HOME_INDEX:
+            case MainTabLayout.HOME_INDEX:
             default:
                 return HomePagerFragment.newInstance();
         }
@@ -46,18 +40,14 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return mTitleArray.size();
+        return mTabs.getCount();
     }
 
     public int getHomeIndex() {
-        return HOME_INDEX;
-    }
-
-    public Drawable getItemIcon(int i) {
-        return mIconArray.getDrawable(i);
+        return MainTabLayout.HOME_INDEX;
     }
 
     public String getItemTitle(int i) {
-        return mTitleArray.get(i);
+        return mTabs.getTabTitle(i);
     }
 }

@@ -1,10 +1,9 @@
 package com.example.realestate.ui.main;
 
-import com.example.realestate.EstateApplication;
+import com.example.realestate.LogoutManager;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.rest.UserService;
 import com.example.realestate.ui.BasePresenter;
-import com.example.realestate.utils.NetworkUtils;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -17,25 +16,41 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     private UserService mUserService;
 
+    private LogoutManager mLogoutManager;
+
     private CompositeSubscription mSubscription = new CompositeSubscription();
 
-    public MainPresenter() {
+    public MainPresenter(LogoutManager logoutManager) {
+        mLogoutManager = logoutManager;
         mUserService = ServiceProvider.getUserService();
     }
 
     public void signOut() {
-        if (!NetworkUtils.isNetworkConnected(EstateApplication.getInstance())); {
-            signOutFinished();
-            return;
-        }
-
+        signOutFinished();
+        goToSignInScreen();
     }
 
-    private void showSignOutProgress() {
+    private void goToSignInScreen() {
+        if (isViewAttached()) {
+            mView.goToLoginScreen();
+        }
     }
 
     private void signOutFinished() {
+        if (mLogoutManager != null) {
+            mLogoutManager.logOut();
+        }
     }
 
-
+    @Override
+    public void detachView() {
+        super.detachView();
+        if (mLogoutManager != null) {
+            mLogoutManager.cleanUp();
+            mLogoutManager = null;
+        }
+        if (mSubscription != null) {
+            mSubscription.unsubscribe();
+        }
+    }
 }

@@ -44,12 +44,10 @@
     </FrameLayout>
 
     <!-- Main Tab Layout -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/navigation_tab_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical" />
+    <com.example.realestate.ui.widget.MainTabLayout
+        android:id="@+id/main_tabs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!-- Divider -->
     <View
@@ -65,8 +63,7 @@
         android:gravity="center_vertical"
         android:text="Support"
         android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/btn_about_us"
@@ -76,8 +73,7 @@
         android:gravity="center_vertical"
         android:text="About us"
         android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/btn_sign_out"
@@ -87,6 +83,5 @@
         android:gravity="center_vertical"
         android:text="Sign out"
         android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 </LinearLayout>
