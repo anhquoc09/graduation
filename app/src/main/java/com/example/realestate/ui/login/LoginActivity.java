@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.realestate.LoginManager;
+import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
 import com.example.realestate.ui.main.MainActivity;
 import com.example.realestate.utils.AndroidUtilities;
@@ -23,7 +23,7 @@ import butterknife.Unbinder;
  * @since 06/03/2019
  */
 
-public class LoginActivity extends AppCompatActivity implements LoginView {
+public class LoginActivity extends AppCompatActivity implements LoginView, GoogleManager.LoginResultCallback {
 
     public static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -32,23 +32,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private Unbinder mUnbinder;
 
+    private GoogleManager mGoogleManager;
+
     private LoginPresenter mPresenter;
-
-    private LoginManager mLoginManager;
-
-    private LoginManager.LoginResultCallback mResultCallback = new LoginManager.LoginResultCallback() {
-        @Override
-        public void onLoginError(String errorMessage) {
-            AndroidUtilities.showToast(errorMessage);
-        }
-
-        @Override
-        public void onLoginSuccess(String accessToken) {
-            if (mPresenter != null) {
-                mPresenter.login(accessToken);
-            }
-        }
-    };
 
     public static Intent intentFor(Context context) {
         return new Intent(context, LoginActivity.class);
@@ -61,19 +47,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         mUnbinder = ButterKnife.bind(this);
 
-        mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
-
-        mLoginManager = new LoginManager(this, mResultCallback);
-        mLoginManager.init();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (mLoginManager != null && mLoginManager.onActivityResult(this, requestCode, resultCode, data)) {
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+        initPresenter();
+        initGoogle();
     }
 
     @Override
@@ -84,14 +59,52 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             mUnbinder.unbind();
         }
 
-        if (mLoginManager != null) {
-            mLoginManager.cleanUp();
-            mLoginManager = null;
-        }
-
         super.onDestroy();
     }
 
+    private void initPresenter() {
+        mPresenter = new LoginPresenter();
+        mPresenter.attachView(this);
+    }
+
+    private void initGoogle() {
+        mGoogleManager = new GoogleManager();
+        mGoogleManager.init();
+        mGoogleManager.setLoginCallback(this);
+    }
+
+    private void goToHome() {
+        startActivity(MainActivity.intentFor(this));
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (mGoogleManager != null && mGoogleManager.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+//    GoogleManager Callback
+    @Override
+    public void startForResult(Intent signInIntent, int loginGgRequestCode) {
+        startActivityForResult(signInIntent, loginGgRequestCode);
+    }
+
+    @Override
+    public void onLoginError(String errorMessage) {
+        AndroidUtilities.showToast(errorMessage);
+    }
+
+    @Override
+    public void onLoginSuccess(String accessToken) {
+        if (mPresenter != null) {
+            mPresenter.login(accessToken);
+        }
+    }
+
+//    Presenter callback
     @Override
     public void showNoNetworkConnection() {
         AndroidUtilities.showToast(getString(R.string.no_network_connection));
@@ -107,6 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         AndroidUtilities.showToast(message);
     }
 
+
     @OnClick(R.id.btn_login_google)
     public void loginGoogle() {
         if (!NetworkUtils.isNetworkConnected(this)) {
@@ -114,8 +128,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             return;
         }
 
-        if (mLoginManager != null) {
-            mLoginManager.loginGoogle();
+        if (mGoogleManager != null) {
+            mGoogleManager.loginGoogle();
         }
     }
 
@@ -123,10 +137,5 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void goHome() {
         goToHome();
         mTvGoHome.setClickable(false);
-    }
-
-    private void goToHome() {
-        startActivity(MainActivity.intentFor(this));
-        finish();
     }
 }

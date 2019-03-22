@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.realestate.LogoutManager;
+import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
@@ -27,7 +27,10 @@ import butterknife.Unbinder;
  * @since 06/03/2019
  */
 
-public class MainActivity extends BaseActivity implements MainView, MainTabLayout.OnTabSelectListener {
+public class MainActivity extends BaseActivity
+        implements MainView,
+        MainTabLayout.OnTabSelectListener,
+        GoogleManager.LogoutResultCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -54,7 +57,7 @@ public class MainActivity extends BaseActivity implements MainView, MainTabLayou
 
     private Unbinder mUnbinder;
 
-    private LogoutManager mLogoutManager;
+    private GoogleManager mGoogleManager;
 
     public static Intent intentFor(Context context) {
         return new Intent(context, MainActivity.class);
@@ -75,6 +78,8 @@ public class MainActivity extends BaseActivity implements MainView, MainTabLayou
         setToolbarTitle(mViewPager.getCurrentItem());
 
         initPresenter();
+
+        initGoogle();
     }
 
     private void setupNavigationLayout() {
@@ -127,11 +132,20 @@ public class MainActivity extends BaseActivity implements MainView, MainTabLayou
     }
 
     private void initPresenter() {
-        mLogoutManager = new LogoutManager(this);
-        mLogoutManager.init();
-
-        mPresenter = new MainPresenter(mLogoutManager);
+        mPresenter = new MainPresenter();
         mPresenter.attachView(this);
+    }
+
+    private void initGoogle() {
+        mGoogleManager = new GoogleManager();
+        mGoogleManager.init();
+        mGoogleManager.setLogoutManagert(this);
+    }
+
+    private void goToLoginScreen() {
+        Intent intent = LoginActivity.intentFor(this);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -154,15 +168,20 @@ public class MainActivity extends BaseActivity implements MainView, MainTabLayou
     }
 
     @Override
-    public void goToLoginScreen() {
-        Intent intent = LoginActivity.intentFor(this);
-        startActivity(intent);
-        finish();
+    public void onTabSelect(int tabIndex) {
+        mViewPager.setCurrentItem(tabIndex, true);
     }
 
     @Override
-    public void onTabSelect(int tabIndex) {
-        mViewPager.setCurrentItem(tabIndex, true);
+    public void logoutFinished() {
+        if (mGoogleManager != null) {
+            mGoogleManager.logoutGoogle();
+        }
+    }
+
+    @Override
+    public void onLogoutSuccess() {
+        goToLoginScreen();
     }
 
     @OnClick(R.id.btn_support)
@@ -177,7 +196,7 @@ public class MainActivity extends BaseActivity implements MainView, MainTabLayou
 
     @OnClick(R.id.btn_sign_out)
     public void onSignOutClick() {
-        mPresenter.signOut();
+        mPresenter.logout();
     }
 
     @OnClick(R.id.btn_open_navigation)

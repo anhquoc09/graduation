@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.example.realestate.EstateApplication;
-import com.example.realestate.LoginManager;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.LoginData;

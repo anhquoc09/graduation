@@ -220,6 +220,6 @@ public final class AndroidUtilities {
 //        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 //        Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
 //        intent.setData(uri);
-//        activity.startActivityForResult(intent, requestCode);
+//        activity.startForResult(intent, requestCode);
 //    }
 }
