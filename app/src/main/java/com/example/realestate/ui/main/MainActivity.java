@@ -206,7 +206,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @OnClick(R.id.btn_open_navigation)
+    @OnClick(R.id.btn_close_navigation)
     public void onCloseNavigationIconClick() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);

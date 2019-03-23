@@ -3,7 +3,6 @@ package com.example.realestate;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
-//import android.support.multidex.MultiDex;
 
 import com.bumptech.glide.Glide;
 import com.example.realestate.utils.PlatformUtils;
@@ -45,7 +44,6 @@ public class EstateApplication extends Application {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        Glide.with(this).onTrimMemory(level);
     }
 
     @Override

@@ -33,14 +33,14 @@
             android:textSize="26sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/ic_close_navigation"
+        <ImageView
+            android:id="@+id/btn_close_navigation"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_gravity="top|end"
-            android:background="@drawable/ic_delete" />
+            android:src="@drawable/ic_navigation" />
     </FrameLayout>
 
     <!-- Main Tab Layout -->
@@ -59,7 +59,7 @@
         android:id="@+id/btn_support"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:gravity="center_vertical"
         android:text="Support"
         android:textColor="@color/black"
@@ -69,7 +69,7 @@
         android:id="@+id/btn_about_us"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:gravity="center_vertical"
         android:text="About us"
         android:textColor="@color/black"
@@ -79,7 +79,7 @@
         android:id="@+id/btn_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:gravity="center_vertical"
         android:text="Sign out"
         android:textColor="@color/black"

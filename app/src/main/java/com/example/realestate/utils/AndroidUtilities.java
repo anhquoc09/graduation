@@ -43,6 +43,13 @@ public final class AndroidUtilities {
         sPackageName = EstateApplication.getInstance().getPackageName();
     }
 
+    public static int dp(float dp) {
+        if (dp == 0) {
+            return 0;
+        }
+        return (int) Math.ceil(sDensity * dp);
+    }
+
     public static String getDeviceId() {
         Context context = EstateApplication.getInstance();
         if (TextUtils.isEmpty(sDeviceId)) {
@@ -219,7 +226,7 @@ public final class AndroidUtilities {
 //    public static void openAppSettings(Activity activity, int requestCode) {
 //        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 //        Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
-//        intent.setData(uri);
+//        intent.fetchDataSuccess(uri);
 //        activity.startForResult(intent, requestCode);
 //    }
 }

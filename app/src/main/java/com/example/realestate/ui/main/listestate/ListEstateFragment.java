@@ -1,4 +1,4 @@
-package com.example.realestate.ui.main.home.listpost;
+package com.example.realestate.ui.main.listestate;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.main.home.map.MapFragment;
+import com.example.realestate.ui.widget.CustomListLayout;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import java.util.List;
 
@@ -22,25 +23,23 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class ListEstateFragment extends Fragment
-        implements SwipeRefreshLayout.OnRefreshListener, ListEstateAdapter.OnItemClickListener {
+        implements ListEstateView,
+        SwipeRefreshLayout.OnRefreshListener,
+        ListEstateAdapter.OnItemClickListener {
 
     public static final String TAG = ListEstateFragment.class.getSimpleName();
 
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout mRefreshLayout;
-
-    @BindView(R.id.recycler)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.list_layout)
+    CustomListLayout mListLayout;
 
     private Unbinder mUnbinder;
 
     private ListEstateAdapter mAdapter;
 
-    private OnCallBackListener mCallBackListener;
+    private ListEstatePresenter mPresenter;
 
-    public static Fragment newInstance(OnCallBackListener listener) {
+    public static Fragment newInstance() {
         ListEstateFragment fragment = new ListEstateFragment();
-        fragment.setOnCallBackListener(listener);
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -53,7 +52,7 @@ public class ListEstateFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_estate_layout, container, false);
+        View view = inflater.inflate(R.layout.list_estate_fragment_layout, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -61,20 +60,31 @@ public class ListEstateFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         initView();
+        initPresenter();
+    }
+
+    private void initPresenter() {
+        mPresenter = new ListEstatePresenter();
+        mPresenter.attachView(this);
+        mPresenter.fetchData();
     }
 
     private void initView() {
         mAdapter = new ListEstateAdapter();
+        mAdapter.setItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRefreshLayout.setOnRefreshListener(this);
+        mListLayout.setLayoutManager(layoutManager);
+        mListLayout.setAdapter(mAdapter);
+        mListLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void onDestroyView() {
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
@@ -83,8 +93,8 @@ public class ListEstateFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        if (mCallBackListener != null) {
-            mCallBackListener.onRefreshList();
+        if (mPresenter != null) {
+            mPresenter.fetchData();
         }
     }
 
@@ -93,24 +103,17 @@ public class ListEstateFragment extends Fragment
 
     }
 
-    public void setData(List<EstateDetail> list) {
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
+    @Override
+    public void fetchDataSuccess(List<EstateDetail> list) {
+        if (mListLayout.isRefreshing()) {
+            mListLayout.setRefreshing(false);
         }
 
-        if (mAdapter != null) {
+        if (CollectionUtils.isEmpty(list)) {
+            mListLayout.showEmptyLayout();
+        } else {
+            mListLayout.hideEmptyLayout();
             mAdapter.setData(list);
         }
-    }
-
-    public void setOnCallBackListener(OnCallBackListener listener) {
-        mCallBackListener = listener;
-    }
-
-    /**
-     * {@link MapFragment.OnCallBackListener}
-     */
-    public interface OnCallBackListener {
-        void onRefreshList();
     }
 }

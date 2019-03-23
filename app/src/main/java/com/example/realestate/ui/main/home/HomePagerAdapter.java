@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 
 import com.example.realestate.R;
 import com.example.realestate.ui.main.home.map.MapFragment;
-import com.example.realestate.ui.main.home.listpost.ListEstateFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     private MapFragment.OnCallBackListener mMapListener;
 
-    private ListEstateFragment.OnCallBackListener mListListener;
+    private HomeTabListFragment.OnCallBackListener mListListener;
 
     private final SparseArrayCompat<WeakReference<Fragment>> mHolder;
 
@@ -43,7 +42,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case LIST_INDEX:
-                return ListEstateFragment.newInstance(mListListener);
+                return HomeTabListFragment.newInstance(mListListener);
 
             case MAP_INDEX:
             default:
@@ -60,7 +59,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
         mMapListener = mapListener;
     }
 
-    public void setListListener(ListEstateFragment.OnCallBackListener listListener) {
+    public void setListListener(HomeTabListFragment.OnCallBackListener listListener) {
         mListListener = listListener;
     }
 

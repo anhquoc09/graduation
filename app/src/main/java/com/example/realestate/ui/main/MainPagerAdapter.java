@@ -1,16 +1,8 @@
 package com.example.realestate.ui.main;
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-
-import com.example.realestate.R;
 import com.example.realestate.ui.main.home.HomePagerFragment;
-import com.example.realestate.ui.main.home.map.MapFragment;
+import com.example.realestate.ui.main.listestate.ListEstateFragment;
 import com.example.realestate.ui.widget.MainTabLayout;
-
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -30,7 +22,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
 
             case MainTabLayout.NEWEST_INDEX:
-                return HomePagerFragment.newInstance();
+                return ListEstateFragment.newInstance();
 
             case MainTabLayout.HOME_INDEX:
             default:

@@ -8,8 +8,8 @@
     
     <!-- Navigation Icon Array -->
     <array name="navigation_icon">
-        <item>@drawable/ic_login_google</item>
-        <item>@drawable/ic_login_google</item>
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_newest_post</item>
     </array>
 
     <string-array name="home_title">

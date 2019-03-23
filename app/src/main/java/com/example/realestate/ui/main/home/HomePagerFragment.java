@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.main.MainPresenter;
-import com.example.realestate.ui.main.home.listpost.ListEstateFragment;
 import com.example.realestate.ui.main.home.map.MapFragment;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.AndroidUtilities;
@@ -34,7 +32,7 @@ import butterknife.Unbinder;
 public class HomePagerFragment extends Fragment
         implements HomePagerView,
         MapFragment.OnCallBackListener,
-        ListEstateFragment.OnCallBackListener {
+        HomeTabListFragment.OnCallBackListener {
 
     public static final String TAG = HomePagerFragment.class.getSimpleName();
 
@@ -240,8 +238,8 @@ public class HomePagerFragment extends Fragment
                 ((MapFragment) page).setData(list);
             }
 
-            if (page instanceof ListEstateFragment) {
-                ((ListEstateFragment) page).setData(list);
+            if (page instanceof HomeTabListFragment) {
+                ((HomeTabListFragment) page).setData(list);
             }
         }
     }

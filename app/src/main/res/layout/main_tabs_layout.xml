@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -15,7 +14,7 @@
         android:drawableStart="@drawable/ic_login_google"
         android:drawablePadding="20dp"
         android:gravity="center_vertical"
-        android:paddingStart="40dp"
+        android:paddingStart="30dp"
         android:paddingEnd="0dp"
         android:text="Home"
         android:textColor="@color/black"
@@ -31,10 +30,26 @@
         android:drawableStart="@drawable/ic_login_google"
         android:drawablePadding="20dp"
         android:gravity="center_vertical"
-        android:paddingStart="40dp"
+        android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Newest"
+        android:text="Newest Post"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <!--&lt;!&ndash; Newest Tab &ndash;&gt;-->
+    <!--<TextView-->
+        <!--android:id="@+id/tab_newest"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/navigation_item_height"-->
+        <!--android:background="@color/white"-->
+        <!--android:drawableStart="@drawable/ic_login_google"-->
+        <!--android:drawablePadding="20dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingStart="30dp"-->
+        <!--android:paddingEnd="0dp"-->
+        <!--android:text="Newest"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textSize="16sp"-->
+        <!--android:textStyle="bold" />-->
 </LinearLayout>
