@@ -31,11 +31,16 @@ public class MainTabLayout extends LinearLayout {
 
     public static final int NEWEST_INDEX = 1;
 
+    public static final int PROFILE_INDEX = 2;
+
     @BindView(R.id.tab_home)
     TextView mHomeTab;
 
     @BindView(R.id.tab_newest)
     TextView mNewestTab;
+
+    @BindView(R.id.tab_profile)
+    TextView mProfileTab;
 
     private int mSelectedIndex = -1;
 
@@ -70,7 +75,7 @@ public class MainTabLayout extends LinearLayout {
 
         setOrientation(VERTICAL);
 
-        final TextView[] iconViews = {mHomeTab, mNewestTab};
+        final TextView[] iconViews = {mHomeTab, mNewestTab, mProfileTab};
         mTitles = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.navigation_title));
         mIcons = context.getApplicationContext().getResources().obtainTypedArray(R.array.navigation_icon);
 
@@ -131,8 +136,13 @@ public class MainTabLayout extends LinearLayout {
     }
 
     @OnClick(R.id.tab_newest)
-    public void onProfileClick() {
+    public void onNewestClick() {
         setSelected(NEWEST_INDEX, true);
+    }
+
+    @OnClick(R.id.tab_profile)
+    public void onProfileClick() {
+        setSelected(PROFILE_INDEX, true);
     }
 
     /**

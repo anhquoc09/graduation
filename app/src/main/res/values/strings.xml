@@ -24,11 +24,20 @@
     <string name="navigation_new_post">Newest posts</string>
     <string name="navigation_profile">Profile</string>
 
+    <!-- Home -->
     <string name="map_title">Map</string>
-
     <string name="search_hint">Enter address, keyword, ....</string>
     <string name="view_on_map">XEM TRÊN BẢN ĐỒ</string>
     <string name="view_ont_list">XEM DANH SÁCH</string>
     <string name="empty_data">Empty data.</string>
+
+    <!-- Profile -->
+    <string name="profile_detail">Detail</string>
+    <string name="profile_activities">Activities</string>
+    <string name="profile_id">ID:</string>
+    <string name="profile_display_name">Display name:</string>
+    <string name="profile_phone">Phone:</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_address">Address:</string>
 
 </resources>

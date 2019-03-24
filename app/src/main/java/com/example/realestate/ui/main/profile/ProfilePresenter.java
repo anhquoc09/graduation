@@ -1,4 +1,9 @@
 package com.example.realestate.ui.main.profile;
 
-public class ProfilePresenter {
+import com.example.realestate.ui.BasePresenter;
+
+public class ProfilePresenter extends BasePresenter<ProfileView> {
+    public static final String TAG = ProfilePresenter.class.getSimpleName();
+
+
 }

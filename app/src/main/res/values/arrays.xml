@@ -3,6 +3,7 @@
     <!-- Navigation Title Array -->
     <string-array name="navigation_title">
         <item>@string/navigation_home</item>
+        <item>@string/navigation_new_post</item>
         <item>@string/navigation_profile</item>
     </string-array>
     
@@ -10,10 +11,16 @@
     <array name="navigation_icon">
         <item>@drawable/ic_home</item>
         <item>@drawable/ic_newest_post</item>
+        <item>@drawable/ic_home</item>
     </array>
 
     <string-array name="home_title">
         <item>@string/view_on_map</item>
         <item>@string/view_ont_list</item>
+    </string-array>
+
+    <string-array name="profile_title">
+        <item>@string/profile_detail</item>
+        <item>@string/profile_activities</item>
     </string-array>
 </resources>

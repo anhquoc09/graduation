@@ -4,9 +4,8 @@
 
     <dimen name="toolbar_height">50dp</dimen>
 
-    <dimen name="main_toolbar_height">200dp</dimen>
-    <dimen name="main_button_width">140dp</dimen>
-    <dimen name="main_button_height">100dp</dimen>
     <dimen name="navigation_item_height">40dp</dimen>
     <dimen name="list_estate_image_size">41dp</dimen>
+
+    <dimen name="profile_tab_height">40dp</dimen>
 </resources>

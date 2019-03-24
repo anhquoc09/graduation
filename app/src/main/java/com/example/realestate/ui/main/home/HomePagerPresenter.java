@@ -6,6 +6,11 @@ import com.example.realestate.ui.BasePresenter;
 
 import rx.subscriptions.CompositeSubscription;
 
+/**
+ * @author anhquoc09
+ * @since 24/03/2019
+ */
+
 public class HomePagerPresenter extends BasePresenter<HomePagerView> {
 
     public static final String TAG = HomePagerPresenter.class.getSimpleName();

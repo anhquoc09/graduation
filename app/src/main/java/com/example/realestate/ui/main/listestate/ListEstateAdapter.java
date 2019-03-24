@@ -25,6 +25,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * @author anhquoc09
+ * @since 24/03/2019
+ */
+
 public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.EstateItemVH> {
 
     private final int mImageSize;

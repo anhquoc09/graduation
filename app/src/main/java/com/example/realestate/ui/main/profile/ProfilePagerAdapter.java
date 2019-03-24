@@ -1,10 +1,9 @@
-package com.example.realestate.ui.main.home;
+package com.example.realestate.ui.main.profile;
 
 import android.content.Context;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
-import com.example.realestate.ui.main.home.map.MapFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -16,43 +15,37 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+public class ProfilePagerAdapter extends FragmentPagerAdapter {
 
-/**
- * @author anhquoc09
- * @since 24/03/2019
- */
+    public static final String TAG = ProfilePagerAdapter.class.getSimpleName();
 
-public class HomePagerAdapter extends FragmentPagerAdapter {
+    private static final int DETAIL_INDEX = 0;
 
-    public static final String TAG = HomePagerAdapter.class.getSimpleName();
-
-    private static final int MAP_INDEX = 0;
-
-    private static final int LIST_INDEX = 1;
+    private static final int ACTIVITIES_INDEX = 1;
 
     private final List<String> mTitleArray;
 
-    private MapFragment.OnCallBackListener mMapListener;
+    private ProfileTabDetailFragment.OnCallBackListener mDetailListener;
 
-    private HomeTabListFragment.OnCallBackListener mListListener;
+    private ProfileTabPostFragment.OnCallBackListener mListListener;
 
     private final SparseArrayCompat<WeakReference<Fragment>> mHolder;
 
-    public HomePagerAdapter(FragmentManager fm, Context context) {
+    public ProfilePagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        mTitleArray = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.home_title));
+        mTitleArray = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.profile_title));
         mHolder = new SparseArrayCompat<>(mTitleArray.size());
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case LIST_INDEX:
-                return HomeTabListFragment.newInstance(mListListener);
+            case ACTIVITIES_INDEX:
+                return ProfileTabPostFragment.newInstance(mListListener);
 
-            case MAP_INDEX:
+            case DETAIL_INDEX:
             default:
-                return MapFragment.newInstance(mMapListener);
+                return ProfileTabDetailFragment.newInstance(mDetailListener);
         }
     }
 
@@ -61,11 +54,11 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
         return mTitleArray.size();
     }
 
-    public void setMapListener(MapFragment.OnCallBackListener mapListener) {
-        mMapListener = mapListener;
+    public void setDetailListener(ProfileTabDetailFragment.OnCallBackListener detailListener) {
+        mDetailListener = detailListener;
     }
 
-    public void setListListener(HomeTabListFragment.OnCallBackListener listListener) {
+    public void setListListener(ProfileTabPostFragment.OnCallBackListener listListener) {
         mListListener = listListener;
     }
 
@@ -74,7 +67,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     }
 
     public int getDefaultIndex() {
-        return MAP_INDEX;
+        return DETAIL_INDEX;
     }
 
     @Override

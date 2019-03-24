@@ -29,6 +29,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+/**
+ * @author anhquoc09
+ * @since 24/03/2019
+ */
+
 public class HomePagerFragment extends Fragment
         implements HomePagerView,
         MapFragment.OnCallBackListener,
@@ -81,7 +86,7 @@ public class HomePagerFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
     }

@@ -1,19 +1,12 @@
 package com.example.realestate.ui.main.home.map;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.widget.DebounceEditText;
-import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -25,9 +18,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -64,7 +55,7 @@ public class MapFragment extends Fragment implements MapView {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.map_fragment_layout, container, false);
+        return inflater.inflate(R.layout.fragment_map_layout, container, false);
     }
 
     @Override

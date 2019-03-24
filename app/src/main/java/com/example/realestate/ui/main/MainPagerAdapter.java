@@ -2,6 +2,7 @@ package com.example.realestate.ui.main;
 
 import com.example.realestate.ui.main.home.HomePagerFragment;
 import com.example.realestate.ui.main.listestate.ListEstateFragment;
+import com.example.realestate.ui.main.profile.ProfileFragment;
 import com.example.realestate.ui.widget.MainTabLayout;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,9 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
             case MainTabLayout.NEWEST_INDEX:
                 return ListEstateFragment.newInstance();
+
+            case MainTabLayout.PROFILE_INDEX:
+                return ProfileFragment.newInstance();
 
             case MainTabLayout.HOME_INDEX:
             default:

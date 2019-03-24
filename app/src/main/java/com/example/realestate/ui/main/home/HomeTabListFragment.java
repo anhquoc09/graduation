@@ -23,6 +23,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+/**
+ * @author anhquoc09
+ * @since 24/03/2019
+ */
+
 public class HomeTabListFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener,
         ListEstateAdapter.OnItemClickListener {
@@ -53,7 +58,7 @@ public class HomeTabListFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_estate_fragment_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_estate_layout, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
     }
