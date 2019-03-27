@@ -1,13 +1,18 @@
 package com.example.realestate.ui.main.profile;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.data.model.ProfileDetail;
+import com.example.realestate.utils.AndroidUtilities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +43,12 @@ public class ProfileTabDetailFragment extends Fragment {
 
     @BindView(R.id.profile_address)
     EditText mAddress;
+
+    @BindView(R.id.btn_edit)
+    Button mBtnEdit;
+
+    @BindView(R.id.btn_save)
+    Button mBtnSave;
 
     private OnCallBackListener mCallBackListener;
 
@@ -74,6 +85,30 @@ public class ProfileTabDetailFragment extends Fragment {
 
     }
 
+    private void showBtnEdit() {
+        if (mBtnEdit != null) {
+            mBtnEdit.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideBtnEdit() {
+        if (mBtnEdit != null) {
+            mBtnEdit.setVisibility(View.GONE);
+        }
+    }
+
+    private void showBtnSave() {
+        if (mBtnSave != null) {
+            mBtnSave.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideBtnSave() {
+        if (mBtnSave != null) {
+            mBtnSave.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         if (mUnbinder != null) {
@@ -82,16 +117,36 @@ public class ProfileTabDetailFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void setData(EstateDetail list) {
-
+    public void setData(ProfileDetail profileDetail) {
+        if (profileDetail == null) {
+            return;
+        }
+        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getUserId() == profileDetail.getProfileId()) {
+            showBtnEdit();
+        }
     }
 
     public void setOnCallBackListener(OnCallBackListener listener) {
         mCallBackListener = listener;
     }
 
+    public void onEditProfileSuccess() {
+        hideBtnSave();
+        showBtnEdit();
+        mName.setEnabled(false);
+        mPhone.setEnabled(false);
+        mAddress.setEnabled(false);
+        AndroidUtilities.showToast("Your profile is saved");
+    }
+
+    public void onEditProfileError(String error) {
+        AndroidUtilities.showToast(error);
+    }
+
     @OnClick(R.id.btn_edit)
     public void onBtnEditClick() {
+        hideBtnEdit();
+        showBtnSave();
         mName.setEnabled(true);
         mPhone.setEnabled(true);
         mAddress.setEnabled(true);
@@ -99,19 +154,18 @@ public class ProfileTabDetailFragment extends Fragment {
 
     @OnClick(R.id.btn_save)
     public void onBtnSaveClick() {
+        String name = String.valueOf(mName.getText());
+        String phone = String.valueOf(mPhone.getText());
+        String address = String.valueOf(mAddress.getText());
         if (mCallBackListener != null) {
-            mCallBackListener.onEditProfile();
+            mCallBackListener.onEditProfile(name, phone, address);
         }
-
-        mName.setEnabled(false);
-        mPhone.setEnabled(false);
-        mAddress.setEnabled(false);
     }
 
     /**
      * {@link OnCallBackListener}
      */
     public interface OnCallBackListener {
-        void onEditProfile();
+        void onEditProfile(String name, String phone, String address);
     }
 }

@@ -6,4 +6,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
     public static final String TAG = ProfilePresenter.class.getSimpleName();
 
 
+    public void getProfile(int id) {
+
+    }
 }

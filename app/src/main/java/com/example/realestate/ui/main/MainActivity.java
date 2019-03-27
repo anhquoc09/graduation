@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
+import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.widget.MainTabLayout;
 import com.example.realestate.utils.AndroidUtilities;
 
@@ -49,6 +53,18 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.toolbar_title)
     TextView mTabTitle;
 
+    @BindView(R.id.profile)
+    View mProfileView;
+
+    @BindView(R.id.img_avatar)
+    ImageView mProfileAvatar;
+
+    @BindView(R.id.tv_name)
+    TextView mProfileName;
+
+    @BindView(R.id.tv_app_name)
+    View mAppName;
+
     private MainPagerAdapter mAdapter;
 
     private MainPresenter mPresenter;
@@ -69,6 +85,8 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         mUnbinder = ButterKnife.bind(this);
 
+        initView();
+
         initAdapter();
 
         setupTabLayout();
@@ -80,6 +98,14 @@ public class MainActivity extends BaseActivity
         initPresenter();
 
         initGoogle();
+    }
+
+    private void initView() {
+        if (UserManager.isUserLoggedIn()) {
+            showProfileView();
+        } else {
+            hideProfileView();
+        }
     }
 
     private void setupNavigationLayout() {
@@ -140,6 +166,31 @@ public class MainActivity extends BaseActivity
         mGoogleManager = new GoogleManager();
         mGoogleManager.init();
         mGoogleManager.setLogoutManagert(this);
+    }
+
+
+    private void hideProfileView() {
+        if (mProfileView != null) {
+            mProfileView.setVisibility(View.GONE);
+        }
+        if (mAppName != null) {
+            mAppName.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showProfileView() {
+        if (mProfileView != null) {
+            mProfileView.setVisibility(View.VISIBLE);
+            mProfileName.setText(UserManager.getCurrentUser().getDisplayName());
+            Glide.with(this)
+                    .load(UserManager.getCurrentUser().getAvatar())
+                    .placeholder(R.drawable.avatar_default_small)
+                    .into(mProfileAvatar);
+        }
+        if (mAppName != null) {
+            mAppName.setVisibility(mProfileView == null ? View.VISIBLE : View.GONE);
+        }
+
     }
 
     private void goToLoginScreen() {
@@ -211,5 +262,10 @@ public class MainActivity extends BaseActivity
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+
+    @OnClick(R.id.profile)
+    public void onProfileClick() {
+        startActivity(ProfileActivity.intentFor(this, UserManager.getCurrentUser().getUserId()));
     }
 }

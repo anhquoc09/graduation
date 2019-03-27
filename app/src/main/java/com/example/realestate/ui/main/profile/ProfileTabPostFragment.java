@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.main.home.HomeTabListFragment;
 import com.example.realestate.ui.main.listestate.ListEstateAdapter;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;

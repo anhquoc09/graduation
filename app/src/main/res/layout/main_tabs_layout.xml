@@ -37,19 +37,4 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Newest Tab -->
-    <TextView
-        android:id="@+id/tab_profile"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_item_height"
-        android:background="@color/white"
-        android:drawableStart="@drawable/ic_login_google"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:paddingStart="30dp"
-        android:paddingEnd="0dp"
-        android:text="Profile"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 </LinearLayout>

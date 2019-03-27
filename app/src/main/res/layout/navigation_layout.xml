@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,17 +11,13 @@
 
     <!-- Header Image, App name, Close Button -->
     <FrameLayout
+        android:id="@+id/img_navigation_header"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-        <ImageView
-            android:id="@+id/img_navigation_header"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorAccent"
-            android:scaleType="fitXY" />
+        android:layout_height="100dp"
+        android:background="@color/colorAccent">
 
         <TextView
+            android:id="@+id/tv_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
@@ -33,13 +30,47 @@
             android:textSize="26sp"
             android:textStyle="bold" />
 
+        <!-- Profile -->
+        <LinearLayout
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="0dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/avatar_default_small"
+                app:civ_border_color="@color/white"
+                app:civ_border_overlay="true"
+                app:civ_border_width="1dp" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="20dp"
+                android:ellipsize="end"
+                android:text="Anh Quốc"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
         <ImageView
             android:id="@+id/btn_close_navigation"
             android:layout_width="30dp"
             android:layout_height="20dp"
+            android:layout_gravity="top|end"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
-            android:layout_gravity="top|end"
             android:src="@drawable/ic_navigation" />
     </FrameLayout>
 
