@@ -117,13 +117,17 @@ public class ProfileTabDetailFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void setData(ProfileDetail profileDetail) {
-        if (profileDetail == null) {
-            return;
-        }
-        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getUserId() == profileDetail.getProfileId()) {
-            showBtnEdit();
-        }
+    public void setData(String name, String email, String phone, String address) {
+//        if (profileDetail == null) {
+//            return;
+//        }
+//        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getUserId() == profileDetail.getProfileId()) {
+//            showBtnEdit();
+//        }
+        mName.setText(name);
+        mEmail.setText(email);
+        mPhone.setText(phone);
+        mAddress.setText(address);
     }
 
     public void setOnCallBackListener(OnCallBackListener listener) {

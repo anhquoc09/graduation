@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             android:shadowColor="#40000000"
             android:shadowDx="4"
             android:shadowDy="4"
@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
+            android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
             android:paddingStart="30dp"
             android:paddingEnd="0dp">
@@ -44,7 +45,6 @@
                 android:id="@+id/img_avatar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:scaleType="fitCenter"
                 android:src="@drawable/avatar_default_small"
                 app:civ_border_color="@color/white"
                 app:civ_border_overlay="true"
@@ -88,10 +88,13 @@
 
     <TextView
         android:id="@+id/btn_support"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="30dp"
+        android:drawableStart="@drawable/ic_support"
+        android:drawablePadding="20dp"
         android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
         android:text="Support"
         android:textColor="@color/black"
         android:textSize="16sp" />
@@ -100,9 +103,12 @@
         android:id="@+id/btn_about_us"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="30dp"
+        android:drawableStart="@drawable/ic_setting"
+        android:drawablePadding="20dp"
         android:gravity="center_vertical"
-        android:text="About us"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="Setting"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -110,8 +116,11 @@
         android:id="@+id/btn_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/navigation_item_height"
-        android:layout_marginStart="30dp"
+        android:drawableStart="@drawable/ic_sign_out"
+        android:drawablePadding="20dp"
         android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
         android:text="Sign out"
         android:textColor="@color/black"
         android:textSize="16sp" />

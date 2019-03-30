@@ -16,19 +16,19 @@ public class Profile {
     public void setEmail(String string) {
     }
 
-    public void setBirthday(int birthday) {
+    public void setBirthday(String birthday) {
     }
 
     public int getUserId() {
-        return 0;
+        return 1;
     }
 
     public String getUserName() {
-        return "";
+        return "anhquoc09";
     }
 
     public String getDisplayName() {
-        return "";
+        return "Hoàng Anh Quốc";
     }
 
     public String getAvatar() {
@@ -36,11 +36,11 @@ public class Profile {
     }
 
     public String getEmail() {
-        return "";
+        return "anhquoc.haq09@gmail.com";
     }
 
-    public int getBirthday() {
-        return 0;
+    public String getBirthday() {
+        return "28/03/1997";
     }
 
     public void setPhoneNumber(String phoneNumber) {

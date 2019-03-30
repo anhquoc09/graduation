@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
+import com.example.realestate.User;
 import com.example.realestate.UserManager;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
@@ -266,6 +267,13 @@ public class MainActivity extends BaseActivity
 
     @OnClick(R.id.profile)
     public void onProfileClick() {
-        startActivity(ProfileActivity.intentFor(this, UserManager.getCurrentUser().getUserId()));
+        User user = UserManager.getCurrentUser();
+        startActivity(ProfileActivity.intentFor(this,
+                user.getUserId(),
+                user.getAvatar(),
+                user.getDisplayName(),
+                user.getBirthday(),
+                user.getEmail(),
+                user.getPhoneNumber()));
     }
 }

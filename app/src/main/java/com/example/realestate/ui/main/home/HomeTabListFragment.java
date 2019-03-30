@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.main.listestate.ListEstateAdapter;
+import com.example.realestate.ui.main.ListEstateAdapter;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -58,7 +58,7 @@ public class HomeTabListFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_estate_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_layout, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
     }

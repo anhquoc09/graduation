@@ -1,7 +1,6 @@
 package com.example.realestate.ui.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -31,7 +29,13 @@ public class MainTabLayout extends LinearLayout {
 
     public static final int NEWEST_INDEX = 1;
 
-    public static final int PROFILE_INDEX = 2;
+    public static final int SAVED_INDEX = 2;
+
+    public static final int CONSTRUCTION_INDEX = 3;
+
+    public static final int EXTERIOR_INDEXT = 4;
+
+    public static final int GEOMANCY_INDEX = 5;
 
     @BindView(R.id.tab_home)
     TextView mHomeTab;
@@ -39,13 +43,21 @@ public class MainTabLayout extends LinearLayout {
     @BindView(R.id.tab_newest)
     TextView mNewestTab;
 
+    @BindView(R.id.tab_saved)
+    TextView mSavedTab;
+
+    @BindView(R.id.tab_construction)
+    TextView mSketchTab;
+
+    @BindView(R.id.tab_exterior)
+    TextView mExteriorTab;
+
+    @BindView(R.id.tab_geomancy)
+    TextView mGeomancyTab;
+
     private int mSelectedIndex = -1;
 
     private List<Tab> mTabs;
-
-    private List<String> mTitles;
-
-    private TypedArray mIcons;
 
     private OnTabSelectListener mTabSelectListener;
 
@@ -72,11 +84,9 @@ public class MainTabLayout extends LinearLayout {
 
         setOrientation(VERTICAL);
 
-        final TextView[] iconViews = {mHomeTab, mNewestTab};
-        mTitles = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.navigation_title));
-        mIcons = context.getApplicationContext().getResources().obtainTypedArray(R.array.navigation_icon);
+        final TextView[] iconViews = {mHomeTab, mNewestTab, mSavedTab, mSketchTab, mExteriorTab, mGeomancyTab};
 
-        int count = mTitles.size();
+        int count = iconViews.length;
         mTabs = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             Tab tab = new Tab();
@@ -135,6 +145,26 @@ public class MainTabLayout extends LinearLayout {
     @OnClick(R.id.tab_newest)
     public void onNewestClick() {
         setSelected(NEWEST_INDEX, true);
+    }
+
+    @OnClick(R.id.tab_saved)
+    public void onSavedClick() {
+        setSelected(SAVED_INDEX, true);
+    }
+
+    @OnClick(R.id.tab_construction)
+    public void onSketchClick() {
+        setSelected(CONSTRUCTION_INDEX, true);
+    }
+
+    @OnClick(R.id.tab_exterior)
+    public void onExteriorClick() {
+        setSelected(EXTERIOR_INDEXT, true);
+    }
+
+    @OnClick(R.id.tab_geomancy)
+    public void onGeomancyClick() {
+        setSelected(GEOMANCY_INDEX, true);
     }
 
     /**

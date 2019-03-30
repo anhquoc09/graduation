@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">REALES</string>
+    <string name="app_name" translatable="false">REALES</string>
 
-    <string name="google_client_id">776676760586-udmhul1tgsleevrj32qvv6m9el7ltj2r.apps.googleusercontent.com</string>
+    <string name="google_client_id" translatable="false">776676760586-udmhul1tgsleevrj32qvv6m9el7ltj2r.apps.googleusercontent.com</string>
 
-    <string name="drawer_opened">Drawer opened</string>
-    <string name="drawer_closed">Drawer_closed</string>
+    <string name="drawer_opened" translatable="false">Drawer opened</string>
+    <string name="drawer_closed" translatable="false">Drawer_closed</string>
 
     <string name="slogan">BEST PLACE FOR DECISION</string>
     <string name="login_google">Login with Google</string>
@@ -20,15 +20,19 @@
     <string name="loading">Loading...</string>
 
     <!-- Navigation Title -->
+    <string name="navigation_profile">Profile</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_new_post">Newest posts</string>
-    <string name="navigation_profile">Profile</string>
+    <string name="navigation_saved_post">Saved posts</string>
+    <string name="navigation_construct">Architecture</string>
+    <string name="navigation_exterior">Exterior - Interior</string>
+    <string name="navigation_geomancy">Geomancy</string>
 
     <!-- Home -->
     <string name="map_title">Map</string>
     <string name="search_hint">Enter address, keyword, ....</string>
-    <string name="view_on_map">XEM TRÊN BẢN ĐỒ</string>
-    <string name="view_ont_list">XEM DANH SÁCH</string>
+    <string name="view_on_map">VIEW ON MAP</string>
+    <string name="view_ont_list">VIEW ON LIST</string>
     <string name="empty_data">Empty data.</string>
 
     <!-- Profile -->

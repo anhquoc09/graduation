@@ -1,4 +1,4 @@
-package com.example.realestate.ui.main.listestate;
+package com.example.realestate.ui.main;
 
 import android.content.Context;
 import android.content.res.Resources;

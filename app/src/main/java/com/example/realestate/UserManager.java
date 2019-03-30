@@ -156,7 +156,7 @@ public final class UserManager {
                 editor.putString(PREF_DISPLAY_NAME, profile.getDisplayName());
                 editor.putString(PREF_USER_AVATAR, profile.getAvatar());
                 editor.putString(PREF_USER_EMAIL, profile.getEmail());
-                editor.putInt(PREF_USER_BIRTHDAY, profile.getBirthday());
+                editor.putString(PREF_USER_BIRTHDAY, profile.getBirthday());
                 editor.apply();
             }
         }
@@ -168,7 +168,7 @@ public final class UserManager {
             profile.setDisplayName(sSettings.getString(PREF_DISPLAY_NAME, ""));
             profile.setAvatar(sSettings.getString(PREF_USER_AVATAR, ""));
             profile.setEmail(sSettings.getString(PREF_USER_EMAIL, ""));
-            profile.setBirthday(sSettings.getInt(PREF_USER_BIRTHDAY, 0));
+            profile.setBirthday(sSettings.getString(PREF_USER_BIRTHDAY, ""));
             return profile;
         }
 

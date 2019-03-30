@@ -16,12 +16,12 @@
         android:gravity="center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Home"
+        android:text="@string/navigation_home"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Newest Tab -->
+    <!-- Home Tab -->
     <TextView
         android:id="@+id/tab_newest"
         android:layout_width="match_parent"
@@ -32,7 +32,71 @@
         android:gravity="center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Newest Post"
+        android:text="@string/navigation_new_post"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Saved Tab -->
+    <TextView
+        android:id="@+id/tab_saved"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_item_height"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_saved_post"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="@string/navigation_saved_post"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Construction - Architecture Tab -->
+    <TextView
+        android:id="@+id/tab_construction"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_item_height"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_sketch"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="@string/navigation_construct"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Exterior - Interior Tab -->
+    <TextView
+        android:id="@+id/tab_exterior"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_item_height"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_exterior"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="@string/navigation_exterior"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Geomancy Tab -->
+    <TextView
+        android:id="@+id/tab_geomancy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_item_height"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_geomancy"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="@string/navigation_geomancy"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />

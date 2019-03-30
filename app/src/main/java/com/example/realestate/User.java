@@ -108,11 +108,11 @@ public class User {
         mProfile.setAddress(address);
     }
 
-    public int getBirthday() {
+    public String getBirthday() {
         return mProfile.getBirthday();
     }
 
-    public void setBirthday(int birthday) {
+    public void setBirthday(String birthday) {
         mProfile.setBirthday(birthday);
     }
 

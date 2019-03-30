@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.realestate.R;
+import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.model.ProfileDetail;
 import com.example.realestate.ui.BaseActivity;
 import com.google.android.material.tabs.TabLayout;
@@ -26,6 +28,19 @@ public class ProfileActivity extends BaseActivity
 
     public static final String PROFILE_ID = "profile_id";
 
+    public static final String PROFILE_AVATAR = "profile_avatar";
+
+    public static final String PROFILE_DISPLAYNAME = "profile_display_name";
+
+    public static final String PROFILE_ADDRESS = "profile_address";
+
+    public static final String PROFILE_EMAIL = "profile_email";
+
+    public static final String PROFILE_PHONE = "profile_phone";
+
+    @BindView(R.id.profile_avatar)
+    ImageView mImageView;
+
     @BindView(R.id.profile_viewpager)
     ViewPager mViewPager;
 
@@ -34,15 +49,31 @@ public class ProfileActivity extends BaseActivity
 
     private int mProfileId;
 
+    private String mProfileAvatar;
+
+    private String mProfileDisplayName;
+
+    private String mProfileAddress;
+
+    private String mProfileEmail;
+
+    private String mProfilePhone;
+
     private ProfilePresenter mPresenter;
 
     private ProfilePagerAdapter mPagerAdapter;
 
     private Unbinder mUnbinder;
 
-    public static Intent intentFor(Context context, int profileId) {
+    public static Intent intentFor(Context context, int profileId, String avatar, String displayName, String address, String email, String phoneNumber) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra(PROFILE_ID, profileId);
+        intent.putExtra(PROFILE_AVATAR, avatar);
+        intent.putExtra(PROFILE_DISPLAYNAME, displayName);
+        intent.putExtra(PROFILE_ADDRESS, address);
+        intent.putExtra(PROFILE_EMAIL, email);
+        intent.putExtra(PROFILE_PHONE, phoneNumber);
+
         return intent;
     }
 
@@ -54,6 +85,11 @@ public class ProfileActivity extends BaseActivity
 
         Intent intent = getIntent();
         mProfileId = intent.getIntExtra(PROFILE_ID, 0);
+        mProfileAvatar = intent.getStringExtra(PROFILE_AVATAR);
+        mProfileDisplayName = intent.getStringExtra(PROFILE_DISPLAYNAME);
+        mProfileAddress = intent.getStringExtra(PROFILE_ADDRESS);
+        mProfileEmail = intent.getStringExtra(PROFILE_EMAIL);
+        mProfilePhone = intent.getStringExtra(PROFILE_PHONE);
 
         initView();
         setupTabLayout();

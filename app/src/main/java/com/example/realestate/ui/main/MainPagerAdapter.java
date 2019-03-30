@@ -1,7 +1,11 @@
 package com.example.realestate.ui.main;
 
+import com.example.realestate.ui.main.construction.ConstructionFragment;
+import com.example.realestate.ui.main.exterior.ExteriorFragment;
+import com.example.realestate.ui.main.geomancy.GeomancyFragment;
 import com.example.realestate.ui.main.home.HomePagerFragment;
 import com.example.realestate.ui.main.listestate.ListEstateFragment;
+import com.example.realestate.ui.main.savedestate.SavedEstateFragment;
 import com.example.realestate.ui.widget.MainTabLayout;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +27,18 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
             case MainTabLayout.NEWEST_INDEX:
                 return ListEstateFragment.newInstance();
+
+            case MainTabLayout.SAVED_INDEX:
+                return SavedEstateFragment.newInstance();
+
+            case MainTabLayout.CONSTRUCTION_INDEX:
+                return ConstructionFragment.newInstance();
+
+            case MainTabLayout.EXTERIOR_INDEXT:
+                return ExteriorFragment.newInstance();
+
+            case MainTabLayout.GEOMANCY_INDEX:
+                return GeomancyFragment.newInstance();
 
             case MainTabLayout.HOME_INDEX:
             default:
