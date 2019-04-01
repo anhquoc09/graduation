@@ -29,4 +29,6 @@
     <string name="navigation_profile">Trang cá nhân</string>
     <string name="navigation_saved_post">Tin đã lưu</string>
     <string name="slogan">NƠI TỐT NHẤT ĐỂ LỰA CHỌN</string>
+    <string name="button_save">Lưu</string>
+    <string name="button_cancel">Huỷ bỏ</string>
 </resources>

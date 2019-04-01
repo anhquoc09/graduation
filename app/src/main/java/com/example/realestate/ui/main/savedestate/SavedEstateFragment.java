@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.main.ListEstateAdapter;
-import com.example.realestate.ui.main.listestate.ListEstateFragment;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -44,7 +43,7 @@ public class SavedEstateFragment extends Fragment
     private SavedEstatePresenter mPresenter;
 
     public static Fragment newInstance() {
-        ListEstateFragment fragment = new ListEstateFragment();
+        SavedEstateFragment fragment = new SavedEstateFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }

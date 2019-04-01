@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
+import com.example.realestate.data.model.Profile;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -23,16 +25,19 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
 
     private static final int ACTIVITIES_INDEX = 1;
 
-    private final List<String> mTitleArray;
-
     private ProfileTabDetailFragment.OnCallBackListener mDetailListener;
 
     private ProfileTabPostFragment.OnCallBackListener mListListener;
 
+    private final Profile mProfile;
+
+    private final List<String> mTitleArray;
+
     private final SparseArrayCompat<WeakReference<Fragment>> mHolder;
 
-    public ProfilePagerAdapter(FragmentManager fm, Context context) {
+    public ProfilePagerAdapter(FragmentManager fm, Context context, Profile profile) {
         super(fm);
+        mProfile = profile;
         mTitleArray = Arrays.asList(context.getApplicationContext().getResources().getStringArray(R.array.profile_title));
         mHolder = new SparseArrayCompat<>(mTitleArray.size());
     }
@@ -45,7 +50,7 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
 
             case DETAIL_INDEX:
             default:
-                return ProfileTabDetailFragment.newInstance(mDetailListener);
+                return ProfileTabDetailFragment.newInstance(mDetailListener, mProfile);
         }
     }
 

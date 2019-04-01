@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.realestate.R;
 import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.model.ProfileDetail;
@@ -26,17 +27,7 @@ public class ProfileActivity extends BaseActivity
 
     public static final String TAG = ProfileActivity.class.getSimpleName();
 
-    public static final String PROFILE_ID = "profile_id";
-
-    public static final String PROFILE_AVATAR = "profile_avatar";
-
-    public static final String PROFILE_DISPLAYNAME = "profile_display_name";
-
-    public static final String PROFILE_ADDRESS = "profile_address";
-
-    public static final String PROFILE_EMAIL = "profile_email";
-
-    public static final String PROFILE_PHONE = "profile_phone";
+    public static final String PROFILE = "profile";
 
     @BindView(R.id.profile_avatar)
     ImageView mImageView;
@@ -47,17 +38,7 @@ public class ProfileActivity extends BaseActivity
     @BindView(R.id.profile_tab_layout)
     TabLayout mTabLayout;
 
-    private int mProfileId;
-
-    private String mProfileAvatar;
-
-    private String mProfileDisplayName;
-
-    private String mProfileAddress;
-
-    private String mProfileEmail;
-
-    private String mProfilePhone;
+    private Profile mProfile;
 
     private ProfilePresenter mPresenter;
 
@@ -65,14 +46,9 @@ public class ProfileActivity extends BaseActivity
 
     private Unbinder mUnbinder;
 
-    public static Intent intentFor(Context context, int profileId, String avatar, String displayName, String address, String email, String phoneNumber) {
+    public static Intent intentFor(Context context, Profile profile) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(PROFILE_ID, profileId);
-        intent.putExtra(PROFILE_AVATAR, avatar);
-        intent.putExtra(PROFILE_DISPLAYNAME, displayName);
-        intent.putExtra(PROFILE_ADDRESS, address);
-        intent.putExtra(PROFILE_EMAIL, email);
-        intent.putExtra(PROFILE_PHONE, phoneNumber);
+        intent.putExtra(PROFILE, profile);
 
         return intent;
     }
@@ -84,12 +60,7 @@ public class ProfileActivity extends BaseActivity
         mUnbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        mProfileId = intent.getIntExtra(PROFILE_ID, 0);
-        mProfileAvatar = intent.getStringExtra(PROFILE_AVATAR);
-        mProfileDisplayName = intent.getStringExtra(PROFILE_DISPLAYNAME);
-        mProfileAddress = intent.getStringExtra(PROFILE_ADDRESS);
-        mProfileEmail = intent.getStringExtra(PROFILE_EMAIL);
-        mProfilePhone = intent.getStringExtra(PROFILE_PHONE);
+        mProfile = (Profile) intent.getSerializableExtra(PROFILE);
 
         initView();
         setupTabLayout();
@@ -99,11 +70,16 @@ public class ProfileActivity extends BaseActivity
     private void initPresenter() {
         mPresenter = new ProfilePresenter();
         mPresenter.attachView(this);
-        mPresenter.getProfile(mProfileId);
+        mPresenter.getProfile(mProfile.getUserId());
     }
 
     private void initView() {
-        mPagerAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), this);
+        Glide.with(this)
+                .load(mProfile.getAvatar())
+                .placeholder(R.color.silver)
+                .into(mImageView);
+
+        mPagerAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), this, mProfile);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
         mViewPager.setCurrentItem(mPagerAdapter.getDefaultIndex());

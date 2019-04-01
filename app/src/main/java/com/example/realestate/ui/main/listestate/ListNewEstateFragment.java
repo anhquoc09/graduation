@@ -28,12 +28,12 @@ import butterknife.Unbinder;
  * @since 24/03/2019
  */
 
-public class ListEstateFragment extends Fragment
-        implements ListEstateView,
+public class ListNewEstateFragment extends Fragment
+        implements ListNewEstateView,
         SwipeRefreshLayout.OnRefreshListener,
         ListEstateAdapter.OnItemClickListener {
 
-    public static final String TAG = ListEstateFragment.class.getSimpleName();
+    public static final String TAG = ListNewEstateFragment.class.getSimpleName();
 
     @BindView(R.id.list_layout)
     CustomListLayout mListLayout;
@@ -42,10 +42,10 @@ public class ListEstateFragment extends Fragment
 
     private ListEstateAdapter mAdapter;
 
-    private ListEstatePresenter mPresenter;
+    private ListNewEstatePresenter mPresenter;
 
     public static Fragment newInstance() {
-        ListEstateFragment fragment = new ListEstateFragment();
+        ListNewEstateFragment fragment = new ListNewEstateFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -72,7 +72,7 @@ public class ListEstateFragment extends Fragment
     }
 
     private void initPresenter() {
-        mPresenter = new ListEstatePresenter();
+        mPresenter = new ListNewEstatePresenter();
         mPresenter.attachView(this);
         mPresenter.fetchData();
     }

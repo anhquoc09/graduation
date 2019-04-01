@@ -1,6 +1,8 @@
 package com.example.realestate.data.model;
 
-public class EstateDetail {
+import java.io.Serializable;
+
+public class EstateDetail implements Serializable {
     private String mImage;
     private String mTitle;
     private String mTime;

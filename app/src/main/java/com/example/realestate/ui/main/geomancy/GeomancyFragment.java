@@ -6,11 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
-import com.example.realestate.data.model.ExteriorDetail;
 import com.example.realestate.data.model.GeomancyDetail;
-import com.example.realestate.ui.main.exterior.ExteriorAdapter;
-import com.example.realestate.ui.main.exterior.ExteriorPresenter;
-import com.example.realestate.ui.main.listestate.ListEstateFragment;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -19,7 +15,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.GeneratedAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -46,7 +41,7 @@ public class GeomancyFragment extends Fragment
     private GeomancyPresenter mPresenter;
 
     public static Fragment newInstance() {
-        ListEstateFragment fragment = new ListEstateFragment();
+        GeomancyFragment fragment = new GeomancyFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }

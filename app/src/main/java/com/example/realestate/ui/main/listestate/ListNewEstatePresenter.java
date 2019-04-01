@@ -7,8 +7,8 @@ import com.example.realestate.ui.BasePresenter;
  * @since 24/03/2019
  */
 
-public class ListEstatePresenter extends BasePresenter<ListEstateView> {
-    public static final String TAG = ListEstatePresenter.class.getSimpleName();
+public class ListNewEstatePresenter extends BasePresenter<ListNewEstateView> {
+    public static final String TAG = ListNewEstatePresenter.class.getSimpleName();
 
     public void fetchData() {
         mView.fetchDataSuccess(null);

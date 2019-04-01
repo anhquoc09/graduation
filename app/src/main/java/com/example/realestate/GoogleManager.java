@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.example.realestate.data.model.Profile;
 import com.example.realestate.utils.NetworkUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -56,6 +57,10 @@ public class GoogleManager {
             if (account == null) {
                 onError(mContext.getResources().getString(R.string.message_login_fail, "NoAcc"));
             } else {
+                User user = new User();
+                Profile profile = new Profile();
+                user.setProfile(profile);
+                UserManager.setCurrentUser(user);
                 onSuccess(account.getIdToken());
             }
         } catch (ApiException e) {
@@ -103,6 +108,7 @@ public class GoogleManager {
 
         mLoginCallback.startForResult(mClient.getSignInIntent(), LOGIN_GG_REQUEST_CODE);
     }
+
     public void logoutGoogle() {
         if (mClient != null) {
             mClient.signOut().addOnCompleteListener(task -> logoutSuccess());

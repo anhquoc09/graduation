@@ -9,6 +9,6 @@ import java.util.List;
  * @since 24/03/2019
  */
 
-public interface ListEstateView {
+public interface ListNewEstateView {
     void fetchDataSuccess(List<EstateDetail> list);
 }

@@ -6,11 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
-import com.example.realestate.data.model.ConstructionDetail;
 import com.example.realestate.data.model.ExteriorDetail;
-import com.example.realestate.ui.main.construction.ConstructionAdapter;
-import com.example.realestate.ui.main.construction.ConstructionPresenter;
-import com.example.realestate.ui.main.listestate.ListEstateFragment;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -41,7 +37,7 @@ public class ExteriorFragment extends Fragment
     private ExteriorPresenter mPresenter;
 
     public static Fragment newInstance() {
-        ListEstateFragment fragment = new ListEstateFragment();
+        ExteriorFragment fragment = new ExteriorFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }

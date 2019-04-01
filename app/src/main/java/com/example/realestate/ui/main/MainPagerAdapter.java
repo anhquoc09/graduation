@@ -4,7 +4,7 @@ import com.example.realestate.ui.main.construction.ConstructionFragment;
 import com.example.realestate.ui.main.exterior.ExteriorFragment;
 import com.example.realestate.ui.main.geomancy.GeomancyFragment;
 import com.example.realestate.ui.main.home.HomePagerFragment;
-import com.example.realestate.ui.main.listestate.ListEstateFragment;
+import com.example.realestate.ui.main.listestate.ListNewEstateFragment;
 import com.example.realestate.ui.main.savedestate.SavedEstateFragment;
 import com.example.realestate.ui.widget.MainTabLayout;
 
@@ -26,7 +26,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
 
             case MainTabLayout.NEWEST_INDEX:
-                return ListEstateFragment.newInstance();
+                return ListNewEstateFragment.newInstance();
 
             case MainTabLayout.SAVED_INDEX:
                 return SavedEstateFragment.newInstance();

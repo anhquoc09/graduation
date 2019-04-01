@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.model.ProfileDetail;
 import com.example.realestate.utils.AndroidUtilities;
 
@@ -50,13 +51,19 @@ public class ProfileTabDetailFragment extends Fragment {
     @BindView(R.id.btn_save)
     Button mBtnSave;
 
+    @BindView(R.id.btn_cancel)
+    Button mBtnCancel;
+
     private OnCallBackListener mCallBackListener;
 
     private Unbinder mUnbinder;
 
-    public static Fragment newInstance(OnCallBackListener listener) {
+    private Profile mProfile;
+
+    public static Fragment newInstance(OnCallBackListener listener, Profile profile) {
         ProfileTabDetailFragment fragment = new ProfileTabDetailFragment();
         fragment.setOnCallBackListener(listener);
+        fragment.setProfile(profile);
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -82,7 +89,7 @@ public class ProfileTabDetailFragment extends Fragment {
     }
 
     private void initView() {
-
+        setData(mProfile);
     }
 
     private void showBtnEdit() {
@@ -101,11 +108,17 @@ public class ProfileTabDetailFragment extends Fragment {
         if (mBtnSave != null) {
             mBtnSave.setVisibility(View.VISIBLE);
         }
+        if (mBtnCancel != null) {
+            mBtnCancel.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideBtnSave() {
         if (mBtnSave != null) {
             mBtnSave.setVisibility(View.GONE);
+        }
+        if (mBtnCancel != null) {
+            mBtnCancel.setVisibility(View.GONE);
         }
     }
 
@@ -117,17 +130,18 @@ public class ProfileTabDetailFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public void setData(String name, String email, String phone, String address) {
-//        if (profileDetail == null) {
-//            return;
-//        }
-//        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getUserId() == profileDetail.getProfileId()) {
-//            showBtnEdit();
-//        }
-        mName.setText(name);
-        mEmail.setText(email);
-        mPhone.setText(phone);
-        mAddress.setText(address);
+    public void setProfile(Profile profile) {
+        mProfile = profile;
+    }
+
+    public void setData(Profile profile) {
+        if (profile != null) {
+            mId.setText(mProfile.getUserId());
+            mName.setText(mProfile.getDisplayName());
+            mPhone.setText(mProfile.getPhoneNumber());
+            mEmail.setText(mProfile.getEmail());
+            mAddress.setText(mProfile.getAddress());
+        }
     }
 
     public void setOnCallBackListener(OnCallBackListener listener) {
@@ -164,6 +178,15 @@ public class ProfileTabDetailFragment extends Fragment {
         if (mCallBackListener != null) {
             mCallBackListener.onEditProfile(name, phone, address);
         }
+    }
+
+    @OnClick(R.id.btn_cancel)
+    public void onBtnCancelClick() {
+        mName.setEnabled(false);
+        mPhone.setEnabled(false);
+        mAddress.setEnabled(false);
+        setData(mProfile);
+        showBtnEdit();
     }
 
     /**
