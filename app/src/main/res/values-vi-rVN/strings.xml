@@ -31,4 +31,6 @@
     <string name="slogan">NƠI TỐT NHẤT ĐỂ LỰA CHỌN</string>
     <string name="button_save">Lưu</string>
     <string name="button_cancel">Huỷ bỏ</string>
+    <string name="call">Gọi</string>
+    <string name="message">Nhắn tin</string>
 </resources>

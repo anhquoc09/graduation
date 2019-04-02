@@ -87,12 +87,12 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/estate_district"
+        app:layout_constraintBottom_toTopOf="@id/estate_province"
         app:layout_constraintStart_toEndOf="@id/estate_avatar"
         app:layout_constraintTop_toTopOf="@id/estate_avatar" />
 
     <TextView
-        android:id="@+id/estate_district"
+        android:id="@+id/estate_province"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Đắk Lắk"

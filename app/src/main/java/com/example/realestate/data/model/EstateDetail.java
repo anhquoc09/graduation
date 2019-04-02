@@ -59,11 +59,39 @@ public class EstateDetail implements Serializable {
         mStatus = status;
     }
 
-    public String getPoster() {
+    public String getOwnerName() {
         return mPoster;
     }
 
     public void setPoster(String poster) {
         mPoster = poster;
+    }
+
+    public String getOwnerAvatar() {
+        return "";
+    }
+
+    public String getOwnerProvince() {
+        return "";
+    }
+
+    public String getType() {
+        return "";
+    }
+
+    public String getAddress() {
+        return "";
+    }
+
+    public String getSquare() {
+        return "";
+    }
+
+    public String getDescription() {
+        return "";
+    }
+
+    public String getPhoneNumber() {
+        return "0348898600";
     }
 }

@@ -45,5 +45,7 @@
     <string name="profile_address">Address:</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="call">Call</string>
+    <string name="message">Mesage</string>
 
 </resources>

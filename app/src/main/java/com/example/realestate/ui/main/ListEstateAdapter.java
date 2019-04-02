@@ -158,7 +158,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
                 setTime(item.getTime());
                 setPrice(item.getPrice());
                 setStatus(item.getStatus());
-                setPoster(item.getPoster());
+                setPoster(item.getOwnerName());
             }
         }
     }
