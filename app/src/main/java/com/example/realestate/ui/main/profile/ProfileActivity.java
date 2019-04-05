@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.model.ProfileDetail;
 import com.example.realestate.ui.BaseActivity;
@@ -27,7 +28,7 @@ public class ProfileActivity extends BaseActivity
 
     public static final String TAG = ProfileActivity.class.getSimpleName();
 
-    public static final String PROFILE = "profile";
+    public static final String PROFILE = "profileId";
 
     @BindView(R.id.profile_avatar)
     ImageView mImageView;
@@ -38,6 +39,8 @@ public class ProfileActivity extends BaseActivity
     @BindView(R.id.profile_tab_layout)
     TabLayout mTabLayout;
 
+    private int mProfileId;
+
     private Profile mProfile;
 
     private ProfilePresenter mPresenter;
@@ -46,9 +49,9 @@ public class ProfileActivity extends BaseActivity
 
     private Unbinder mUnbinder;
 
-    public static Intent intentFor(Context context, Profile profile) {
+    public static Intent intentFor(Context context, int profileId) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(PROFILE, profile);
+        intent.putExtra(PROFILE, profileId);
 
         return intent;
     }
@@ -60,25 +63,14 @@ public class ProfileActivity extends BaseActivity
         mUnbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        mProfile = (Profile) intent.getSerializableExtra(PROFILE);
+        mProfileId = intent.getIntExtra(PROFILE, -1);
 
         initView();
         setupTabLayout();
         initPresenter();
     }
 
-    private void initPresenter() {
-        mPresenter = new ProfilePresenter();
-        mPresenter.attachView(this);
-        mPresenter.getProfile(mProfile.getUserId());
-    }
-
     private void initView() {
-        Glide.with(this)
-                .load(mProfile.getAvatar())
-                .placeholder(R.color.silver)
-                .into(mImageView);
-
         mPagerAdapter = new ProfilePagerAdapter(getSupportFragmentManager(), this, mProfile);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() - 1);
@@ -105,6 +97,13 @@ public class ProfileActivity extends BaseActivity
         }
     }
 
+    private void initPresenter() {
+        mPresenter = new ProfilePresenter();
+        mPresenter.attachView(this);
+//        mPresenter.getProfile(mProfileId);
+        mProfile = UserManager.getCurrentUser().getProfile();
+        onFetchProfileSuccess(mProfile);
+    }
 
     @Override
     public void onDestroy() {
@@ -118,8 +117,11 @@ public class ProfileActivity extends BaseActivity
     }
 
     @Override
-    public void onFetchProfileSuccess(ProfileDetail profile) {
-
+    public void onFetchProfileSuccess(Profile profile) {
+        Glide.with(this)
+                .load(mProfile.getAvatar())
+                .placeholder(R.color.silver)
+                .into(mImageView);
     }
 
     @Override

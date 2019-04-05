@@ -35,7 +35,7 @@ public class Profile implements Serializable {
     }
 
     public String getAvatar() {
-        return "https://scontent.fsgn5-5.fna.fbcdn.net/v/t1.0-9/51169446_2005577566222443_4290843324236955648_n.jpg?_nc_cat=108&_nc_oc=AQn9c3j7TswnQ8o7sKHPLwzCpGSLgHY3G_2GnSoW_N-vD_JsCYqUnY1-OsXsizm6xMI&_nc_ht=scontent.fsgn5-5.fna&oh=087ed093e9a458ad0c6017133548cb99&oe=5D4F0064";
+        return "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net";
     }
 
     public String getEmail() {

@@ -17,6 +17,7 @@ import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.widget.MainTabLayout;
 import com.example.realestate.utils.AndroidUtilities;
+import com.example.realestate.utils.PermissionUtils;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
@@ -85,6 +86,9 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mUnbinder = ButterKnife.bind(this);
+
+        PermissionUtils.Request_FINE_LOCATION(this, 1);
+        PermissionUtils.Request_COARSE_LOCATION(this, 2);
 
         initView();
 
@@ -268,12 +272,6 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.profile)
     public void onProfileClick() {
         User user = UserManager.getCurrentUser();
-        startActivity(ProfileActivity.intentFor(this,
-                user.getUserId(),
-                user.getAvatar(),
-                user.getDisplayName(),
-                user.getBirthday(),
-                user.getEmail(),
-                user.getPhoneNumber()));
+        startActivity(ProfileActivity.intentFor(this, user.getUserId()));
     }
 }

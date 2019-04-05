@@ -109,7 +109,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         @Override
         public void onClick(View v) {
-            mItemClickListener.onItemSelected(getItem());
+//            mItemClickListener.onItemSelected(getItem());
         }
 
         private EstateDetail getItem() {
@@ -153,12 +153,12 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         public void bindView(EstateDetail item) {
             if (item != null) {
-                setImage(item.getImage());
+                setImage(item.getImageUrl());
                 setTitle(item.getTitle());
                 setTime(item.getTime());
                 setPrice(item.getPrice());
                 setStatus(item.getStatus());
-                setPoster(item.getOwnerName());
+                setPoster(item.getOwnerDisplayName());
             }
         }
     }

@@ -38,7 +38,7 @@
             android:layout_gravity="start|bottom"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:paddingStart="30dp"
+            android:paddingStart="25dp"
             android:paddingEnd="0dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -55,12 +55,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="20dp"
+                android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:text="Anh Quốc"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:textStyle="bold" />
         </LinearLayout>
 
 

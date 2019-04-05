@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
@@ -46,7 +47,7 @@ public class ProfileTabDetailFragment extends Fragment {
     EditText mAddress;
 
     @BindView(R.id.btn_edit)
-    Button mBtnEdit;
+    ImageView mBtnEdit;
 
     @BindView(R.id.btn_save)
     Button mBtnSave;

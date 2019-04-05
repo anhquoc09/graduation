@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:src="#C4C4C4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -21,7 +23,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
-        android:text="Cần bán gấp nhà mặt tiền quận 1, giá rẻ TP.HCM"
+        android:text="Cần bán gấp nhà mặt tiền quận 1, giá rẻ TP.HCMMMMMMMMMM"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"

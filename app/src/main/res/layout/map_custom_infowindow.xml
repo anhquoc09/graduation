@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/estate_info_window"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_whie_fill">
+
+    <ImageView
+        android:id="@+id/estate_image"
+        android:layout_width="300dp"
+        android:layout_height="160dp"
+        android:background="@color/silver"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/estate_avatar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/avatar_default_small"
+        app:civ_border_color="@color/white"
+        app:civ_border_overlay="true"
+        app:civ_border_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/estate_image"
+        app:layout_constraintStart_toStartOf="@id/estate_image" />
+
+    <TextView
+        android:id="@+id/estate_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Anh Quốc"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/estate_avatar"
+        app:layout_constraintStart_toEndOf="@id/estate_avatar"
+        app:layout_constraintTop_toTopOf="@id/estate_avatar" />
+
+    <TextView
+        android:id="@+id/estate_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Cần bán gấp nhà mặt tiền quận 1, giá rẻ TP.HCM"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/estate_image"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/estate_image"
+        app:layout_constraintTop_toBottomOf="@id/estate_image" />
+
+    <ImageView
+        android:id="@+id/img_price"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_cash"
+        app:layout_constraintBottom_toBottomOf="@id/estate_price"
+        app:layout_constraintStart_toStartOf="@id/estate_title"
+        app:layout_constraintTop_toTopOf="@id/estate_price" />
+
+    <TextView
+        android:id="@+id/estate_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:text="10.000.000.000 VNĐ"
+        android:textColor="#018F73"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/estate_image"
+        app:layout_constraintStart_toEndOf="@id/img_price"
+        app:layout_constraintTop_toBottomOf="@id/estate_title" />
+
+    <ImageView
+        android:id="@+id/img_address"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_reminder_location"
+        app:layout_constraintBottom_toBottomOf="@id/estate_address"
+        app:layout_constraintStart_toStartOf="@id/estate_title"
+        app:layout_constraintTop_toTopOf="@id/estate_address" />
+
+    <TextView
+        android:id="@+id/estate_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:text="Khu vực: Quận 1, TP.HCM"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/estate_image"
+        app:layout_constraintStart_toEndOf="@id/img_address"
+        app:layout_constraintTop_toBottomOf="@id/estate_price" />
+
+    <ImageView
+        android:id="@+id/img_square"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_estate_square"
+        app:layout_constraintBottom_toBottomOf="@id/estate_square"
+        app:layout_constraintStart_toStartOf="@id/estate_title"
+        app:layout_constraintTop_toTopOf="@id/estate_square" />
+
+    <TextView
+        android:id="@+id/estate_square"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
+        android:text="Diện tích: 100m2"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/estate_image"
+        app:layout_constraintStart_toEndOf="@id/img_square"
+        app:layout_constraintTop_toBottomOf="@id/estate_address" />
+</androidx.constraintlayout.widget.ConstraintLayout>

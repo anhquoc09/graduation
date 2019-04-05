@@ -1,30 +1,67 @@
 package com.example.realestate.data.model;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class EstateDetail implements Serializable {
-    private String mImage;
-    private String mTitle;
-    private String mTime;
-    private String mPrice;
-    private String mStatus;
-    private String mPoster;
 
-    public EstateDetail(String image, String title, String time, String price, String status, String poster) {
-        mImage = image;
+    @SerializedName("imageUrl")
+    private String mImageUrl;
+    @SerializedName("title")
+    private String mTitle;
+    @SerializedName("time")
+    private String mTime;
+    @SerializedName("price")
+    private String mPrice;
+    @SerializedName("status")
+    private String mStatus;
+    @SerializedName("type")
+    private String mType;
+    @SerializedName("address")
+    private String mAddress;
+    @SerializedName("square")
+    private String mSquare;
+    @SerializedName("description")
+    private String mDescription;
+    @SerializedName("contact")
+    private String mContact;
+    @SerializedName("ownerId")
+    private int mOwnerId;
+    @SerializedName("ownerAvatar")
+    private String mOwnerAvatar;
+    @SerializedName("ownerDisplayName")
+    private String mOwnerDisplayName;
+    @SerializedName("ownerProvince")
+    private String mOwnerProvince;
+    @SerializedName("prosition")
+    private LatLng mPosition;
+
+    public EstateDetail(String imageUrl, String title, String time, String price, String status, String type, String address, String square, String description, String contact, int ownerId, String ownerAvatar, String ownerDisplayName, String ownerProvince, LatLng position) {
+        mImageUrl = imageUrl;
         mTitle = title;
         mTime = time;
         mPrice = price;
         mStatus = status;
-        mPoster = poster;
+        mType = type;
+        mAddress = address;
+        mSquare = square;
+        mDescription = description;
+        mContact = contact;
+        mOwnerId = ownerId;
+        mOwnerAvatar = ownerAvatar;
+        mOwnerDisplayName = ownerDisplayName;
+        mOwnerProvince = ownerProvince;
+        mPosition = position;
     }
 
-    public String getImage() {
-        return mImage;
+    public String getImageUrl() {
+        return mImageUrl;
     }
 
-    public void setImage(String image) {
-        mImage = image;
+    public void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
     }
 
     public String getTitle() {
@@ -59,39 +96,83 @@ public class EstateDetail implements Serializable {
         mStatus = status;
     }
 
-    public String getOwnerName() {
-        return mPoster;
-    }
-
-    public void setPoster(String poster) {
-        mPoster = poster;
-    }
-
-    public String getOwnerAvatar() {
-        return "";
-    }
-
-    public String getOwnerProvince() {
-        return "";
-    }
-
     public String getType() {
-        return "";
+        return mType;
+    }
+
+    public void setType(String type) {
+        mType = type;
     }
 
     public String getAddress() {
-        return "";
+        return mAddress;
+    }
+
+    public void setAddress(String address) {
+        mAddress = address;
     }
 
     public String getSquare() {
-        return "";
+        return mSquare;
+    }
+
+    public void setSquare(String square) {
+        mSquare = square;
     }
 
     public String getDescription() {
-        return "";
+        return mDescription;
     }
 
-    public String getPhoneNumber() {
-        return "0348898600";
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
+    public String getContact() {
+        return mContact;
+    }
+
+    public void setContact(String contact) {
+        mContact = contact;
+    }
+
+    public int getOwnerId() {
+        return mOwnerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        mOwnerId = ownerId;
+    }
+
+    public String getOwnerAvatar() {
+        return mOwnerAvatar;
+    }
+
+    public void setOwnerAvatar(String ownerAvatar) {
+        mOwnerAvatar = ownerAvatar;
+    }
+
+    public String getOwnerDisplayName() {
+        return mOwnerDisplayName;
+    }
+
+    public void setOwnerDisplayName(String ownerDisplayName) {
+        mOwnerDisplayName = ownerDisplayName;
+    }
+
+    public String getOwnerProvince() {
+        return mOwnerProvince;
+    }
+
+    public void setOwnerProvince(String ownerProvince) {
+        mOwnerProvince = ownerProvince;
+    }
+
+    public LatLng getPosition() {
+        return mPosition;
+    }
+
+    public void setPosition(LatLng position) {
+        mPosition = position;
     }
 }

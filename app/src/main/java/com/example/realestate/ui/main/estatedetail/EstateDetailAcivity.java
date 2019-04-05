@@ -71,7 +71,7 @@ public class EstateDetailAcivity extends BaseActivity {
     private Unbinder mUnbinder;
 
     public static Intent intentFor(Context context, EstateDetail estateDetail) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(context, EstateDetailAcivity.class);
         intent.putExtra(ESTATE_DETAIL, estateDetail);
         return intent;
     }
@@ -90,10 +90,10 @@ public class EstateDetailAcivity extends BaseActivity {
     private void bindData() {
         if (mEstateDetail != null) {
             setOwnerAvatar(mEstateDetail.getOwnerAvatar());
-            setOwnerName(mEstateDetail.getOwnerName());
+            setOwnerName(mEstateDetail.getOwnerDisplayName());
             setOwnerProvince(mEstateDetail.getOwnerProvince());
 
-            setEstateImage(mEstateDetail.getImage());
+            setEstateImage(mEstateDetail.getImageUrl());
             setEstateTitle(mEstateDetail.getTitle());
             setEstatePrice(mEstateDetail.getPrice());
             setEstateTimePost(mEstateDetail.getTime());
@@ -171,13 +171,13 @@ public class EstateDetailAcivity extends BaseActivity {
         contactDialog.setPositiveButton(R.string.call, (dialog, which) -> {
             Intent dial = new Intent();
             dial.setAction(Intent.ACTION_DIAL);
-            dial.setData(Uri.parse("tel:" + mEstateDetail.getPhoneNumber()));
+            dial.setData(Uri.parse("tel:" + mEstateDetail.getContact()));
             startActivity(dial);
         });
 
         contactDialog.setPositiveButton(R.string.message, (dialog, which) -> {
             Intent messaging = new Intent(Intent.ACTION_VIEW);
-            messaging.setDataAndType(Uri.parse("tel:" + mEstateDetail.getPhoneNumber()), "vnd.android-dir/mms-sms");
+            messaging.setDataAndType(Uri.parse("tel:" + mEstateDetail.getContact()), "vnd.android-dir/mms-sms");
             startActivity(messaging);
         });
         contactDialog.setCancelable(true);

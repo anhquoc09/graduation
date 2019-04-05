@@ -1,7 +1,7 @@
 package com.example.realestate.ui.main.profile;
 
-import com.example.realestate.data.model.ProfileDetail;
+import com.example.realestate.data.model.Profile;
 
 public interface ProfileView {
-    void onFetchProfileSuccess(ProfileDetail profile);
+    void onFetchProfileSuccess(Profile profile);
 }
