@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.estatedetail.EstateDetailAcivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.utils.PermissionUtils;
@@ -154,7 +155,7 @@ public class MapFragment extends Fragment
 
             for (EstateDetail estate : mList) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(estate.getPosition())
+                markerOptions.position(estate.getLatLng())
                         .title(estate.getTitle())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
@@ -206,7 +207,7 @@ public class MapFragment extends Fragment
     public void onInfoWindowClick(Marker marker) {
         EstateDetail estateDetail = (EstateDetail) marker.getTag();
         if (estateDetail != null) {
-//            startActivity(EstateDetailAcivity.intentFor(getActivity(), estateDetail));
+            startActivity(EstateDetailAcivity.intentFor(getActivity(), estateDetail));
         }
     }
 

@@ -35,10 +35,12 @@ public class EstateDetail implements Serializable {
     private String mOwnerDisplayName;
     @SerializedName("ownerProvince")
     private String mOwnerProvince;
-    @SerializedName("prosition")
-    private LatLng mPosition;
+    @SerializedName("latitude")
+    private String mLatitude;
+    @SerializedName("longitude")
+    private String mLongitude;
 
-    public EstateDetail(String imageUrl, String title, String time, String price, String status, String type, String address, String square, String description, String contact, int ownerId, String ownerAvatar, String ownerDisplayName, String ownerProvince, LatLng position) {
+    public EstateDetail(String imageUrl, String title, String time, String price, String status, String type, String address, String square, String description, String contact, int ownerId, String ownerAvatar, String ownerDisplayName, String ownerProvince, String latitude, String longitude) {
         mImageUrl = imageUrl;
         mTitle = title;
         mTime = time;
@@ -53,7 +55,8 @@ public class EstateDetail implements Serializable {
         mOwnerAvatar = ownerAvatar;
         mOwnerDisplayName = ownerDisplayName;
         mOwnerProvince = ownerProvince;
-        mPosition = position;
+        mLatitude = latitude;
+        mLongitude = longitude;
     }
 
     public String getImageUrl() {
@@ -168,11 +171,23 @@ public class EstateDetail implements Serializable {
         mOwnerProvince = ownerProvince;
     }
 
-    public LatLng getPosition() {
-        return mPosition;
+    public String getLongitude() {
+        return mLongitude;
     }
 
-    public void setPosition(LatLng position) {
-        mPosition = position;
+    public void setLongitude(String longitude) {
+        mLongitude = longitude;
+    }
+
+    public String getLatitude() {
+        return mLatitude;
+    }
+
+    public void setLatitude(String latitude) {
+        mLatitude = latitude;
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(Double.parseDouble(mLatitude), Double.parseDouble(mLongitude));
     }
 }

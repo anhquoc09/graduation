@@ -46,6 +46,14 @@
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="call">Call</string>
-    <string name="message">Mesage</string>
+    <string name="message">Message</string>
+    <string name="up_post">Up Post</string>
+    <string name="add_picture_text_hint">Click button on the right to add picture</string>
+    <string name="title">Title</string>
+    <string name="price">Price (VNĐ)</string>
+    <string name="square">Square</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
+    <string name="picture">Picture</string>
 
 </resources>

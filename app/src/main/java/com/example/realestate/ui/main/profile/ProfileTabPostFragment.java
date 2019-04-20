@@ -114,7 +114,8 @@ public class ProfileTabPostFragment extends Fragment
                 "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
                 "Hoàng Anh Quốc",
                 "TP.Hồ Chí Minh",
-                new LatLng(10.762879, 106.682189)));
+                "10.762879",
+                "106.682189"));
 
         list.add(new EstateDetail(
                 "https://images.foody.vn/res/g15/145153/prof/s576x330/foody-mobile-t2-jpg-738-635702210022756988.jpg",
@@ -131,7 +132,8 @@ public class ProfileTabPostFragment extends Fragment
                 "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
                 "Hoàng Anh Quốc",
                 "TP.Hồ Chí Minh",
-                new LatLng(10.764354, 106.682675)));
+                "10.764354",
+                "106.682675"));
 
         setData(list);
     }

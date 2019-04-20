@@ -15,6 +15,7 @@ import com.example.realestate.UserManager;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
+import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.ui.widget.MainTabLayout;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.PermissionUtils;
@@ -273,5 +274,14 @@ public class MainActivity extends BaseActivity
     public void onProfileClick() {
         User user = UserManager.getCurrentUser();
         startActivity(ProfileActivity.intentFor(this, user.getUserId()));
+    }
+
+    @OnClick(R.id.btn_up_post)
+    public void onUpPostClick() {
+        if (UserManager.isUserLoggedIn()) {
+            startActivity(UpPostActivity.intentFor(this));
+        } else {
+            startActivity(LoginActivity.intentFor(this));
+        }
     }
 }

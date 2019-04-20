@@ -33,4 +33,12 @@
     <string name="button_cancel">Huỷ bỏ</string>
     <string name="call">Gọi</string>
     <string name="message">Nhắn tin</string>
+    <string name="up_post">Đăng tin</string>
+    <string name="add_picture_text_hint">Bấm nút bên phải để thêm ảnh</string>
+    <string name="title">Tiêu đề</string>
+    <string name="price">Giá bán (VNĐ)</string>
+    <string name="square">Diện tích</string>
+    <string name="address">Địa chỉ</string>
+    <string name="description">Mô tả</string>
+    <string name="picture">Hình ảnh</string>
 </resources>

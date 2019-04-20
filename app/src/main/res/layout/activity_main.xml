@@ -32,7 +32,7 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
-                android:layout_marginEnd="60dp"
+                android:layout_marginEnd="55dp"
                 android:layout_marginStart="20dp"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -40,6 +40,15 @@
                 android:textColor="@color/white"
                 android:textSize="26sp"
                 android:textStyle="bold" />
+            
+            <ImageView
+                android:id="@+id/btn_up_post"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/ic_like_heart"/>
+
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.viewpager.widget.ViewPager

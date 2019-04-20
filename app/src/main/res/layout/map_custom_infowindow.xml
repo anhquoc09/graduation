@@ -4,13 +4,13 @@
     android:id="@+id/estate_info_window"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_whie_fill">
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/estate_image"
         android:layout_width="300dp"
         android:layout_height="160dp"
-        android:background="@color/silver"
+        android:background="@color/black"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:shadowColor="#40000000"
+        android:shadowDx="0"
+        android:shadowDy="4"
+        android:shadowRadius="4"
         android:text="Anh Quốc"
         android:textColor="@color/white"
         android:textSize="14sp"

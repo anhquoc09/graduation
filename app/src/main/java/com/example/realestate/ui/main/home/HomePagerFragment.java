@@ -12,8 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.home.map.MapFragment;
+import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.maps.model.LatLng;
@@ -200,7 +203,8 @@ public class HomePagerFragment extends Fragment
                 "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
                 "Hoàng Anh Quốc",
                 "TP.Hồ Chí Minh",
-                new LatLng(10.762879, 106.682189)));
+                "10.762879",
+                "106.682189"));
 
         list.add(new EstateDetail(
                 "https://images.foody.vn/res/g15/145153/prof/s576x330/foody-mobile-t2-jpg-738-635702210022756988.jpg",
@@ -217,7 +221,8 @@ public class HomePagerFragment extends Fragment
                 "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
                 "Hoàng Anh Quốc",
                 "TP.Hồ Chí Minh",
-                new LatLng(10.764354, 106.682675)));
+                "10.764354",
+                "106.682675"));
 
         fetchDataSuccess(list);
     }
@@ -261,6 +266,15 @@ public class HomePagerFragment extends Fragment
     public void onBtnSearchClick() {
 
     }
+
+//    @OnClick(R.id.btn_up_post)
+//    public void onUpPostClick() {
+//        if (UserManager.isUserLoggedIn()) {
+//            startActivity(UpPostActivity.intentFor(getActivity()));
+//        } else {
+//            startActivity(LoginActivity.intentFor(getActivity()));
+//        }
+//    }
 
     @Override
     public void onMoveMap() {

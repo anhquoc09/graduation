@@ -73,7 +73,7 @@
         android:id="@+id/btn_login_google"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:background="@drawable/bg_whie_fill"
+        android:background="@drawable/bg_white_fill"
         android:orientation="horizontal"
         android:elevation="4dp"
         app:layout_constraintCircleRadius="10dp"

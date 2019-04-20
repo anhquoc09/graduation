@@ -10,7 +10,7 @@
         android:id="@+id/estate_image"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:src="#C4C4C4"
+        android:background="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -71,12 +71,15 @@
             android:src="@drawable/ic_like_heart" />
     </FrameLayout>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/estate_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:src="@drawable/avatar_default_small"
+        app:civ_border_color="@color/white"
+        app:civ_border_overlay="true"
+        app:civ_border_width="1dp"
         app:layout_constraintStart_toStartOf="@id/estate_title"
         app:layout_constraintTop_toBottomOf="@id/estate_price" />
 
@@ -123,7 +126,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:drawableStart="@drawable/ic_type_estate"
+        android:drawableStart="@drawable/ic_reminder_location"
         android:drawablePadding="10dp"
         android:text="Khu vực: Quận 1, TP.HCM"
         android:textColor="@color/black"
@@ -172,7 +175,7 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="#C4C4C4"
         app:layout_constraintTop_toBottomOf="@id/estate_contact" />

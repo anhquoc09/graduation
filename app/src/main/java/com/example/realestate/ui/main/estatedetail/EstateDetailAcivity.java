@@ -12,9 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
+import com.example.realestate.ui.main.profile.ProfileActivity;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -70,7 +75,7 @@ public class EstateDetailAcivity extends BaseActivity {
 
     private Unbinder mUnbinder;
 
-    public static Intent intentFor(Context context, EstateDetail estateDetail) {
+    public static Intent intentFor(Context context, Serializable estateDetail) {
         Intent intent = new Intent(context, EstateDetailAcivity.class);
         intent.putExtra(ESTATE_DETAIL, estateDetail);
         return intent;
@@ -116,6 +121,7 @@ public class EstateDetailAcivity extends BaseActivity {
         Glide.with(this)
                 .load(ownerAvatar)
                 .placeholder(R.color.silver)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(mOwnerAvatar);
     }
 
@@ -128,6 +134,11 @@ public class EstateDetailAcivity extends BaseActivity {
     }
 
     public void setEstateImage(String estateImage) {
+        Glide.with(this)
+                .load(estateImage)
+                .placeholder(R.color.silver)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .into(mEstateImage);
     }
 
     public void setEstateTitle(String estateTitle) {
@@ -184,8 +195,8 @@ public class EstateDetailAcivity extends BaseActivity {
         contactDialog.show();
     }
 
-    @OnClick({R.id.estate_avatar, R.id.estate_province})
+    @OnClick({R.id.estate_avatar, R.id.estate_province, R.id.estate_display_name})
     public void onOwnerDetailClick() {
-
+        startActivity(ProfileActivity.intentFor(this, mEstateDetail.getOwnerId()));
     }
 }

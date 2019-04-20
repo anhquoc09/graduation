@@ -109,7 +109,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         @Override
         public void onClick(View v) {
-//            mItemClickListener.onItemSelected(getItem());
+            mItemClickListener.onItemSelected(getItem());
         }
 
         private EstateDetail getItem() {
