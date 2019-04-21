@@ -41,4 +41,5 @@
     <string name="address">Địa chỉ</string>
     <string name="description">Mô tả</string>
     <string name="picture">Hình ảnh</string>
+    <string name="estate_location">Giữ và di chuyển đến vị trí bất động sản của bạn</string>
 </resources>

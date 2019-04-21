@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.estatedetail.EstateDetailAcivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
+import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -46,7 +49,6 @@ import butterknife.Unbinder;
 public class MapFragment extends Fragment
         implements MapView,
         OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MapFragment.class.getSimpleName();
@@ -172,7 +174,6 @@ public class MapFragment extends Fragment
         mGoogleMap.setInfoWindowAdapter(mMapAdapter);
         mGoogleMap.setOnInfoWindowClickListener(this);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         Activity activity = getActivity();
         if (activity != null) {
@@ -188,19 +189,17 @@ public class MapFragment extends Fragment
                 mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
                 mGoogleMap.setMyLocationEnabled(true);
-                mGoogleMap.setOnMyLocationButtonClickListener(this);
             }
         }
-        LatLng latLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        getMyLocation();
 
         notifyDataChange();
     }
 
-    @Override
-    public boolean onMyLocationButtonClick() {
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
-        return false;
+    private void getMyLocation() {
+        mGoogleMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
     }
 
     @Override
@@ -209,6 +208,20 @@ public class MapFragment extends Fragment
         if (estateDetail != null) {
             startActivity(EstateDetailAcivity.intentFor(getActivity(), estateDetail));
         }
+    }
+
+    @OnClick(R.id.btn_up_post)
+    public void onUpPostClick() {
+        if (UserManager.isUserLoggedIn()) {
+            startActivity(UpPostActivity.intentFor(getActivity()));
+        } else {
+            startActivity(LoginActivity.intentFor(getActivity()));
+        }
+    }
+
+    @OnClick(R.id.btn_my_location)
+    public void onMyLocationClick() {
+        getMyLocation();
     }
 
     /**

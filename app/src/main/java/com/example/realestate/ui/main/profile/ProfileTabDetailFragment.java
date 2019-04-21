@@ -188,6 +188,7 @@ public class ProfileTabDetailFragment extends Fragment {
         mAddress.setEnabled(false);
         setData(mProfile);
         showBtnEdit();
+        hideBtnSave();
     }
 
     /**

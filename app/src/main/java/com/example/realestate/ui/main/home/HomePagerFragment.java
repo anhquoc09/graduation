@@ -11,24 +11,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.example.realestate.R;
-import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.home.map.MapFragment;
-import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.AndroidUtilities;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -266,15 +263,6 @@ public class HomePagerFragment extends Fragment
     public void onBtnSearchClick() {
 
     }
-
-//    @OnClick(R.id.btn_up_post)
-//    public void onUpPostClick() {
-//        if (UserManager.isUserLoggedIn()) {
-//            startActivity(UpPostActivity.intentFor(getActivity()));
-//        } else {
-//            startActivity(LoginActivity.intentFor(getActivity()));
-//        }
-//    }
 
     @Override
     public void onMoveMap() {

@@ -55,5 +55,6 @@
     <string name="address">Address</string>
     <string name="description">Description</string>
     <string name="picture">Picture</string>
+    <string name="estate_location">Hold and drag to your estate location</string>
 
 </resources>
