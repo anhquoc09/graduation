@@ -2,13 +2,17 @@ package com.example.realestate.ui.main.home.map;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +22,6 @@ import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.estatedetail.EstateDetailAcivity;
-import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
@@ -37,6 +40,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -72,7 +76,9 @@ public class MapFragment extends Fragment
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            mLocation = location;
+            if (location != null) {
+                mLocation = location;
+            }
         }
 
         @Override
@@ -175,31 +181,55 @@ public class MapFragment extends Fragment
         mGoogleMap.setOnInfoWindowClickListener(this);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        initMyLocation();
+        notifyDataChange();
+    }
+
+    private void initMyLocation() {
+
         Activity activity = getActivity();
         if (activity != null) {
             mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            boolean gps_enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean network_enabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (!gps_enabled && !network_enabled) {
+                new AlertDialog.Builder(activity)
+                        .setTitle(R.string.gps_not_found_title)
+                        .setMessage(R.string.gps_not_found_message)
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 PermissionUtils.Request_FINE_LOCATION(activity, 1);
-
             } else {
-                mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
                 mGoogleMap.setMyLocationEnabled(true);
+                Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location != null) {
+                    mLocation = location;
+                }
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
             }
         }
-        getMyLocation();
 
-        notifyDataChange();
-    }
-
-    private void getMyLocation() {
-        mGoogleMap.animateCamera(
+        mGoogleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
                         new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+    }
+
+    private void animateToMyLocation() {
+        if (mGoogleMap.isMyLocationEnabled()) {
+            mGoogleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+        } else  {
+            initMyLocation();
+        }
     }
 
     @Override
@@ -221,7 +251,7 @@ public class MapFragment extends Fragment
 
     @OnClick(R.id.btn_my_location)
     public void onMyLocationClick() {
-        getMyLocation();
+        animateToMyLocation();
     }
 
     /**

@@ -186,7 +186,7 @@ public class HomePagerFragment extends Fragment
         List<EstateDetail> list = new ArrayList<>();
 
         list.add(new EstateDetail(
-                "https://sites.google.com/site/camnangtansv/_/rsrc/1396354609847/truong-dhai-hoc-khoa-hoc-tu-nhien/cac-co-so-cua-truong/29.jpg",
+                "https://firebasestorage.googleapis.com/v0/b/local-receiver-234415.appspot.com/o/spiderman2.jpg?alt=media&token=c628b0b4-64d5-4122-af96-18ad57d96e3a",
                 "Cần bán nhà mặt tiền Quận 5, Tp.HCM",
                 "Thứ hai, 01/04/2019",
                 "10.000",
@@ -197,7 +197,7 @@ public class HomePagerFragment extends Fragment
                 "Nhà 11 tầng có sân thượng, khuôn viên rộng rãi. Ahihi Ahoho Ahaha Ahehe",
                 "0348898600",
                 1512444,
-                "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
+                "https://firebasestorage.googleapis.com/v0/b/local-receiver-234415.appspot.com/o/spiderman2.jpg?alt=media&token=c628b0b4-64d5-4122-af96-18ad57d96e3a",
                 "Hoàng Anh Quốc",
                 "TP.Hồ Chí Minh",
                 "10.762879",

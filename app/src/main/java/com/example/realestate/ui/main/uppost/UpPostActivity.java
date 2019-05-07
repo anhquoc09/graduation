@@ -9,10 +9,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.realestate.R;
 import com.example.realestate.ui.BaseActivity;
@@ -33,6 +35,8 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,10 +47,26 @@ public class UpPostActivity extends BaseActivity
         implements UpPostView,
         OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerDragListener {
+        GoogleMap.OnMarkerDragListener,
+        ImageRecyclerViewAdapter.OnImageClickListener {
+
+    @BindView(R.id.up_title)
+    EditText mTitle;
+
+    @BindView(R.id.up_price)
+    EditText mPrice;
+
+    @BindView(R.id.up_square)
+    EditText mSquare;
 
     @BindView(R.id.up_address)
     EditText mAddressEditText;
+
+    @BindView(R.id.up_list_image)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.up_description)
+    EditText mDescription;
 
     private Unbinder mUnbinder;
 
@@ -69,6 +89,12 @@ public class UpPostActivity extends BaseActivity
     private DebounceEditText mDebounceEditText;
 
     private MarkerOptions mMarkerOptions = new MarkerOptions();
+
+    private ImageRecyclerViewAdapter mImageAdapter;
+
+    int PICK_IMAGE_MULTIPLE = 1;
+    String imageEncoded;
+    List<String> imagesEncodedList;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -104,28 +130,92 @@ public class UpPostActivity extends BaseActivity
         initPresenter();
     }
 
-    @Override
-    protected void onDestroy() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
-        if (mDebounceEditText != null) {
-            mDebounceEditText.destroy();
-        }
-        if (mPresenter.isViewAttached()) {
-            mPresenter.detachView();
-        }
-        super.onDestroy();
+    private void initView() {
+        initMap();
+        initGeoCoder();
+        initAddressListener();
+        initRecyclerView();
     }
 
-    @Override
-    public void onPostSuccess() {
-        AndroidUtilities.showToast("Your post is upload success!");
+    private void initMap() {
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.up_map);
+        if (supportMapFragment != null) {
+            supportMapFragment.getMapAsync(this);
+        }
     }
 
-    @Override
-    public void onPostFailed(String message) {
-        AndroidUtilities.showToast(message);
+    private void initGeoCoder() {
+        mGeocoder = new Geocoder(this, Locale.getDefault());
+    }
+
+    private void initAddressListener() {
+        mDebounceEditText = new DebounceEditText(mAddressEditText, result -> {
+            mAddress = result.toString();
+            updateLocation();
+        });
+    }
+
+    private void initRecyclerView() {
+        mImageAdapter = new ImageRecyclerViewAdapter();
+        mImageAdapter.setOnImageClickListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mImageAdapter);
+    }
+
+    private void initPresenter() {
+        mPresenter = new UpPostPresenter();
+        mPresenter.attachView(this);
+    }
+
+    private void initMyLocation() {
+        mGoogleMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+    }
+
+    private void initMarker() {
+        mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        mMarkerOptions.position(mLatLng)
+                .title(getResources().getString(R.string.estate_location))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                .draggable(true);
+        mMarker = mGoogleMap.addMarker(mMarkerOptions);
+        mMarker.setDraggable(true);
+        mMarker.showInfoWindow();
+        moveMarker(mLatLng);
+    }
+
+    private void updateLocation() {
+        if (mGoogleMap != null) {
+            moveMarker(getLocationFromAddress(mAddress));
+        }
+    }
+
+    private void moveMarker(LatLng latLng) {
+        if (latLng != null && mMarker != null) {
+            mLatLng = latLng;
+            mMarker.setPosition(mLatLng);
+            if (mGoogleMap != null) {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15));
+            }
+        }
+    }
+
+    private LatLng getLocationFromAddress(String strAddress) {
+        if (!TextUtils.isEmpty(strAddress) && mGeocoder != null) {
+            List<Address> address;
+            try {
+                address = mGeocoder.getFromLocationName(mAddress, 5);
+                if (address != null && !address.isEmpty()) {
+                    Address location = address.get(0);
+                    return new LatLng(location.getLatitude(), location.getLongitude());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -147,9 +237,11 @@ public class UpPostActivity extends BaseActivity
             PermissionUtils.Request_FINE_LOCATION(this, 1);
 
         } else {
+            mGoogleMap.setMyLocationEnabled(true);
             mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
         }
+        initMyLocation();
         initMarker();
     }
 
@@ -174,84 +266,80 @@ public class UpPostActivity extends BaseActivity
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mLatLng));
     }
 
-    private void initView() {
-        initMap();
-        initGeoCoder();
-        initAddressListener();
-    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            if (requestCode == PICK_IMAGE_MULTIPLE && resultCode == RESULT_OK && null != data) {
 
-    private void initMap() {
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.up_map);
-        if (supportMapFragment != null) {
-            supportMapFragment.getMapAsync(this);
-        }
-    }
+                mPresenter.pickImageResultOK(data);
 
-    private void initGeoCoder() {
-        mGeocoder = new Geocoder(this, Locale.getDefault());
-    }
-
-    private void initAddressListener() {
-        mDebounceEditText = new DebounceEditText(mAddressEditText, result -> {
-            mAddress = result.toString();
-            updateLocation();
-        });
-    }
-
-    private void initPresenter() {
-        mPresenter = new UpPostPresenter();
-        mPresenter.attachView(this);
-    }
-
-    private void initMarker() {
-        mLatLng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-        mMarkerOptions.position(mLatLng)
-                .title(getResources().getString(R.string.estate_location))
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .draggable(true);
-        mMarker = mGoogleMap.addMarker(mMarkerOptions);
-        mMarker.setDraggable(true);
-        mMarker.showInfoWindow();
-        moveMarker(mLatLng);
-    }
-
-    private void updateLocation() {
-        if (mGoogleMap != null) {
-            moveMarker(getLocationFromAddress(mAddress));
-        }
-    }
-
-    private void moveMarker(LatLng latLng) {
-        if (latLng != null && mMarker != null) {
-            mLatLng = latLng;
-            mMarker.setPosition(latLng);
-            if (mGoogleMap != null) {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            } else {
+                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
+        } catch (Exception e) {
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private LatLng getLocationFromAddress(String strAddress) {
-        if (!TextUtils.isEmpty(strAddress) && mGeocoder != null) {
-            List<Address> address;
-            try {
-                address = mGeocoder.getFromLocationName(mAddress, 5);
-                if (address == null) {
-                    return null;
-                }
-                Address location = address.get(0);
-                location.getLatitude();
-                location.getLongitude();
-                return new LatLng((location.getLatitude() * 1E6), (location.getLongitude() * 1E6));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    @Override
+    protected void onDestroy() {
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
         }
-        return null;
+        if (mDebounceEditText != null) {
+            mDebounceEditText.destroy();
+        }
+        if (mPresenter.isViewAttached()) {
+            mPresenter.detachView();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void addImage(Uri imageUri) {
+        mImageAdapter.addImage(imageUri);
+    }
+
+    @Override
+    public void setImageList(List<Uri> imageListUri) {
+        mImageAdapter.setImageList(imageListUri);
+    }
+
+    @Override
+    public void onPostSuccess() {
+        AndroidUtilities.showToast("Your post is upload success!");
+    }
+
+    @Override
+    public void onPostFailed(String message) {
+        AndroidUtilities.showToast(message);
     }
 
     @OnClick(R.id.btn_up_post)
     public void onUpClick() {
         mPresenter.upPost();
+    }
+
+    @OnClick(R.id.btn_add_image)
+    public void onAddImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_MULTIPLE);
+    }
+
+    @Override
+    public void onViewImageClick(List<Uri> imageUrlList, int position) {
+//                Intent intent = new Intent(mContext, SpacePhotoActivity.class);
+//                intent.putExtra(SpacePhotoActivity.EXTRA_SPACE_PHOTO, spacePhoto);
+//                startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteImageClick(int position) {
+        mPresenter.deleteImage(position);
     }
 }

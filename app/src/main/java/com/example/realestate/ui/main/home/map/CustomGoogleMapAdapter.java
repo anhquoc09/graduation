@@ -55,13 +55,13 @@ public class CustomGoogleMapAdapter implements GoogleMap.InfoWindowAdapter {
                     .load(mEstateDetail.getImageUrl())
                     .placeholder(R.color.silver)
                     .override(AndroidUtilities.dp(300), AndroidUtilities.dp(160))
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mEstateImage);
 
             Glide.with(mContext)
                     .load(mEstateDetail.getOwnerAvatar())
                     .placeholder(R.drawable.avatar_default_small)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mOwnerAvatar);
             mOwnerName.setText(mEstateDetail.getOwnerDisplayName());
             mEstateTitle.setText(mEstateDetail.getTitle());

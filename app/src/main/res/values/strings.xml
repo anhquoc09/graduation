@@ -54,7 +54,11 @@
     <string name="square">Square</string>
     <string name="address">Address</string>
     <string name="description">Description</string>
-    <string name="picture">Picture</string>
+    <string name="image">Image</string>
     <string name="estate_location">Hold and drag to your estate location</string>
+    <string name="gps_not_found_title">Location service is disabled</string>
+    <string name="gps_not_found_message">Do you want to enable Location service?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

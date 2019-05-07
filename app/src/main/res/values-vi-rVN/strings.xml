@@ -40,6 +40,10 @@
     <string name="square">Diện tích</string>
     <string name="address">Địa chỉ</string>
     <string name="description">Mô tả</string>
-    <string name="picture">Hình ảnh</string>
+    <string name="image">Hình ảnh</string>
     <string name="estate_location">Giữ và di chuyển đến vị trí bất động sản của bạn</string>
+    <string name="gps_not_found_title">Định vị GPS đã tắt</string>
+    <string name="gps_not_found_message">Bạn có muốn kích hoạt định vị?</string>
+    <string name="no">Không</string>
+    <string name="yes">Có</string>
 </resources>

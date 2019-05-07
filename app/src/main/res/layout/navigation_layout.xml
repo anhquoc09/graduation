@@ -58,7 +58,7 @@
                 android:drawablePadding="20dp"
                 android:ellipsize="end"
                 android:text="Anh Quốc"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>

@@ -155,15 +155,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="@string/picture"
-                android:textColor="@color/black" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
@@ -179,23 +170,23 @@
                     android:text="@string/add_picture_text_hint"
                     android:textColor="#C4C4C4"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_add_picture"
+                    app:layout_constraintEnd_toStartOf="@id/btn_add_image"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Picture list -->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/up_list_picture"
+                    android:id="@+id/up_list_image"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_add_picture"
+                    app:layout_constraintEnd_toStartOf="@id/btn_add_image"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Button add picture-->
                 <ImageView
-                    android:id="@+id/btn_add_picture"
+                    android:id="@+id/btn_add_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_vertical"
