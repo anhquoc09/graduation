@@ -1,7 +1,7 @@
 package com.example.realestate.data.remote;
 
 import com.example.realestate.EstateApplication;
-import com.example.realestate.data.remote.rest.UserService;
+import com.example.realestate.data.remote.rest.EstateService;
 
 /**
  * @author anhquoc09
@@ -12,7 +12,7 @@ public class ServiceProvider {
 
     private static RestClient sRestClient;
 
-    private static UserService sUserService;
+    private static EstateService sEstateService;
 
     private ServiceProvider() {
     }
@@ -30,16 +30,16 @@ public class ServiceProvider {
         return client;
     }
 
-    public static synchronized UserService getUserService() {
-        UserService userService = sUserService;
-        if (userService == null) {
+    public static synchronized EstateService getEstateService() {
+        EstateService estateService = sEstateService;
+        if (estateService == null) {
             synchronized (ServiceProvider.class) {
-                userService = sUserService;
-                if (userService == null) {
-                    userService = sUserService = getRestClient().create(UserService.class);
+                estateService = sEstateService;
+                if (estateService == null) {
+                    estateService = sEstateService = getRestClient().create(EstateService.class);
                 }
             }
         }
-        return userService;
+        return estateService;
     }
 }

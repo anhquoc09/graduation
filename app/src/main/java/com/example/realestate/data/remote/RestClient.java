@@ -31,7 +31,7 @@ public class RestClient {
 
     public static final String TAG = RestClient.class.getSimpleName();
 
-    private static final String baseUrl = "https://www.google.com.vn/";
+    private static final String BASE_URL = "https://realstatebackend.herokuapp.com";
 
     private static final long CACHE_SIZE = 10 * 1024 * 1024;
 
@@ -48,21 +48,15 @@ public class RestClient {
     private RestClient(Context context) {
         final Cache cache = new Cache(context.getCacheDir(), CACHE_SIZE);
 
-        final Interceptor requestInterceptor = new DefaultParamsInterceptor(
-                AndroidUtilities.getDeviceId(),
-                AndroidUtilities.getDeviceName(),
-                BuildConfig.VERSION_NAME);
-
         final HttpLoggingInterceptor httpLoggingInterceptor = defaultLoggingInterceptor();
 
-        mClient = createClient(cache, null, requestInterceptor,
-                httpLoggingInterceptor, 60, 60, 60);
+        mClient = createClient(cache, null, httpLoggingInterceptor, 60, 60, 60);
 
         mGson = new GsonBuilder().create();
 
         mRxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
 
-        mRetrofit = createRetrofit(baseUrl, mClient, mGson, mRxJavaCallAdapterFactory);
+        mRetrofit = createRetrofit(BASE_URL, mClient, mGson, mRxJavaCallAdapterFactory);
     }
 
     public static RestClient getInstance(Context context) {
@@ -104,7 +98,6 @@ public class RestClient {
 
     private OkHttpClient createClient(Cache cache,
                                       SSLContext sslContext,
-                                      Interceptor requestInterceptor,
                                       HttpLoggingInterceptor loggingInterceptor,
                                       long readTimeOut /* seconds */,
                                       long writeTimeout /* seconds */,
@@ -112,9 +105,6 @@ public class RestClient {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (cache != null) {
             builder.cache(cache);
-        }
-        if (requestInterceptor != null) {
-            builder.addInterceptor(requestInterceptor);
         }
         if (loggingInterceptor != null) {
             builder.addInterceptor(loggingInterceptor);

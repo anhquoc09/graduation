@@ -60,5 +60,15 @@
     <string name="gps_not_found_message">Do you want to enable Location service?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="status_available">Available</string>
+    <string name="status_sold">Sold</string>
+    <string name="estate_apartment">Apartment</string>
+    <string name="estate_townhouse">Townhouse</string>
+    <string name="estate_villa">Villa</string>
+    <string name="estate_office">Office</string>
+    <string name="estate_warehouse">Warehouse</string>
+    <string name="estate_land">Land</string>
+    <string name="contact_now">Contact now</string>
+    <string name="contact_mess">Select the method to contact the owner</string>
 
 </resources>

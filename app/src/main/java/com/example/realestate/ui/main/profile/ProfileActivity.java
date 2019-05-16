@@ -49,7 +49,7 @@ public class ProfileActivity extends BaseActivity
 
     private Unbinder mUnbinder;
 
-    public static Intent intentFor(Context context, int profileId) {
+    public static Intent intentFor(Context context, String profileId) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra(PROFILE, profileId);
 

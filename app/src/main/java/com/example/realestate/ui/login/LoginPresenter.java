@@ -9,7 +9,7 @@ import com.example.realestate.UserManager;
 import com.example.realestate.data.model.LoginData;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.LoginResponse;
-import com.example.realestate.data.remote.rest.UserService;
+import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
@@ -30,13 +30,13 @@ public class LoginPresenter extends BasePresenter<LoginView> {
 
     private Context mContext;
 
-    private UserService mUserService;
+    private EstateService mEstateService;
 
     private final CompositeSubscription mSubscriptions = new CompositeSubscription();
 
     public LoginPresenter() {
         mContext = EstateApplication.getInstance().getApplicationContext();
-        mUserService = ServiceProvider.getUserService();
+        mEstateService = ServiceProvider.getEstateService();
     }
 
     public void login(String accessToken) {
@@ -58,7 +58,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         UserManager.setGoogleToken(accessToken);
         mView.onLoginSuccess();
 //        showLoadingProgress();
-//        Subscription subscription = mUserService.loginGoogle(accessToken,
+//        Subscription subscription = mEstateService.loginGoogle(accessToken,
 //                null,
 //                null, AndroidUtilities.currentOsVersion())
 //                .subscribeOn(SchedulerProvider.io())

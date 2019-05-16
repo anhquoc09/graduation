@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -53,9 +53,12 @@ import butterknife.Unbinder;
 public class MapFragment extends Fragment
         implements MapView,
         OnMapReadyCallback,
+        GoogleMap.OnCameraIdleListener,
         GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MapFragment.class.getSimpleName();
+
+    private static final float LOAD_DISTANCE = 2000;
 
     private Unbinder mUnbinder;
 
@@ -70,6 +73,10 @@ public class MapFragment extends Fragment
     private LocationManager mLocationManager;
 
     private Location mLocation;
+
+    private Location mOldCamPosition;
+
+    private LatLng mMarkerSelectedPosition;
 
     private final List<EstateDetail> mList = new ArrayList<>();
 
@@ -163,8 +170,8 @@ public class MapFragment extends Fragment
 
             for (EstateDetail estate : mList) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(estate.getLatLng())
-                        .title(estate.getTitle())
+                markerOptions.position(new LatLng(estate.getLat(), estate.getLong()))
+                        .title(estate.getName())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
                 Marker marker = mGoogleMap.addMarker(markerOptions);
@@ -180,7 +187,7 @@ public class MapFragment extends Fragment
         mGoogleMap.setInfoWindowAdapter(mMapAdapter);
         mGoogleMap.setOnInfoWindowClickListener(this);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        mGoogleMap.setOnCameraIdleListener(this);
         initMyLocation();
         notifyDataChange();
     }
@@ -216,18 +223,25 @@ public class MapFragment extends Fragment
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
             }
         }
-
+        mOldCamPosition = mLocation;
         mGoogleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+                        new LatLng(mOldCamPosition.getLatitude(),
+                                mOldCamPosition.getLongitude()),
+                        15));
+        mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
     }
 
     private void animateToMyLocation() {
         if (mGoogleMap.isMyLocationEnabled()) {
+            mOldCamPosition = mLocation;
             mGoogleMap.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
-        } else  {
+                            new LatLng(mOldCamPosition.getLatitude(),
+                                    mOldCamPosition.getLongitude()),
+                            15));
+
+        } else {
             initMyLocation();
         }
     }
@@ -254,12 +268,27 @@ public class MapFragment extends Fragment
         animateToMyLocation();
     }
 
+    @Override
+    public void onCameraIdle() {
+        LatLng target = mGoogleMap.getCameraPosition().target;
+        Location newLocation = new Location("");
+        newLocation.setLatitude(target.latitude);
+        newLocation.setLongitude(target.longitude);
+        float distance = mOldCamPosition.distanceTo(new Location(newLocation));
+
+        if (distance >= LOAD_DISTANCE) {
+            mOldCamPosition = newLocation;
+
+            if (mCallBackListener != null) {
+                mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
+            }
+        }
+    }
+
     /**
      * {@link OnCallBackListener}
      */
     public interface OnCallBackListener {
-        void onMoveMap();
-
-        void onRefreshMap();
+        void getListInMap(double latitude, double longitude);
     }
 }

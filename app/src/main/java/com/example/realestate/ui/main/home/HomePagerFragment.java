@@ -23,7 +23,6 @@ import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -105,8 +104,6 @@ public class HomePagerFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-//        mPresenter.fetchData();
-        fakeData();
     }
 
     @Override
@@ -182,51 +179,9 @@ public class HomePagerFragment extends Fragment
         mPresenter.attachView(this);
     }
 
-    private void fakeData() {
-        List<EstateDetail> list = new ArrayList<>();
-
-        list.add(new EstateDetail(
-                "https://firebasestorage.googleapis.com/v0/b/local-receiver-234415.appspot.com/o/spiderman2.jpg?alt=media&token=c628b0b4-64d5-4122-af96-18ad57d96e3a",
-                "Cần bán nhà mặt tiền Quận 5, Tp.HCM",
-                "Thứ hai, 01/04/2019",
-                "10.000",
-                "Available",
-                "Bán nhà",
-                "227 Nguyễn Văn Cừ, Phường 4, quận 5, Tp.HCMmmmmmmmmmmmmmmmm",
-                "10.000m2",
-                "Nhà 11 tầng có sân thượng, khuôn viên rộng rãi. Ahihi Ahoho Ahaha Ahehe",
-                "0348898600",
-                1512444,
-                "https://firebasestorage.googleapis.com/v0/b/local-receiver-234415.appspot.com/o/spiderman2.jpg?alt=media&token=c628b0b4-64d5-4122-af96-18ad57d96e3a",
-                "Hoàng Anh Quốc",
-                "TP.Hồ Chí Minh",
-                "10.762879",
-                "106.682189"));
-
-        list.add(new EstateDetail(
-                "https://images.foody.vn/res/g15/145153/prof/s576x330/foody-mobile-t2-jpg-738-635702210022756988.jpg",
-                "Cần bán căn hộ chung cư Quận 1, Tp.HCM",
-                "Thứ hai, 01/04/2019",
-                "10.000",
-                "Available",
-                "Bán nhà",
-                "235 Đường Nguyễn Văn Cừ, Phường Nguyễn Cư Trinh, Quận 1, Hồ Chí Minh",
-                "100m2",
-                "Nhà nhiều phòng, có trung tâm mua sắm. Ahihi Ahoho Ahaha Ahehe",
-                "0348898600",
-                1512444,
-                "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net",
-                "Hoàng Anh Quốc",
-                "TP.Hồ Chí Minh",
-                "10.764354",
-                "106.682675"));
-
-        fetchDataSuccess(list);
-    }
-
-    private void fetchData() {
+    private void fetchData(double latitude, double longitude) {
         if (mPresenter != null) {
-//            mPresenter.fetchData();
+            mPresenter.fetchData(latitude, longitude);
         }
     }
 
@@ -265,18 +220,12 @@ public class HomePagerFragment extends Fragment
     }
 
     @Override
-    public void onMoveMap() {
-        fetchData();
-    }
-
-    @Override
-    public void onRefreshMap() {
-        fetchData();
+    public void getListInMap(double latitude, double longitude) {
+        fetchData(latitude, longitude);
     }
 
     @Override
     public void onRefreshList() {
-        fetchData();
         AndroidUtilities.showToast("Refresh");
     }
 

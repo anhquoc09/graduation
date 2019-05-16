@@ -17,7 +17,9 @@ import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.common.util.CollectionUtils;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -153,12 +155,24 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         public void bindView(EstateDetail item) {
             if (item != null) {
-                setImage(item.getImageUrl());
-                setTitle(item.getTitle());
-                setTime(item.getTime());
-                setPrice(item.getPrice());
-                setStatus(item.getStatus());
-                setPoster(item.getOwnerDisplayName());
+                Context context = EstateApplication.getInstance().getApplicationContext();
+                if (item.getCreateTime() != null) {
+                    Date date = new Date(item.getCreateTime());
+                    DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+                    setTime(dateFormat.format(date));
+                }
+
+                if (!item.getUrl().isEmpty()) {
+                    setImage(item.getUrl().get(0));
+                }
+                setTitle(item.getName());
+                setPrice(item.getPrice().toString());
+                if (item.getStatusProject() == 1){
+                    setStatus(context.getResources().getString(R.string.status_available));
+                } else {
+                    setStatus(context.getResources().getString(R.string.status_sold));
+                }
+                setPoster(item.getFullname());
             }
         }
     }

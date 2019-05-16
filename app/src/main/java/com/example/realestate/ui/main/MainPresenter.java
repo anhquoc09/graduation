@@ -1,7 +1,7 @@
 package com.example.realestate.ui.main;
 
 import com.example.realestate.data.remote.ServiceProvider;
-import com.example.realestate.data.remote.rest.UserService;
+import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.ui.BasePresenter;
 
 import rx.subscriptions.CompositeSubscription;
@@ -13,12 +13,12 @@ import rx.subscriptions.CompositeSubscription;
 public class MainPresenter extends BasePresenter<MainView> {
     public static final String TAG = MainPresenter.class.getSimpleName();
 
-    private UserService mUserService;
+    private EstateService mEstateService;
 
     private CompositeSubscription mSubscription = new CompositeSubscription();
 
     public MainPresenter() {
-        mUserService = ServiceProvider.getUserService();
+        mEstateService = ServiceProvider.getEstateService();
     }
 
     public void logout() {

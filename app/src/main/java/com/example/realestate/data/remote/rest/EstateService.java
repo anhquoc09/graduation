@@ -1,5 +1,6 @@
 package com.example.realestate.data.remote.rest;
 
+import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.response.LoginResponse;
 
 import retrofit2.http.Field;
@@ -12,7 +13,7 @@ import rx.Observable;
  * @since 06/03/2019
  */
 
-public interface UserService {
+public interface EstateService {
 
     //    Passport APIS
     @FormUrlEncoded
@@ -22,4 +23,10 @@ public interface UserService {
                                           @Field("phone") String phone,
                                           @Field("os_version") String osVersion);
 
+
+    @FormUrlEncoded
+    @POST("projects/home")
+    Observable<EstateListResponse> getEstatesByPosition(@Field("radius") String radius,
+                                                        @Field("lat") String latitude,
+                                                        @Field("long") String longitude);
 }

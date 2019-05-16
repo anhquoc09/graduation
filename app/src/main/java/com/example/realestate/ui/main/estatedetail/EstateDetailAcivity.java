@@ -2,26 +2,31 @@ package com.example.realestate.ui.main.estatedetail;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
-import com.google.gson.annotations.SerializedName;
+import com.example.realestate.ui.widget.ImageSliderAdapter;
+import com.example.realestate.ui.widget.ImageSliderLayout;
+import com.example.realestate.ui.widget.InfinitePagerAdapter;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,8 +46,8 @@ public class EstateDetailAcivity extends BaseActivity {
     @BindView(R.id.estate_province)
     TextView mOwnerProvince;
 
-    @BindView(R.id.estate_image)
-    ImageView mEstateImage;
+    @BindView(R.id.estate_image_slider)
+    ImageSliderLayout mImageSlider;
 
     @BindView(R.id.estate_title)
     TextView mEstateTitle;
@@ -73,6 +78,8 @@ public class EstateDetailAcivity extends BaseActivity {
 
     private EstateDetail mEstateDetail;
 
+    private ImageSliderAdapter mImageSliderAdapter;
+
     private Unbinder mUnbinder;
 
     public static Intent intentFor(Context context, Serializable estateDetail) {
@@ -89,23 +96,56 @@ public class EstateDetailAcivity extends BaseActivity {
 
         Intent intent = getIntent();
         mEstateDetail = (EstateDetail) intent.getSerializableExtra(ESTATE_DETAIL);
+        mImageSliderAdapter = new ImageSliderAdapter(null);
+        mImageSlider.setAdapter(new InfinitePagerAdapter(mImageSliderAdapter));
         bindData();
     }
 
     private void bindData() {
         if (mEstateDetail != null) {
-            setOwnerAvatar(mEstateDetail.getOwnerAvatar());
-            setOwnerName(mEstateDetail.getOwnerDisplayName());
-            setOwnerProvince(mEstateDetail.getOwnerProvince());
+            Context context = EstateApplication.getInstance().getApplicationContext();
 
-            setEstateImage(mEstateDetail.getImageUrl());
-            setEstateTitle(mEstateDetail.getTitle());
-            setEstatePrice(mEstateDetail.getPrice());
-            setEstateTimePost(mEstateDetail.getTime());
-            setEstateType(mEstateDetail.getType());
+            if (mEstateDetail.getCreateTime() != null) {
+                Date date = new Date(mEstateDetail.getCreateTime());
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+                setEstateTimePost(dateFormat.format(date));
+            }
+            if (mEstateDetail.getAvatar() != null) {
+                setOwnerAvatar(mEstateDetail.getAvatar());
+            }
+
+            setOwnerName(mEstateDetail.getFullname());
+            setOwnerProvince(mEstateDetail.getEmail());
+
+            setImageSlider(mEstateDetail.getUrl());
+            setEstateTitle(mEstateDetail.getName());
+            setEstatePrice(mEstateDetail.getPrice().toString());
+            switch (mEstateDetail.getType()) {
+                case 1:
+                    setEstateType(context.getString(R.string.estate_apartment));
+                    break;
+                case 2:
+                    setEstateType(context.getString(R.string.estate_townhouse));
+                    break;
+                case 3:
+                    setEstateType(context.getString(R.string.estate_villa));
+                    break;
+                case 4:
+                    setEstateType(context.getString(R.string.estate_land));
+                    break;
+                case 5:
+                    setEstateType(context.getString(R.string.estate_office));
+                    break;
+                case 6:
+                    setEstateType(context.getString(R.string.estate_warehouse));
+                    break;
+                default:
+                    break;
+            }
             setEstateAddress(mEstateDetail.getAddress());
-            setEstateSquare(mEstateDetail.getSquare());
-            setEstateDescription(mEstateDetail.getDescription());
+            setEstateSquare(mEstateDetail.getArea().toString());
+            setEstateContact(mEstateDetail.getPhone());
+            setEstateDescription(mEstateDetail.getInfo());
         }
     }
 
@@ -133,12 +173,9 @@ public class EstateDetailAcivity extends BaseActivity {
         mOwnerProvince.setText(ownerDisStrict);
     }
 
-    public void setEstateImage(String estateImage) {
-        Glide.with(this)
-                .load(estateImage)
-                .placeholder(R.color.silver)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(mEstateImage);
+    public void setImageSlider(List<String> imageSlider) {
+        mImageSliderAdapter.setData(imageSlider);
+        mImageSlider.checkIfShowIndicator(imageSlider);
     }
 
     public void setEstateTitle(String estateTitle) {
@@ -176,19 +213,19 @@ public class EstateDetailAcivity extends BaseActivity {
     @OnClick(R.id.btn_contact)
     public void onContactClick() {
         AlertDialog.Builder contactDialog = new AlertDialog.Builder(this);
-        contactDialog.setTitle("Liên hệ ngay");
-        contactDialog.setMessage("Bạn có muốn liên hệ ngay với chủ sở hữu?");
+        contactDialog.setTitle(getResources().getString(R.string.contact_now));
+        contactDialog.setMessage(getResources().getString(R.string.contact_mess));
 
         contactDialog.setPositiveButton(R.string.call, (dialog, which) -> {
             Intent dial = new Intent();
             dial.setAction(Intent.ACTION_DIAL);
-            dial.setData(Uri.parse("tel:" + mEstateDetail.getContact()));
+            dial.setData(Uri.parse("tel:" + mEstateDetail.getPhone()));
             startActivity(dial);
         });
 
         contactDialog.setPositiveButton(R.string.message, (dialog, which) -> {
             Intent messaging = new Intent(Intent.ACTION_VIEW);
-            messaging.setDataAndType(Uri.parse("tel:" + mEstateDetail.getContact()), "vnd.android-dir/mms-sms");
+            messaging.setDataAndType(Uri.parse("tel:" + mEstateDetail.getPhone()), "vnd.android-dir/mms-sms");
             startActivity(messaging);
         });
         contactDialog.setCancelable(true);
@@ -197,6 +234,6 @@ public class EstateDetailAcivity extends BaseActivity {
 
     @OnClick({R.id.estate_avatar, R.id.estate_province, R.id.estate_display_name})
     public void onOwnerDetailClick() {
-        startActivity(ProfileActivity.intentFor(this, mEstateDetail.getOwnerId()));
+        startActivity(ProfileActivity.intentFor(this, mEstateDetail.getOwnerid()));
     }
 }

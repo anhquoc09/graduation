@@ -273,7 +273,7 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.profile)
     public void onProfileClick() {
         User user = UserManager.getCurrentUser();
-        startActivity(ProfileActivity.intentFor(this, user.getUserId()));
+        startActivity(ProfileActivity.intentFor(this, String.valueOf(user.getUserId())));
     }
 
     @OnClick(R.id.btn_up_post)

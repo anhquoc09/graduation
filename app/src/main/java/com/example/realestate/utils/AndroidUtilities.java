@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.realestate.EstateApplication;
@@ -98,14 +99,14 @@ public final class AndroidUtilities {
         }
         return phrase;
     }
-//
-//    public static Point getDisplaySize(Context context) {
-//        if (sDisplaySize.x == 0 && sDisplaySize.y == 0) {
-//            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//            wm.getDefaultDisplay().getSize(sDisplaySize);
-//        }
-//        return new Point(sDisplaySize);
-//    }
+
+    public static Point getDisplaySize(Context context) {
+        if (sDisplaySize.x == 0 && sDisplaySize.y == 0) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            wm.getDefaultDisplay().getSize(sDisplaySize);
+        }
+        return new Point(sDisplaySize);
+    }
 
     public static void showToast(final String message) {
         if (TextUtils.isEmpty(message)) {

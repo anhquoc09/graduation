@@ -46,4 +46,14 @@
     <string name="gps_not_found_message">Bạn có muốn kích hoạt định vị?</string>
     <string name="no">Không</string>
     <string name="yes">Có</string>
+    <string name="status_available">Có sẵn</string>
+    <string name="status_sold">Đã bán</string>
+    <string name="estate_apartment">Chung cư, căn hộ</string>
+    <string name="estate_land">Đất nền</string>
+    <string name="estate_office">Văn phòng</string>
+    <string name="estate_townhouse">Nhà phố</string>
+    <string name="estate_villa">Biệt thự</string>
+    <string name="estate_warehouse">Kho, xưởng</string>
+    <string name="contact_mess">Chọn cách liên hệ với chủ sở hữu</string>
+    <string name="contact_now">Liên hệ ngay</string>
 </resources>

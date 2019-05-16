@@ -1,193 +1,261 @@
 package com.example.realestate.data.model;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
+import java.util.List;
+
 
 public class EstateDetail implements Serializable {
+    @SerializedName("url")
+    private List<String> url = null;
 
-    @SerializedName("imageUrl")
-    private String mImageUrl;
-    @SerializedName("title")
-    private String mTitle;
-    @SerializedName("time")
-    private String mTime;
+    @SerializedName("publicId")
+    private List<String> publicId = null;
+
+    @SerializedName("_id")
+    private String id;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("investor")
+    private String investor;
+
     @SerializedName("price")
-    private String mPrice;
-    @SerializedName("status")
-    private String mStatus;
-    @SerializedName("type")
-    private String mType;
+    private Integer price;
+
+    @SerializedName("unit")
+    private String unit;
+
+    @SerializedName("area")
+    private Integer area;
+
     @SerializedName("address")
-    private String mAddress;
-    @SerializedName("square")
-    private String mSquare;
-    @SerializedName("description")
-    private String mDescription;
-    @SerializedName("contact")
-    private String mContact;
-    @SerializedName("ownerId")
-    private int mOwnerId;
-    @SerializedName("ownerAvatar")
-    private String mOwnerAvatar;
-    @SerializedName("ownerDisplayName")
-    private String mOwnerDisplayName;
-    @SerializedName("ownerProvince")
-    private String mOwnerProvince;
-    @SerializedName("latitude")
-    private String mLatitude;
-    @SerializedName("longitude")
-    private String mLongitude;
+    private String address;
 
-    public EstateDetail(String imageUrl, String title, String time, String price, String status, String type, String address, String square, String description, String contact, int ownerId, String ownerAvatar, String ownerDisplayName, String ownerProvince, String latitude, String longitude) {
-        mImageUrl = imageUrl;
-        mTitle = title;
-        mTime = time;
-        mPrice = price;
-        mStatus = status;
-        mType = type;
-        mAddress = address;
-        mSquare = square;
-        mDescription = description;
-        mContact = contact;
-        mOwnerId = ownerId;
-        mOwnerAvatar = ownerAvatar;
-        mOwnerDisplayName = ownerDisplayName;
-        mOwnerProvince = ownerProvince;
-        mLatitude = latitude;
-        mLongitude = longitude;
+    @SerializedName("type")
+    private Integer type;
+
+    @SerializedName("info")
+    private String info;
+
+    @SerializedName("lat")
+    private Double lat;
+
+    @SerializedName("long")
+    private Double _long;
+
+    @SerializedName("ownerid")
+    private String ownerid;
+
+    @SerializedName("fullname")
+    private String fullname;
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("avatar")
+    private String avatar;
+
+    @SerializedName("statusProject")
+    private Integer statusProject;
+
+    @SerializedName("allowComment")
+    private Boolean allowComment;
+
+    @SerializedName("createTime")
+    private Integer createTime;
+
+    @SerializedName("updateTime")
+    private Integer updateTime;
+
+    @SerializedName("__v")
+    private Integer v;
+
+    public List<String> getUrl() {
+        return url;
     }
 
-    public String getImageUrl() {
-        return mImageUrl;
+    public void setUrl(List<String> url) {
+        this.url = url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        mImageUrl = imageUrl;
+    public List<String> getPublicId() {
+        return publicId;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public void setPublicId(List<String> publicId) {
+        this.publicId = publicId;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public String getId() {
+        return id;
     }
 
-    public String getTime() {
-        return mTime;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setTime(String time) {
-        mTime = time;
+    public String getName() {
+        return name;
     }
 
-    public String getPrice() {
-        return mPrice;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPrice(String price) {
-        mPrice = price;
+    public String getInvestor() {
+        return investor;
     }
 
-    public String getStatus() {
-        return mStatus;
+    public void setInvestor(String investor) {
+        this.investor = investor;
     }
 
-    public void setStatus(String status) {
-        mStatus = status;
+    public Integer getPrice() {
+        return price;
     }
 
-    public String getType() {
-        return mType;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
-    public void setType(String type) {
-        mType = type;
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public Integer getArea() {
+        return area;
+    }
+
+    public void setArea(Integer area) {
+        this.area = area;
     }
 
     public String getAddress() {
-        return mAddress;
+        return address;
     }
 
     public void setAddress(String address) {
-        mAddress = address;
+        this.address = address;
     }
 
-    public String getSquare() {
-        return mSquare;
+    public Integer getType() {
+        return type;
     }
 
-    public void setSquare(String square) {
-        mSquare = square;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public String getInfo() {
+        return info;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-    public String getContact() {
-        return mContact;
+    public Double getLat() {
+        return lat;
     }
 
-    public void setContact(String contact) {
-        mContact = contact;
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 
-    public int getOwnerId() {
-        return mOwnerId;
+    public Double getLong() {
+        return _long;
     }
 
-    public void setOwnerId(int ownerId) {
-        mOwnerId = ownerId;
+    public void setLong(Double _long) {
+        this._long = _long;
     }
 
-    public String getOwnerAvatar() {
-        return mOwnerAvatar;
+    public String getOwnerid() {
+        return ownerid;
     }
 
-    public void setOwnerAvatar(String ownerAvatar) {
-        mOwnerAvatar = ownerAvatar;
+    public void setOwnerid(String ownerid) {
+        this.ownerid = ownerid;
     }
 
-    public String getOwnerDisplayName() {
-        return mOwnerDisplayName;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setOwnerDisplayName(String ownerDisplayName) {
-        mOwnerDisplayName = ownerDisplayName;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getOwnerProvince() {
-        return mOwnerProvince;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setOwnerProvince(String ownerProvince) {
-        mOwnerProvince = ownerProvince;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getLongitude() {
-        return mLongitude;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLongitude(String longitude) {
-        mLongitude = longitude;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getLatitude() {
-        return mLatitude;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setLatitude(String latitude) {
-        mLatitude = latitude;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public LatLng getLatLng() {
-        return new LatLng(Double.parseDouble(mLatitude), Double.parseDouble(mLongitude));
+    public Integer getStatusProject() {
+        return statusProject;
+    }
+
+    public void setStatusProject(Integer statusProject) {
+        this.statusProject = statusProject;
+    }
+
+    public Boolean getAllowComment() {
+        return allowComment;
+    }
+
+    public void setAllowComment(Boolean allowComment) {
+        this.allowComment = allowComment;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
+
+    public Integer getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getV() {
+        return v;
+    }
+
+    public void setV(Integer v) {
+        this.v = v;
     }
 }
