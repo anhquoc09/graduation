@@ -13,8 +13,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
+import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.widget.ImageSliderAdapter;
 import com.example.realestate.ui.widget.ImageSliderLayout;
@@ -22,8 +24,10 @@ import com.example.realestate.ui.widget.InfinitePagerAdapter;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 
@@ -91,7 +95,7 @@ public class EstateDetailAcivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_estate_detail_layout);
+        setContentView(R.layout.activity_estate_detail_layout);
         mUnbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
@@ -106,8 +110,8 @@ public class EstateDetailAcivity extends BaseActivity {
             Context context = EstateApplication.getInstance().getApplicationContext();
 
             if (mEstateDetail.getCreateTime() != null) {
-                Date date = new Date(mEstateDetail.getCreateTime());
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = new Date(mEstateDetail.getCreateTime() * 1000);
                 setEstateTimePost(dateFormat.format(date));
             }
             if (mEstateDetail.getAvatar() != null) {
@@ -187,7 +191,7 @@ public class EstateDetailAcivity extends BaseActivity {
     }
 
     public void setEstateTimePost(String estateDayPost) {
-        mEstateDayPost.setText(estateDayPost);
+        mEstateDayPost.setText(estateDayPost + " ");
     }
 
     public void setEstateAddress(String estateAddress) {
@@ -210,30 +214,45 @@ public class EstateDetailAcivity extends BaseActivity {
         mEstateDescription.setText(estateDescription);
     }
 
+    @OnClick(R.id.btn_edit_estate_detail)
+    public void onEditEstateClick() {
+
+    }
+
     @OnClick(R.id.btn_contact)
     public void onContactClick() {
-        AlertDialog.Builder contactDialog = new AlertDialog.Builder(this);
-        contactDialog.setTitle(getResources().getString(R.string.contact_now));
-        contactDialog.setMessage(getResources().getString(R.string.contact_mess));
+        if (UserManager.isUserLoggedIn()) {
+            AlertDialog contactDialog = new AlertDialog.Builder(this).create();
+            contactDialog.setTitle(getResources().getString(R.string.contact_now));
+            contactDialog.setMessage(getResources().getString(R.string.contact_mess));
 
-        contactDialog.setPositiveButton(R.string.call, (dialog, which) -> {
-            Intent dial = new Intent();
-            dial.setAction(Intent.ACTION_DIAL);
-            dial.setData(Uri.parse("tel:" + mEstateDetail.getPhone()));
-            startActivity(dial);
-        });
+            contactDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.call), (dialog, which) -> {
+                Intent dial = new Intent(Intent.ACTION_DIAL);
+                dial.setData(Uri.parse("tel:" + mEstateDetail.getPhone()));
+                startActivity(dial);
+            });
 
-        contactDialog.setPositiveButton(R.string.message, (dialog, which) -> {
-            Intent messaging = new Intent(Intent.ACTION_VIEW);
-            messaging.setDataAndType(Uri.parse("tel:" + mEstateDetail.getPhone()), "vnd.android-dir/mms-sms");
-            startActivity(messaging);
-        });
-        contactDialog.setCancelable(true);
-        contactDialog.show();
+            contactDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getResources().getString(R.string.message), (dialog, which) -> {
+                Intent messaging = new Intent(Intent.ACTION_SENDTO);
+                messaging.setData(Uri.parse("smsto:" + Uri.encode(mEstateDetail.getPhone())));
+                startActivity(messaging);
+            });
+
+            contactDialog.setCancelable(true);
+            contactDialog.show();
+        } else {
+            startActivity(LoginActivity.intentFor(this));
+        }
     }
 
     @OnClick({R.id.estate_avatar, R.id.estate_province, R.id.estate_display_name})
     public void onOwnerDetailClick() {
         startActivity(ProfileActivity.intentFor(this, mEstateDetail.getOwnerid()));
+    }
+
+    @OnClick(R.id.btn_back)
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

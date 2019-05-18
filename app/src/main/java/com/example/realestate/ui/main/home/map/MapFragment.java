@@ -254,15 +254,6 @@ public class MapFragment extends Fragment
         }
     }
 
-    @OnClick(R.id.btn_up_post)
-    public void onUpPostClick() {
-        if (UserManager.isUserLoggedIn()) {
-            startActivity(UpPostActivity.intentFor(getActivity()));
-        } else {
-            startActivity(LoginActivity.intentFor(getActivity()));
-        }
-    }
-
     @OnClick(R.id.btn_my_location)
     public void onMyLocationClick() {
         animateToMyLocation();
