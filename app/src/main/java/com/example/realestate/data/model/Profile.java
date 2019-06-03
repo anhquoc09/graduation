@@ -1,73 +1,151 @@
 package com.example.realestate.data.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Profile implements Serializable {
 
-    public void setUserId(int userId) {
+    @SerializedName("identify")
+    private String identify;
+
+    @SerializedName("_id")
+    private String id;
+
+    @SerializedName("fullname")
+    private String fullname;
+
+    @SerializedName("address")
+    private String address;
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("totalProject")
+    private Integer totalProject;
+
+    @SerializedName("statusAccount")
+    private Integer statusAccount;
+
+    @SerializedName("avatar")
+    private String avatar;
+
+    @SerializedName("company")
+    private String company;
+
+    @SerializedName("verify")
+    private Boolean verify;
+
+    @SerializedName("lock")
+    private Boolean lock;
+
+    public String getIdentify() {
+        return identify;
     }
 
-    public void setUserName(String string) {
+    public void setIdentify(String identify) {
+        this.identify = identify;
     }
 
-    public void setDisplayName(String string) {
+    public String getId() {
+        return id;
     }
 
-    public void setAvatar(String string) {
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setEmail(String string) {
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setBirthday(String birthday) {
-    }
-
-    public int getUserId() {
-        return 1;
-    }
-
-    public String getUserName() {
-        return "anhquoc09";
-    }
-
-    public String getDisplayName() {
-        return "Hoàng Anh Quốc";
-    }
-
-    public String getAvatar() {
-        return "https://instagram.fsgn5-2.fna.fbcdn.net/vp/113926ae61b700f7a15e7ab7dc2172e4/5D4F684C/t51.2885-19/s150x150/49648280_535498350271620_5522308940190187520_n.jpg?_nc_ht=instagram.fsgn5-2.fna.fbcdn.net";
-    }
-
-    public String getEmail() {
-        return "anhquoc.haq09@gmail.com";
-    }
-
-    public String getBirthday() {
-        return "28/03/1997";
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-    }
-
-    public String getPhoneNumber() {
-        return "0348898600";
-    }
-
-    public int getType() {
-        return 0;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getAddress() {
-        return "221/3/14 Đất Thánh, P6, Q.Tân Bình, TP.HCM";
+        return address;
     }
 
     public void setAddress(String address) {
+        this.address = address;
     }
 
-    public boolean isVerified() {
-        return true;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setVerified(boolean verified) {
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getTotalProject() {
+        return totalProject;
+    }
+
+    public void setTotalProject(Integer totalProject) {
+        this.totalProject = totalProject;
+    }
+
+    public Integer getStatusAccount() {
+        return statusAccount;
+    }
+
+    public void setStatusAccount(Integer statusAccount) {
+        this.statusAccount = statusAccount;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public Boolean getVerify() {
+        return verify;
+    }
+
+    public void setVerify(Boolean verify) {
+        this.verify = verify;
+    }
+
+    public Boolean getLock() {
+        return lock;
+    }
+
+    public void setLock(Boolean lock) {
+        this.lock = lock;
     }
 }

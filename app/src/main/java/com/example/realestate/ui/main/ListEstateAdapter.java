@@ -172,7 +172,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
                 } else {
                     setStatus(context.getResources().getString(R.string.status_sold));
                 }
-                setPoster(item.getFullname());
+                setPoster(item.getFullName());
             }
         }
     }

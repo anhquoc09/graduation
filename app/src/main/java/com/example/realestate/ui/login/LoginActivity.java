@@ -98,9 +98,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
     }
 
     @Override
-    public void onLoginSuccess(String accessToken) {
+    public void onLoginSuccess(String idToken) {
         if (mPresenter != null) {
-            mPresenter.login(accessToken);
+            mPresenter.login(idToken);
         }
     }
 

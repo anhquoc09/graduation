@@ -12,7 +12,8 @@
         android:layout_margin="2dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        tools:src="@color/blue" />
+        tools:alpha="0.5"
+        tools:src="@color/colorAccent" />
 
     <ImageView
         android:id="@+id/iv_delete_photo"
@@ -22,6 +23,21 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_delete"
-        android:visibility="visible" />
+        android:src="@drawable/ic_delete" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:max="100"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ic_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_error"
+        android:visibility="gone" />
 </FrameLayout>

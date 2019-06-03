@@ -36,8 +36,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class EstateDetailAcivity extends BaseActivity {
-    public static final String TAG = EstateDetailAcivity.class.getCanonicalName();
+public class EstateDetailActivity extends BaseActivity {
+    public static final String TAG = EstateDetailActivity.class.getCanonicalName();
 
     public static final String ESTATE_DETAIL = "estate_detail";
 
@@ -87,7 +87,7 @@ public class EstateDetailAcivity extends BaseActivity {
     private Unbinder mUnbinder;
 
     public static Intent intentFor(Context context, Serializable estateDetail) {
-        Intent intent = new Intent(context, EstateDetailAcivity.class);
+        Intent intent = new Intent(context, EstateDetailActivity.class);
         intent.putExtra(ESTATE_DETAIL, estateDetail);
         return intent;
     }
@@ -118,7 +118,7 @@ public class EstateDetailAcivity extends BaseActivity {
                 setOwnerAvatar(mEstateDetail.getAvatar());
             }
 
-            setOwnerName(mEstateDetail.getFullname());
+            setOwnerName(mEstateDetail.getFullName());
             setOwnerProvince(mEstateDetail.getEmail());
 
             setImageSlider(mEstateDetail.getUrl());

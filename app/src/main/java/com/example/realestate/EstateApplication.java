@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 
-import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
 import com.example.realestate.utils.PlatformUtils;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.multidex.MultiDex;
 
@@ -39,6 +41,10 @@ public class EstateApplication extends Application {
         Context applicationContext = getApplicationContext();
 
         UserManager.init(applicationContext);
+
+        Map<String, String> config = new HashMap<>();
+        config.put("cloud_name", "dne3aha8f");
+        MediaManager.init(this, config);
     }
 
     @Override

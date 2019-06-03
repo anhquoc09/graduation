@@ -66,7 +66,7 @@ public class CustomGoogleMapAdapter implements GoogleMap.InfoWindowAdapter {
                         .into(mOwnerAvatar);
             }
 
-            mOwnerName.setText(mEstateDetail.getFullname());
+            mOwnerName.setText(mEstateDetail.getFullName());
             mEstateTitle.setText(mEstateDetail.getName());
             mEstatePrice.setText(String.valueOf(mEstateDetail.getPrice()));
             mEstateAddress.setText(mEstateDetail.getAddress());

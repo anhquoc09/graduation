@@ -15,13 +15,9 @@ import rx.Observable;
 
 public interface EstateService {
 
-    //    Passport APIS
     @FormUrlEncoded
-    @POST("api_passport/login/by_google")
-    Observable<LoginResponse> loginGoogle(@Field("access_token") String accessToken,
-                                          @Field("country_code") Integer countryCode,
-                                          @Field("phone") String phone,
-                                          @Field("os_version") String osVersion);
+    @POST("users/login_google")
+    Observable<LoginResponse> loginGoogle(@Field("id_token") String idToken);
 
 
     @FormUrlEncoded

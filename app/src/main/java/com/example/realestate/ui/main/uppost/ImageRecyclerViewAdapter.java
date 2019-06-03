@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import butterknife.OnClick;
 
 public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecyclerViewAdapter.ImageViewHolder> {
 
-    private final List<Uri> mImageUriList = new ArrayList<>();
+    private final List<ImageInfoItem> mImageList = new ArrayList<>();
 
     private OnImageClickListener mListener;
 
@@ -35,12 +36,12 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.bindView(mImageUriList.get(position));
+        holder.bindView(mImageList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return (mImageUriList.size());
+        return (mImageList.size());
     }
 
     public void setOnImageClickListener(OnImageClickListener listener) {
@@ -49,22 +50,24 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
 
     public void addImage(Uri imageUri) {
         if (imageUri != null) {
-            mImageUriList.add(imageUri);
+            mImageList.add(new ImageInfoItem(imageUri));
         }
-        notifyItemInserted(mImageUriList.size());
+        notifyItemInserted(mImageList.size());
     }
 
-    public void setImageList(List<Uri> imageUrlList) {
-        mImageUriList.clear();
-        if (!imageUrlList.isEmpty()) {
-            mImageUriList.addAll(imageUrlList);
+    public void setImageList(List<Uri> imageUriList) {
+        mImageList.clear();
+        if (!imageUriList.isEmpty()) {
+            for (int i = 0; i < imageUriList.size(); i++) {
+                mImageList.add(new ImageInfoItem(imageUriList.get(i)));
+            }
         }
         notifyDataSetChanged();
     }
 
     public void removeImage(int position) {
         if (position != RecyclerView.NO_POSITION) {
-            mImageUriList.remove(position);
+            mImageList.remove(position);
             notifyItemRemoved(position);
             if (mListener != null) {
                 mListener.onDeleteImageClick(position);
@@ -72,22 +75,72 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
         }
     }
 
+    public void uploadError(int position) {
+        mImageList.get(position).setUploading(false);
+        mImageList.get(position).setUploadError(true);
+        notifyItemChanged(position);
+    }
+
+    public void startUpload(int position) {
+        mImageList.get(position).setUploading(true);
+        notifyItemChanged(position);
+    }
+
+    public void uploadImageSuccess(int position) {
+        mImageList.get(position).setUploading(false);
+        mImageList.get(position).setUploadSuccess(true);
+        notifyItemChanged(position);
+    }
+
+    public void updatePercent(int percent, int position) {
+        mImageList.get(position).setUploadPercent(percent);
+        notifyItemChanged(position);
+    }
+
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_photo)
         ImageView mPhotoImageView;
+
+        @BindView(R.id.ic_error)
+        ImageView mIconError;
+
+        @BindView(R.id.progress)
+        ProgressBar mProgressBar;
+
+        @BindView(R.id.iv_delete_photo)
+        ImageView mIconDeletePhoto;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindView(Uri uri) {
-            if (uri != null) {
+        public void bindView(ImageInfoItem image) {
+            if (image != null) {
                 Glide.with(itemView)
-                        .load(uri)
+                        .load(image.getUri())
                         .placeholder(R.color.silver)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(mPhotoImageView);
+
+                if (image.isUploadSuccess()) {
+                    mIconDeletePhoto.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
+                    mIconError.setVisibility(View.GONE);
+
+                } else if (image.isUploading()) {
+                    mPhotoImageView.setAlpha(0.4f);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mIconDeletePhoto.setVisibility(View.GONE);
+                    mIconError.setVisibility(View.GONE);
+                    mProgressBar.setProgress(image.getUploadPercent());
+
+                } else if (image.isUploadError()) {
+                    mPhotoImageView.setAlpha(0.4f);
+                    mProgressBar.setVisibility(View.GONE);
+                    mIconDeletePhoto.setVisibility(View.VISIBLE);
+                    mIconError.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -97,7 +150,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 if (mListener != null) {
-                    mListener.onViewImageClick(mImageUriList, position);
+                    mListener.onViewImageClick(mImageList, position);
                 }
             }
         }
@@ -112,7 +165,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
     }
 
     public interface OnImageClickListener {
-        void onViewImageClick(List<Uri> imageUrlList, int position);
+        void onViewImageClick(List<ImageInfoItem> imageList, int position);
 
         void onDeleteImageClick(int position);
     }

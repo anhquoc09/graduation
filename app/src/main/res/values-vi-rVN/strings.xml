@@ -56,4 +56,5 @@
     <string name="estate_warehouse">Kho, xưởng</string>
     <string name="contact_mess">Chọn cách liên hệ với chủ sở hữu</string>
     <string name="contact_now">Liên hệ ngay</string>
+    <string name="edit_profile_success">Thông tin của bạn đã được lưu</string>
 </resources>

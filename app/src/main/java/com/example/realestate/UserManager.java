@@ -15,14 +15,7 @@ public final class UserManager {
 
     private static User sCurrentUser;
 
-    private static int sIsNewUser = -1;
-
     private static UserLocalStorage mUserLocalStorage;
-
-    private static CheckInStorage mCheckInStorage;
-
-    private UserManager() {
-    }
 
     public static synchronized void init(Context context) {
         if (mUserLocalStorage == null) {
@@ -31,10 +24,6 @@ public final class UserManager {
 
         if (sCurrentUser == null && mUserLocalStorage.isLoggedIn()) {
             sCurrentUser = mUserLocalStorage.loadUser();
-        }
-
-        if (mCheckInStorage == null) {
-            mCheckInStorage = new CheckInStorage(context);
         }
     }
 
@@ -50,39 +39,28 @@ public final class UserManager {
         mUserLocalStorage.saveUser(currentUser);
     }
 
-    public static synchronized void initUser(User currentUser, int loginMethod) {
-        setCurrentUser(currentUser);
-    }
-
     public static synchronized boolean isUserLoggedIn() {
         final User user = getCurrentUser();
         return user != null && !TextUtils.isEmpty(user.getAccessToken());
     }
 
-    public static synchronized void setGoogleToken(String token) {
-        mUserLocalStorage.saveGoogleToken(token);
+    public static synchronized void setAccessToken(String token) {
+        if (sCurrentUser != null) {
+            sCurrentUser.setAccessToken(token);
+        }
+        mUserLocalStorage.saveAccessToken(token);
     }
 
-    public static synchronized String getGoogleToken() {
-        return mUserLocalStorage.getGoogleToken();
+    public static synchronized String getAccessToken() {
+        if (sCurrentUser != null) {
+            return sCurrentUser.getAccessToken();
+        }
+        return mUserLocalStorage.getAccessToken();
     }
 
     public synchronized static void clearSession() {
         mUserLocalStorage.clear();
-        mCheckInStorage.clear();
         sCurrentUser = null;
-    }
-
-    public static synchronized void setIsNewUser(boolean isNewUser) {
-        sIsNewUser = isNewUser ? 1 : 0;
-        mUserLocalStorage.setIsNewRegisterUser(sIsNewUser);
-    }
-
-    public static synchronized boolean isNewUser() {
-        if (sIsNewUser == -1) {
-            sIsNewUser = mUserLocalStorage.getIsNewRegisterUser();
-        }
-        return sIsNewUser == 1;
     }
 
     /**
@@ -94,25 +72,21 @@ public final class UserManager {
 
         private static final String PREF_USER_SESSION = "key_user_session";
 
+        private static final String PREF_USER_IDENTIFY = "key_user_identify";
         private static final String PREF_USER_ID = "key_user_id";
-
-        private static final String PREF_USER_NAME = "key_user_name_key";
-
-        private static final String PREF_DISPLAY_NAME = "key_display_name_key";
-
-        private static final String PREF_USER_AVATAR = "key_user_avatar_60_key";
-
-        private static final String PREF_USER_EMAIL = "key_user_email";
-
-        private static final String PREF_USER_BIRTHDAY = "key_user_birth_date";
-
+        private static final String PREF_USER_NAME = "key_user_full_name";
+        private static final String PREF_USER_ADDRESS = "key_user_address";
         private static final String PREF_USER_PHONE = "key_user_phone";
+        private static final String PREF_USER_DESCRIPTION = "key_user_description";
+        private static final String PREF_USER_EMAIL = "key_user_email";
+        private static final String PREF_USER_TOTAL_PROJECT = "key_user_total_project";
+        private static final String PREF_USER_STATUS = "key_user_status";
+        private static final String PREF_USER_AVATAR = "key_user_avatar";
+        private static final String PREF_USER_COMPANY = "key_user_company";
+        private static final String PREF_USER_VERIFY = "key_user_verify";
+        private static final String PREF_USER_LOCK = "key_user_lock";
 
-        private static final String PREF_USER_GOOGLE_TOKEN = "key_user_google_token";
-
-        private static final String PREF_IS_NEW_REGISTER_USER = "key_is_new_register_user";
-
-        private SharedPreferences sSettings = null;
+        private SharedPreferences sSettings;
 
         private UserLocalStorage(Context context) {
             sSettings = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
@@ -126,24 +100,18 @@ public final class UserManager {
             return !TextUtils.isEmpty(getUserSession());
         }
 
-        public synchronized boolean saveUser(User user) {
+        public synchronized void saveUser(User user) {
             if (user == null) {
-                return false;
+                return;
             }
-            sSettings.edit()
-                    .putString(PREF_USER_SESSION, user.getAccessToken())
-                    .putInt(PREF_USER_ID, user.getUserId())
-                    .putString(PREF_USER_PHONE, user.getPhoneNumber())
-                    .apply();
+            sSettings.edit().putString(PREF_USER_SESSION, user.getAccessToken()).apply();
 
             saveProfile(user.getProfile());
-            return true;
         }
 
         public synchronized User loadUser() {
             User user = new User();
             user.setAccessToken(sSettings.getString(PREF_USER_SESSION, ""));
-            user.setPhoneNumber(sSettings.getString(PREF_USER_PHONE, ""));
             user.setProfile(loadProfile());
             return user;
         }
@@ -151,24 +119,39 @@ public final class UserManager {
         public synchronized void saveProfile(Profile profile) {
             if (profile != null) {
                 SharedPreferences.Editor editor = sSettings.edit();
-                editor.putInt(PREF_USER_ID, profile.getUserId());
-                editor.putString(PREF_USER_NAME, profile.getUserName());
-                editor.putString(PREF_DISPLAY_NAME, profile.getDisplayName());
-                editor.putString(PREF_USER_AVATAR, profile.getAvatar());
+                editor.putString(PREF_USER_IDENTIFY, profile.getIdentify());
+                editor.putString(PREF_USER_ID, profile.getId());
+                editor.putString(PREF_USER_NAME, profile.getFullname());
+                editor.putString(PREF_USER_ADDRESS, profile.getAddress());
+                editor.putString(PREF_USER_PHONE, profile.getPhone());
+                editor.putString(PREF_USER_DESCRIPTION, profile.getDescription());
                 editor.putString(PREF_USER_EMAIL, profile.getEmail());
-                editor.putString(PREF_USER_BIRTHDAY, profile.getBirthday());
+                editor.putInt(PREF_USER_TOTAL_PROJECT, profile.getTotalProject());
+                editor.putInt(PREF_USER_STATUS, profile.getStatusAccount());
+                editor.putString(PREF_USER_AVATAR, profile.getAvatar());
+                editor.putString(PREF_USER_COMPANY, profile.getCompany());
+                editor.putBoolean(PREF_USER_VERIFY, profile.getVerify());
+                editor.putBoolean(PREF_USER_LOCK, profile.getLock());
+
                 editor.apply();
             }
         }
 
         private synchronized Profile loadProfile() {
             final Profile profile = new Profile();
-            profile.setUserId(sSettings.getInt(PREF_USER_ID, -1));
-            profile.setUserName(sSettings.getString(PREF_USER_NAME, ""));
-            profile.setDisplayName(sSettings.getString(PREF_DISPLAY_NAME, ""));
-            profile.setAvatar(sSettings.getString(PREF_USER_AVATAR, ""));
+            profile.setIdentify(sSettings.getString(PREF_USER_IDENTIFY, ""));
+            profile.setId(sSettings.getString(PREF_USER_ID, ""));
+            profile.setFullname(sSettings.getString(PREF_USER_NAME, ""));
+            profile.setAddress(sSettings.getString(PREF_USER_ADDRESS, ""));
+            profile.setPhone(sSettings.getString(PREF_USER_PHONE, ""));
+            profile.setDescription(sSettings.getString(PREF_USER_DESCRIPTION, ""));
             profile.setEmail(sSettings.getString(PREF_USER_EMAIL, ""));
-            profile.setBirthday(sSettings.getString(PREF_USER_BIRTHDAY, ""));
+            profile.setTotalProject(sSettings.getInt(PREF_USER_TOTAL_PROJECT, 0));
+            profile.setStatusAccount(sSettings.getInt(PREF_USER_STATUS, 0));
+            profile.setAvatar(sSettings.getString(PREF_USER_AVATAR, ""));
+            profile.setCompany(sSettings.getString(PREF_USER_COMPANY, ""));
+            profile.setVerify(sSettings.getBoolean(PREF_USER_VERIFY, false));
+            profile.setLock(sSettings.getBoolean(PREF_USER_LOCK, false));
             return profile;
         }
 
@@ -176,46 +159,12 @@ public final class UserManager {
             sSettings.edit().clear().apply();
         }
 
-        public synchronized void saveGoogleToken(String token) {
-            sSettings.edit().putString(PREF_USER_GOOGLE_TOKEN, token).apply();
+        public synchronized void saveAccessToken(String token) {
+            sSettings.edit().putString(PREF_USER_SESSION, token).apply();
         }
 
-        public synchronized String getGoogleToken() {
-            return sSettings.getString(PREF_USER_GOOGLE_TOKEN, "");
-        }
-
-        public void setIsNewRegisterUser(int flag) {
-            sSettings.edit().putInt(PREF_IS_NEW_REGISTER_USER, flag).apply();
-        }
-
-        public int getIsNewRegisterUser() {
-            return sSettings.getInt(PREF_IS_NEW_REGISTER_USER, 0);
-        }
-
-    }
-
-    private static final class CheckInStorage {
-
-        private static final String NAME = "check_in_prefs";
-
-        private static final String PREF_CHECK_IN_GIFT_DETAILS = "key_check_in_gift_details";
-
-        private SharedPreferences mSettings = null;
-
-        private CheckInStorage(Context context) {
-            mSettings = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-        }
-
-        public String getCheckInGiftDetails() {
-            return mSettings.getString(PREF_CHECK_IN_GIFT_DETAILS, null);
-        }
-
-        public void saveCheckInGiftDetails(String giftDetailsJson) {
-            mSettings.edit().putString(PREF_CHECK_IN_GIFT_DETAILS, giftDetailsJson).apply();
-        }
-
-        public void clear() {
-            mSettings.edit().clear().apply();
+        public synchronized String getAccessToken() {
+            return sSettings.getString(PREF_USER_SESSION, "");
         }
     }
 }

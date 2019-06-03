@@ -2,7 +2,10 @@ package com.example.realestate.ui.main.uppost;
 
 import android.net.Uri;
 
+import com.cloudinary.android.callback.ErrorInfo;
+
 import java.util.List;
+import java.util.Map;
 
 public interface UpPostView {
     void addImage(Uri imageUri);
@@ -12,4 +15,12 @@ public interface UpPostView {
     void onPostSuccess();
 
     void onPostFailed(String message);
+
+    void uploadError(ErrorInfo error, int position);
+
+    void startUploadImage(int position);
+
+    void uploadImageSuccess(int position);
+
+    void updateUploadPercent(int percent, int position);
 }

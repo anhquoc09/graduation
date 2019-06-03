@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "776676760586-d33giurkva6jivosu2fb49go62ni1ivh.apps.googleusercontent.com",
+          "client_id": "776676760586-q0o11ib37pr1ad7q02leorn03cc17hti.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.realestate",
-            "certificate_hash": "0478c09d590269efb512771731f61c3e16f9e4a1"
+            "certificate_hash": "26e6ef0fdfcf8ea666c527869fab27ad351e342a"
           }
         },
         {
@@ -28,6 +28,14 @@
           "android_info": {
             "package_name": "com.example.realestate",
             "certificate_hash": "2d3f773d05bb26658037f82b66677c30d921e052"
+          }
+        },
+        {
+          "client_id": "776676760586-d33giurkva6jivosu2fb49go62ni1ivh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.realestate",
+            "certificate_hash": "0478c09d590269efb512771731f61c3e16f9e4a1"
           }
         },
         {
@@ -41,20 +49,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "776676760586-oeh418goat5ve4ng1r7dt0c2l9s5ihhv.apps.googleusercontent.com",
+              "client_id": "776676760586-01ftnlqveb440ljd9n0s389904q0bp1l.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

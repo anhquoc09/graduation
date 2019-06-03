@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.cloudinary.android.callback.ErrorInfo;
 import com.example.realestate.R;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
@@ -49,6 +50,8 @@ public class UpPostActivity extends BaseActivity
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMarkerDragListener,
         ImageRecyclerViewAdapter.OnImageClickListener {
+
+    public static int PICK_IMAGE_MULTIPLE = 1;
 
     @BindView(R.id.up_title)
     EditText mTitle;
@@ -91,10 +94,6 @@ public class UpPostActivity extends BaseActivity
     private MarkerOptions mMarkerOptions = new MarkerOptions();
 
     private ImageRecyclerViewAdapter mImageAdapter;
-
-    int PICK_IMAGE_MULTIPLE = 1;
-    String imageEncoded;
-    List<String> imagesEncodedList;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -317,6 +316,27 @@ public class UpPostActivity extends BaseActivity
         AndroidUtilities.showToast(message);
     }
 
+    @Override
+    public void uploadError(ErrorInfo error, int position) {
+        AndroidUtilities.showToast(error.getDescription());
+        mImageAdapter.uploadError(position);
+    }
+
+    @Override
+    public void startUploadImage(int position) {
+        mImageAdapter.startUpload(position);
+    }
+
+    @Override
+    public void uploadImageSuccess(int position) {
+        mImageAdapter.uploadImageSuccess(position);
+    }
+
+    @Override
+    public void updateUploadPercent(int percent, int position) {
+        mImageAdapter.updatePercent(percent, position);
+    }
+
     @OnClick(R.id.btn_up_post)
     public void onUpClick() {
         mPresenter.upPost();
@@ -332,7 +352,7 @@ public class UpPostActivity extends BaseActivity
     }
 
     @Override
-    public void onViewImageClick(List<Uri> imageUrlList, int position) {
+    public void onViewImageClick(List<ImageInfoItem> imageUrlList, int position) {
 //                Intent intent = new Intent(mContext, SpacePhotoActivity.class);
 //                intent.putExtra(SpacePhotoActivity.EXTRA_SPACE_PHOTO, spacePhoto);
 //                startActivity(intent);

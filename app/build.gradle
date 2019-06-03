@@ -46,8 +46,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
 //    Firebase
-    implementation 'com.google.firebase:firebase-storage:16.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.2.1'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
 
 //    Butter Knife
     implementation 'com.jakewharton:butterknife:10.1.0'
@@ -69,8 +70,12 @@ dependencies {
 //    Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
 //    CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+//    Cloudinary
+    implementation 'com.cloudinary:cloudinary-android:1.25.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

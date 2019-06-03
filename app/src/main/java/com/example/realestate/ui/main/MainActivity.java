@@ -187,7 +187,7 @@ public class MainActivity extends BaseActivity
     private void showProfileView() {
         if (mProfileView != null) {
             mProfileView.setVisibility(View.VISIBLE);
-            mProfileName.setText(UserManager.getCurrentUser().getDisplayName());
+            mProfileName.setText(UserManager.getCurrentUser().getFullname());
             Glide.with(this)
                     .load(UserManager.getCurrentUser().getAvatar())
                     .placeholder(R.drawable.avatar_default_small)
@@ -273,7 +273,7 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.profile)
     public void onProfileClick() {
         User user = UserManager.getCurrentUser();
-        startActivity(ProfileActivity.intentFor(this, String.valueOf(user.getUserId())));
+        startActivity(ProfileActivity.intentFor(this, String.valueOf(user.getId())));
     }
 
     @OnClick(R.id.btn_up_post)

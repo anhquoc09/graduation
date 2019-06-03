@@ -15,6 +15,7 @@ import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.model.ProfileDetail;
 import com.example.realestate.utils.AndroidUtilities;
+import com.google.android.gms.common.internal.ResourceUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -137,9 +138,9 @@ public class ProfileTabDetailFragment extends Fragment {
 
     public void setData(Profile profile) {
         if (profile != null) {
-            mId.setText(mProfile.getUserId());
-            mName.setText(mProfile.getDisplayName());
-            mPhone.setText(mProfile.getPhoneNumber());
+            mId.setText(mProfile.getId());
+            mName.setText(mProfile.getFullname());
+            mPhone.setText(mProfile.getPhone());
             mEmail.setText(mProfile.getEmail());
             mAddress.setText(mProfile.getAddress());
         }
@@ -155,7 +156,7 @@ public class ProfileTabDetailFragment extends Fragment {
         mName.setEnabled(false);
         mPhone.setEnabled(false);
         mAddress.setEnabled(false);
-        AndroidUtilities.showToast("Your profile is saved");
+        AndroidUtilities.showToast(getResources().getString(R.string.edit_profile_success));
     }
 
     public void onEditProfileError(String error) {

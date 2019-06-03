@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.main.ListEstateAdapter;
-import com.example.realestate.ui.main.estatedetail.EstateDetailAcivity;
+import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.ui.widget.CustomListLayout;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -97,7 +97,7 @@ public class HomeTabListFragment extends Fragment
 
     @Override
     public void onItemSelected(EstateDetail item) {
-        startActivity(EstateDetailAcivity.intentFor(getActivity(), item));
+        startActivity(EstateDetailActivity.intentFor(getActivity(), item));
     }
 
     public void setData(List<EstateDetail> list) {

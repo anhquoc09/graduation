@@ -13,16 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
-import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.realestate.R;
-import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.login.LoginActivity;
-import com.example.realestate.ui.main.estatedetail.EstateDetailAcivity;
-import com.example.realestate.ui.main.uppost.UpPostActivity;
+import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -75,8 +71,6 @@ public class MapFragment extends Fragment
     private Location mLocation;
 
     private Location mOldCamPosition;
-
-    private LatLng mMarkerSelectedPosition;
 
     private final List<EstateDetail> mList = new ArrayList<>();
 
@@ -229,7 +223,9 @@ public class MapFragment extends Fragment
                         new LatLng(mOldCamPosition.getLatitude(),
                                 mOldCamPosition.getLongitude()),
                         15));
-        mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
+        if (mCallBackListener != null) {
+            mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
+        }
     }
 
     private void animateToMyLocation() {
@@ -250,7 +246,7 @@ public class MapFragment extends Fragment
     public void onInfoWindowClick(Marker marker) {
         EstateDetail estateDetail = (EstateDetail) marker.getTag();
         if (estateDetail != null) {
-            startActivity(EstateDetailAcivity.intentFor(getActivity(), estateDetail));
+            startActivity(EstateDetailActivity.intentFor(getActivity(), estateDetail));
         }
     }
 

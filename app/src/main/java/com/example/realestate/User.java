@@ -1,6 +1,5 @@
 package com.example.realestate;
 
-import com.example.realestate.data.model.LoginData;
 import com.example.realestate.data.model.Profile;
 
 /**
@@ -10,6 +9,7 @@ import com.example.realestate.data.model.Profile;
 public class User {
 
     private Profile mProfile;
+    private String mAccessToken;
 
 //    private Credentials mCredentials;
 
@@ -18,39 +18,12 @@ public class User {
 //        mCredentials = new Credentials();
     }
 
-    public User(LoginData loginData) {
-        mProfile = new Profile();
-        mProfile.setUserId(loginData.getUserId());
-        mProfile.setPhoneNumber(loginData.getPhoneNumber());
+    public User(Profile profile) {
+        mProfile = profile;
 
 //        mCredentials = new Credentials(loginData.getAccessToken(), loginData.getTokenExpiredTime());
     }
 
-    public String getPhoneNumber() {
-        return mProfile.getPhoneNumber();
-    }
-
-    public String getAccessToken() {
-        return "123456";
-//        return mCredentials.getAccessToken();
-    }
-
-    public void setAccessToken(String accessToken) {
-//        mCredentials.setAccessToken(accessToken);
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        mProfile.setPhoneNumber(phoneNumber);
-    }
-
-//    public long getTokenExpiredTime() {
-//        return mCredentials.getTokenExpiredTime();
-//    }
-//
-//    public void setTokenExpiredTime(long tokenExpiredTime) {
-//        mCredentials.setTokenExpiredTime(tokenExpiredTime);
-//    }
-//
     public Profile getProfile() {
         return mProfile;
     }
@@ -59,45 +32,28 @@ public class User {
         mProfile = profile;
     }
 
-    public String getAvatar() {
-        return mProfile.getAvatar();
+    public String getIdentify() {
+        return mProfile.getIdentify();
     }
 
-    public void setAvatar(String avatar) {
-        mProfile.setAvatar(avatar);
+    public void setIdentify(String identify) {
+        mProfile.setIdentify(identify);
     }
 
-    public String getDisplayName() {
-        return mProfile.getDisplayName();
+    public String getId() {
+        return mProfile.getId();
     }
 
-    public void setDisplayName(String displayName) {
-        mProfile.setDisplayName(displayName);
+    public void setId(String id) {
+        mProfile.setId(id);
     }
 
-    public String getUserName() {
-        return mProfile.getUserName();
+    public String getFullname() {
+        return mProfile.getFullname();
     }
 
-    public void setUserName(String userName) {
-        mProfile.setUserName(userName);
-    }
-
-    public int getType() {
-        return mProfile.getType();
-    }
-
-    public int getUserId() {
-        return mProfile.getUserId();
-    }
-
-
-    public String getEmail() {
-        return mProfile.getEmail();
-    }
-
-    public void setEmail(String email) {
-        mProfile.setEmail(email);
+    public void setFullname(String fullname) {
+        mProfile.setFullname(fullname);
     }
 
     public String getAddress() {
@@ -108,23 +64,83 @@ public class User {
         mProfile.setAddress(address);
     }
 
-    public String getBirthday() {
-        return mProfile.getBirthday();
+    public String getPhone() {
+        return mProfile.getPhone();
     }
 
-    public void setBirthday(String birthday) {
-        mProfile.setBirthday(birthday);
+    public void setPhone(String phone) {
+        mProfile.setPhone(phone);
     }
 
-    public boolean isVerified() {
-        return mProfile.isVerified();
+    public String getDescription() {
+        return mProfile.getDescription();
     }
 
-    public void setVerified(boolean verified) {
-        mProfile.setVerified(verified);
+    public void setDescription(String description) {
+        mProfile.setDescription(description);
     }
 
-    public boolean isDev() {
-        return getType() == 1000;
+    public String getEmail() {
+        return mProfile.getEmail();
+    }
+
+    public void setEmail(String email) {
+        mProfile.setEmail(email);
+    }
+
+    public Integer getTotalProject() {
+        return mProfile.getTotalProject();
+    }
+
+    public void setTotalProject(Integer totalProject) {
+        mProfile.setTotalProject(totalProject);
+    }
+
+    public Integer getStatusAccount() {
+        return mProfile.getStatusAccount();
+    }
+
+    public void setStatusAccount(Integer statusAccount) {
+        mProfile.setStatusAccount(statusAccount);
+    }
+
+    public String getAvatar() {
+        return mProfile.getAvatar();
+    }
+
+    public void setAvatar(String avatar) {
+        mProfile.setAvatar(avatar);
+    }
+
+    public String getCompany() {
+        return mProfile.getCompany();
+    }
+
+    public void setCompany(String company) {
+        mProfile.setCompany(company);
+    }
+
+    public boolean getVerify() {
+        return mProfile.getVerify();
+    }
+
+    public void setVerify(boolean verify) {
+        mProfile.setVerify(verify);
+    }
+
+    public boolean getLock() {
+        return mProfile.getLock();
+    }
+
+    public void setLock(boolean lock) {
+        mProfile.setLock(lock);
+    }
+
+    public String getAccessToken() {
+        return mAccessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        mAccessToken = accessToken;
     }
 }

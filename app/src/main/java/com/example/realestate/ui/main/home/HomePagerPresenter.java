@@ -41,7 +41,7 @@ public class HomePagerPresenter extends BasePresenter<HomePagerView> {
     }
 
     public void fetchData(double latitude, double longitude) {
-        if (mSub != null &&     !mSub.isUnsubscribed()) {
+        if (mSub != null && !mSub.isUnsubscribed()) {
             mSub.unsubscribe();
         }
 

@@ -2,14 +2,17 @@ package com.example.realestate.ui.login;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
+import com.example.realestate.User;
 import com.example.realestate.UserManager;
-import com.example.realestate.data.model.LoginData;
+import com.example.realestate.data.model.Profile;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.LoginResponse;
 import com.example.realestate.data.remote.rest.EstateService;
+import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
@@ -17,6 +20,7 @@ import com.example.realestate.utils.SimpleSubscriber;
 
 import java.net.SocketTimeoutException;
 
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -39,32 +43,22 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         mEstateService = ServiceProvider.getEstateService();
     }
 
-    public void login(String accessToken) {
-        if (!canLogin(accessToken)) {
+    public void login(String idToken) {
+        if (!canLogin(idToken)) {
             if (isViewAttached()) {
                 mView.showNoNetworkConnection();
             }
         }
-
-        loginGoogle(accessToken);
+        showLoadingProgress();
+        Subscription subscription = mEstateService.loginGoogle(idToken)
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new LoginSubscriber());
+        mSubscriptions.add(subscription);
     }
 
     private boolean canLogin(String accessToken) {
         return !TextUtils.isEmpty(accessToken) && NetworkUtils.isNetworkConnected(mContext);
-    }
-
-
-    private void loginGoogle(String accessToken) {
-        UserManager.setGoogleToken(accessToken);
-        mView.onLoginSuccess();
-//        showLoadingProgress();
-//        Subscription subscription = mEstateService.loginGoogle(accessToken,
-//                null,
-//                null, AndroidUtilities.currentOsVersion())
-//                .subscribeOn(SchedulerProvider.io())
-//                .observeOn(SchedulerProvider.ui())
-//                .subscribe(new LoginSubscriber());
-//        mSubscriptions.add(subscription);
     }
 
     private void showLoadingProgress() {
@@ -80,20 +74,27 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         }
     }
 
+    private void onLoginSuccess(Profile profile, String accessToken) {
+        User user = new User(profile);
+        user.setAccessToken(accessToken);
+        UserManager.setCurrentUser(user);
+        mView.onLoginSuccess();
+    }
+
     private class LoginSubscriber extends SimpleSubscriber<LoginResponse> {
 
         @Override
         public void onNext(LoginResponse loginResponse) {
             hideLoginProgress();
-            if (loginResponse.isSuccessful()) {
-                LoginData loginData = loginResponse.getData();
-                if (loginData == null || TextUtils.isEmpty(loginData.getAccessToken())) {
+
+            if (loginResponse != null) {
+                Profile profile = loginResponse.getProfile();
+                if (profile == null || loginResponse.getToken().isEmpty()) {
+                    Log.e(TAG, loginResponse.getMessage());
                     showLoginError(mContext.getString(R.string.login_fail));
                 } else {
-                    mView.onLoginSuccess();
+                    onLoginSuccess(profile, loginResponse.getToken());
                 }
-            } else {
-                showLoginError(loginResponse.getMessage());
             }
         }
 

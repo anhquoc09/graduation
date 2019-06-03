@@ -5,16 +5,14 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.realestate.data.model.Profile;
-import com.example.realestate.utils.NetworkUtils;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
-
-import androidx.annotation.NonNull;
 
 /**
  * @author anhquoc09
@@ -57,10 +55,6 @@ public class GoogleManager {
             if (account == null) {
                 onError(mContext.getResources().getString(R.string.message_login_fail, "NoAcc"));
             } else {
-                User user = new User();
-                Profile profile = new Profile();
-                user.setProfile(profile);
-                UserManager.setCurrentUser(user);
                 onSuccess(account.getIdToken());
             }
         } catch (ApiException e) {
@@ -132,9 +126,9 @@ public class GoogleManager {
     public interface LoginResultCallback {
         void onLoginError(String errorMessage);
 
-        void onLoginSuccess(String accessToken);
-
         void startForResult(Intent signInIntent, int loginGgRequestCode);
+
+        void onLoginSuccess(String accessToken);
     }
 
 

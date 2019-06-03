@@ -1,11 +1,13 @@
 package com.example.realestate.data.model;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
 
 public class EstateDetail implements Serializable {
+
     @SerializedName("url")
     private List<String> url = null;
 
@@ -22,7 +24,7 @@ public class EstateDetail implements Serializable {
     private String investor;
 
     @SerializedName("price")
-    private Integer price;
+    private Float price;
 
     @SerializedName("unit")
     private String unit;
@@ -48,23 +50,14 @@ public class EstateDetail implements Serializable {
     @SerializedName("ownerid")
     private String ownerid;
 
-    @SerializedName("fullname")
-    private String fullname;
-
-    @SerializedName("phone")
-    private String phone;
-
-    @SerializedName("email")
-    private String email;
-
-    @SerializedName("avatar")
-    private String avatar;
-
     @SerializedName("statusProject")
     private Integer statusProject;
 
-    @SerializedName("allowComment")
-    private Boolean allowComment;
+    @SerializedName("amount")
+    private Integer amount;
+
+    @SerializedName("__v")
+    private Integer v;
 
     @SerializedName("createTime")
     private Integer createTime;
@@ -72,8 +65,26 @@ public class EstateDetail implements Serializable {
     @SerializedName("updateTime")
     private Integer updateTime;
 
-    @SerializedName("__v")
-    private Integer v;
+    @SerializedName("verify")
+    private Boolean verify;
+
+    @SerializedName("allowComment")
+    private Boolean allowComment;
+
+    @SerializedName("avatar")
+    private String avatar;
+
+    @SerializedName("email")
+    private String email;
+
+    @SerializedName("fullname")
+    private String fullname;
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("codelist")
+    private List<CodeList> codeList = null;
 
     public List<String> getUrl() {
         return url;
@@ -115,11 +126,11 @@ public class EstateDetail implements Serializable {
         this.investor = investor;
     }
 
-    public Integer getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -187,38 +198,6 @@ public class EstateDetail implements Serializable {
         this.ownerid = ownerid;
     }
 
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public Integer getStatusProject() {
         return statusProject;
     }
@@ -227,12 +206,20 @@ public class EstateDetail implements Serializable {
         this.statusProject = statusProject;
     }
 
-    public Boolean getAllowComment() {
-        return allowComment;
+    public Integer getAmount() {
+        return amount;
     }
 
-    public void setAllowComment(Boolean allowComment) {
-        this.allowComment = allowComment;
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public Integer getV() {
+        return v;
+    }
+
+    public void setV(Integer v) {
+        this.v = v;
     }
 
     public Integer getCreateTime() {
@@ -251,11 +238,59 @@ public class EstateDetail implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getV() {
-        return v;
+    public Boolean getVerify() {
+        return verify;
     }
 
-    public void setV(Integer v) {
-        this.v = v;
+    public void setVerify(Boolean verify) {
+        this.verify = verify;
+    }
+
+    public Boolean getAllowComment() {
+        return allowComment;
+    }
+
+    public void setAllowComment(Boolean allowComment) {
+        this.allowComment = allowComment;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<CodeList> getCodeList() {
+        return codeList;
+    }
+
+    public void setCodeList(List<CodeList> codeList) {
+        this.codeList = codeList;
     }
 }

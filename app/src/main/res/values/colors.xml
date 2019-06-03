@@ -2,10 +2,10 @@
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#3F51B5</color>
+    <color name="colorAccent">#0042DB</color>
 
     <color name="windowBackground">#CCCCCC</color>
-    <color name="splashScreenBackground">#3F51B5</color>
+    <color name="splashScreenBackground">#0042DB</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>

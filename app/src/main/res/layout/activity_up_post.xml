@@ -13,17 +13,17 @@
 
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="start|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_more_filter" />
+            android:scaleType="center"
+            android:src="@drawable/ic_back" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="55dp"
+            android:layout_marginEnd="47dp"
             android:gravity="center"
             android:text="@string/up_post"
             android:textColor="@color/white"
@@ -32,12 +32,13 @@
 
         <ImageView
             android:id="@+id/btn_up_post"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_like_heart" />
+            android:scaleType="center"
+            android:src="@drawable/ic_upload_ok" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -190,7 +191,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_like_heart"
+                    android:scaleType="center"
+                    android:src="@drawable/btn_upload_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -215,8 +217,8 @@
                     android:background="@drawable/bg_white_fill_green_stroke"
                     android:ems="10"
                     android:hint="@string/description"
-                    android:padding="8dp"
                     android:maxLines="10"
+                    android:padding="8dp"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
