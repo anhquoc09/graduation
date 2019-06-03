@@ -1,4 +1,4 @@
-package com.example.realestate.ui.main.home.map;
+package com.example.realestate.ui.main.home;
 
 import android.app.Activity;
 import android.content.Context;

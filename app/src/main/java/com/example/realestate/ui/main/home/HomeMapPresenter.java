@@ -1,7 +1,5 @@
 package com.example.realestate.ui.main.home;
 
-import android.widget.Toast;
-
 import com.example.realestate.EstateApplication;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.data.remote.ServiceProvider;
@@ -9,7 +7,6 @@ import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
-import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
 
 import java.util.List;
@@ -23,9 +20,9 @@ import rx.subscriptions.CompositeSubscription;
  * @since 24/03/2019
  */
 
-public class HomePagerPresenter extends BasePresenter<HomePagerView> {
+public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
-    public static final String TAG = HomePagerPresenter.class.getSimpleName();
+    public static final String TAG = HomeMapPresenter.class.getSimpleName();
 
     public static final String RADIUS = "5";
 
@@ -35,7 +32,7 @@ public class HomePagerPresenter extends BasePresenter<HomePagerView> {
 
     private CompositeSubscription mSubscription;
 
-    public HomePagerPresenter() {
+    public HomeMapPresenter() {
         mService = ServiceProvider.getEstateService();
         mSubscription = new CompositeSubscription();
     }
@@ -66,43 +63,31 @@ public class HomePagerPresenter extends BasePresenter<HomePagerView> {
     private void showConnectionFailedLayout() {
     }
 
+    private void hideConnectionFailedLayout() {
+    }
+
     private class HomeEstateListSubscriber extends Subscriber<EstateListResponse> {
 
         @Override
         public void onStart() {
-//            hideConnectionFailedLayout();
-//            mPaging.setLoading(true);
+            hideConnectionFailedLayout();
         }
 
         @Override
         public void onCompleted() {
-//            hideLoadingLayout();
-//
-//            mPaging.setLoading(false);
         }
 
         @Override
         public void onError(Throwable e) {
-//            hideLoadingLayout();
             showConnectionFailedLayout();
-            AndroidUtilities.showToast("fetch data error");
         }
 
         @Override
         public void onNext(EstateListResponse estateListResponse) {
             List<EstateDetail> estateList = estateListResponse.getEstateDetails();
-            if (estateList != null) {
-//                mPaging.next();
-//                mPaging.setHasNext(streamList.size() >= mPaging.getPageSize());
-            }
 
             if (isViewAttached()) {
-//                if (mPaging.isFirstPage()) {
                 mView.fetchDataSuccess(estateList);
-//                } else {
-//                    mView.appendData(streamList);
-//                }
-                AndroidUtilities.showToast("fetch data success");
             }
         }
     }

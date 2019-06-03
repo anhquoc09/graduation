@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="10dp"
     app:cardElevation="4dp">
 
     <LinearLayout
@@ -18,8 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal">
 
             <include
@@ -28,41 +29,26 @@
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1" />
 
-            <FrameLayout
-                android:id="@+id/btn_filter"
+            <ImageView
+                android:id="@+id/btn_more_filter"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="20dp">
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_white_fill_green_stroke"
+                android:scaleType="center"
+                android:src="@drawable/ic_arrow_blue_spinner" />
 
-                <ImageView
-                    android:id="@+id/btn_more_filter"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_white_fill_green_stroke"
-                    android:scaleType="center"
-                    android:src="@drawable/green_down_arrow" />
-
-                <ImageView
-                    android:id="@+id/btn_less_filter"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_white_fill_green_stroke"
-                    android:scaleType="center"
-                    android:src="@drawable/green_up_arrow"
-                    android:visibility="gone" />
-            </FrameLayout>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/more_filter_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:animateLayoutChanges="true"
             android:visibility="gone"
             tool:visibility="visible">
@@ -71,8 +57,8 @@
                 android:id="@+id/btn_for"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:animateLayoutChanges="true"
                 android:background="@drawable/bg_green_fill"
                 android:elevation="2dp"
@@ -93,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/white_down_arrow" />
+                    android:src="@drawable/ic_arrow_white_down" />
 
             </FrameLayout>
 
@@ -123,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/green_down_arrow" />
+                    android:src="@drawable/ic_arrow_blue_down" />
 
             </FrameLayout>
 
@@ -152,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/green_down_arrow" />
+                    android:src="@drawable/ic_arrow_blue_down" />
 
             </FrameLayout>
 

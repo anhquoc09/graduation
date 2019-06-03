@@ -1,4 +1,4 @@
-package com.example.realestate.ui.main.home.map;
+package com.example.realestate.ui.main.home;
 
 import android.Manifest;
 import android.app.Activity;
@@ -12,13 +12,24 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
+import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,44 +44,54 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
  * @author anhquoc09
- * @since 10/03/2019
+ * @since 24/03/2019
  */
 
-public class MapFragment extends Fragment
-        implements MapView,
+public class HomeMapFragment extends Fragment
+        implements HomePagerView,
         OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener,
         GoogleMap.OnInfoWindowClickListener {
 
-    private static final String TAG = MapFragment.class.getSimpleName();
+    public static final String TAG = HomeMapFragment.class.getSimpleName();
 
     private static final float LOAD_DISTANCE = 2000;
 
+    @BindView(R.id.ic_delete_search)
+    ImageView mIconClear;
+
+    @BindView(R.id.search_text)
+    EditText mSearchText;
+
+    @BindView(R.id.more_filter_layout)
+    View mMoreFilterLayout;
+
+    @BindView(R.id.btn_more_filter)
+    View mBtnMoreFilter;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+
     private Unbinder mUnbinder;
+
+    private HomeMapPresenter mPresenter;
+
+    private String mCurrentSearchKey;
+
+    private DebounceEditText mDebounceEditText;
 
     private GoogleMap mGoogleMap;
 
-    private MapPresenter mPresenter;
+    private Location mMyLocation;
 
-    private CustomGoogleMapAdapter mMapAdapter;
-
-    private OnCallBackListener mCallBackListener;
-
-    private LocationManager mLocationManager;
-
-    private Location mLocation;
-
-    private Location mOldCamPosition;
+    private Location mOldCamLocation;
 
     private final List<EstateDetail> mList = new ArrayList<>();
 
@@ -78,7 +99,7 @@ public class MapFragment extends Fragment
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                mLocation = location;
+                mMyLocation = location;
             }
         }
 
@@ -98,31 +119,41 @@ public class MapFragment extends Fragment
         }
     };
 
-    public static MapFragment newInstance(OnCallBackListener listener) {
-        MapFragment fragment = new MapFragment();
-        fragment.setCallBackListener(listener);
+    public static HomeMapFragment newInstance() {
+        HomeMapFragment fragment = new HomeMapFragment();
         fragment.setArguments(new Bundle());
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_layout, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mUnbinder = ButterKnife.bind(this, view);
 
-        mLocation = new Location("HCMUS");
-        mLocation.setLatitude(10.763147);
-        mLocation.setLongitude(106.682203);
+        mMyLocation = new Location("HCMUS");
+        mMyLocation.setLatitude(10.763147);
+        mMyLocation.setLongitude(106.682203);
 
+        initSearchBox();
         initPresenter();
-
         initMap();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -130,7 +161,38 @@ public class MapFragment extends Fragment
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
+        if (mDebounceEditText != null) {
+            mDebounceEditText.destroy();
+        }
         super.onDestroyView();
+    }
+
+    private void initSearchBox() {
+        mDebounceEditText = new DebounceEditText(mSearchText, result -> mCurrentSearchKey = result.toString());
+
+        mSearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(s)) {
+                    mIconClear.setVisibility(View.INVISIBLE);
+                } else {
+                    mIconClear.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void initPresenter() {
+        mPresenter = new HomeMapPresenter();
+        mPresenter.attachView(this);
     }
 
     private void initMap() {
@@ -140,14 +202,22 @@ public class MapFragment extends Fragment
         }
     }
 
-    private void initPresenter() {
-        mPresenter = new MapPresenter();
-        mPresenter.attachView(this);
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+        mGoogleMap.setInfoWindowAdapter(new CustomGoogleMapAdapter(getContext()));
+        mGoogleMap.setOnInfoWindowClickListener(this);
+        mGoogleMap.setOnCameraIdleListener(this);
+        initMyLocation();
+        notifyDataChange();
     }
 
-
-    public void setCallBackListener(OnCallBackListener listener) {
-        mCallBackListener = listener;
+    private void fetchData(double latitude, double longitude) {
+        if (mPresenter != null) {
+            mPresenter.fetchData(latitude, longitude);
+        }
     }
 
     public void setData(List<EstateDetail> list) {
@@ -174,25 +244,13 @@ public class MapFragment extends Fragment
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-        mMapAdapter = new CustomGoogleMapAdapter(getContext());
-        mGoogleMap.setInfoWindowAdapter(mMapAdapter);
-        mGoogleMap.setOnInfoWindowClickListener(this);
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mGoogleMap.setOnCameraIdleListener(this);
-        initMyLocation();
-        notifyDataChange();
-    }
-
     private void initMyLocation() {
 
         Activity activity = getActivity();
         if (activity != null) {
-            mLocationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-            boolean gps_enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            boolean network_enabled = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!gps_enabled && !network_enabled) {
                 new AlertDialog.Builder(activity)
@@ -210,31 +268,29 @@ public class MapFragment extends Fragment
                 PermissionUtils.Request_FINE_LOCATION(activity, 1);
             } else {
                 mGoogleMap.setMyLocationEnabled(true);
-                Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (location != null) {
-                    mLocation = location;
+                    mMyLocation = location;
                 }
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
             }
         }
-        mOldCamPosition = mLocation;
+        mOldCamLocation = mMyLocation;
         mGoogleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mOldCamPosition.getLatitude(),
-                                mOldCamPosition.getLongitude()),
+                        new LatLng(mOldCamLocation.getLatitude(),
+                                mOldCamLocation.getLongitude()),
                         15));
-        if (mCallBackListener != null) {
-            mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
-        }
+        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
     }
 
     private void animateToMyLocation() {
         if (mGoogleMap.isMyLocationEnabled()) {
-            mOldCamPosition = mLocation;
+            mOldCamLocation = mMyLocation;
             mGoogleMap.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(mOldCamPosition.getLatitude(),
-                                    mOldCamPosition.getLongitude()),
+                            new LatLng(mOldCamLocation.getLatitude(),
+                                    mOldCamLocation.getLongitude()),
                             15));
 
         } else {
@@ -261,21 +317,47 @@ public class MapFragment extends Fragment
         Location newLocation = new Location("");
         newLocation.setLatitude(target.latitude);
         newLocation.setLongitude(target.longitude);
-        float distance = mOldCamPosition.distanceTo(new Location(newLocation));
+        float distance = mOldCamLocation.distanceTo(new Location(newLocation));
 
         if (distance >= LOAD_DISTANCE) {
-            mOldCamPosition = newLocation;
-
-            if (mCallBackListener != null) {
-                mCallBackListener.getListInMap(mOldCamPosition.getLatitude(), mOldCamPosition.getLongitude());
-            }
+            mOldCamLocation = newLocation;
+            fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
         }
     }
 
-    /**
-     * {@link OnCallBackListener}
-     */
-    public interface OnCallBackListener {
-        void getListInMap(double latitude, double longitude);
+    @OnClick(R.id.btn_more_filter)
+    public void onMoreFilterClick() {
+        if (mMoreFilterLayout.getVisibility() == View.GONE) {
+            mMoreFilterLayout.setVisibility(View.VISIBLE);
+            mBtnMoreFilter.setSelected(true);
+        } else {
+            mMoreFilterLayout.setVisibility(View.GONE);
+            mBtnMoreFilter.setSelected(false);
+        }
+    }
+
+    @OnClick(R.id.btn_for)
+    public void onBtnForClick() {
+
+    }
+
+    @OnClick(R.id.btn_type)
+    public void onBtnTypeClick() {
+
+    }
+
+    @OnClick(R.id.btn_district)
+    public void onBtnDistrictClick() {
+
+    }
+
+    @OnClick(R.id.btn_search)
+    public void onBtnSearchClick() {
+
+    }
+
+    @Override
+    public void fetchDataSuccess(List<EstateDetail> list) {
+        setData(list);
     }
 }
