@@ -2,11 +2,35 @@
 <resources>
       <string-array name="home_title">
         <item>@string/view_on_map</item>
-        <item>@string/view_ont_list</item>
+        <item>@string/show_list</item>
     </string-array>
 
     <string-array name="profile_title">
         <item>@string/profile_detail</item>
         <item>@string/profile_activities</item>
+    </string-array>
+
+    <string-array name="type_name">
+        <item>@string/estate_apartment</item>
+        <item>@string/estate_house</item>
+        <item>@string/estate_land</item>
+        <item>@string/estate_office</item>
+    </string-array>
+
+    <integer-array name="type_code">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </integer-array>
+
+    <string-array name="status_name">
+        <item>@string/estate_sell</item>
+        <item>@string/estate_lease</item>
+    </string-array>
+
+    <string-array name="status_code">
+        <item>1</item>
+        <item>3</item>
     </string-array>
 </resources>

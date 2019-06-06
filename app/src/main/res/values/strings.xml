@@ -32,7 +32,7 @@
     <string name="map_title">Map</string>
     <string name="search_hint">Enter address, keyword, ....</string>
     <string name="view_on_map">VIEW ON MAP</string>
-    <string name="view_ont_list">VIEW ON LIST</string>
+    <string name="show_list">Show list</string>
     <string name="empty_data">Empty data.</string>
 
     <!-- Profile -->
@@ -50,26 +50,43 @@
     <string name="up_post">Up Post</string>
     <string name="add_picture_text_hint">Click button on the right to add picture</string>
     <string name="title">Title</string>
-    <string name="price">Price (VNĐ)</string>
-    <string name="square">Square</string>
+    <string name="investor">Investor</string>
+    <string name="price">Price (Millions VNĐ)</string>
+    <string name="square">Square (m2)</string>
     <string name="address">Address</string>
     <string name="description">Description</string>
     <string name="image">Image</string>
     <string name="estate_location">Hold and drag to your estate location</string>
     <string name="gps_not_found_title">Location service is disabled</string>
     <string name="gps_not_found_message">Do you want to enable Location service?</string>
+    <string name="no_network_message">Do you want to turn on your network?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="status_available">Available</string>
     <string name="status_sold">Sold</string>
     <string name="estate_apartment">Apartment</string>
-    <string name="estate_townhouse">Townhouse</string>
-    <string name="estate_villa">Villa</string>
+    <string name="estate_house">House</string>
     <string name="estate_office">Office</string>
-    <string name="estate_warehouse">Warehouse</string>
+    <string name="estate_sell">For sell</string>
+    <string name="estate_lease">For lease</string>
     <string name="estate_land">Land</string>
     <string name="contact_now">Contact now</string>
     <string name="contact_mess">Select the method to contact the owner</string>
     <string name="edit_profile_success">Your profile is saved</string>
+    <string name="address_required">(*) Please enter your exactly address to find your location easier. Hold and drag below marker to your exactly location on map.</string>
+    <string name="error_no_address">Enter your estate address</string>
+    <string name="error_no_title">Enter a title</string>
+    <string name="error_no_price">Enter expected price</string>
+    <string name="error_no_square">Enter square of your estate</string>
+    <string name="contact_name">Name</string>
+    <string name="contact_phone">Phone number</string>
+    <string name="contact_email">Email</string>
+    <string name="error_no_name">Enter contact name</string>
+    <string name="error_no_phone">Enter contact phone number</string>
+    <string name="error_no_email">Enter contact email</string>
+    <string name="contact_required">(*) Please enter the correct information for buyers can contact to you</string>
+    <string name="no_address">Can not find your location. Please drag a marker on map to your location.</string>
+    <string name="error_no_picture">Please add some picture of your estate</string>
+    <string name="hide_list">Hide list</string>
 
 </resources>

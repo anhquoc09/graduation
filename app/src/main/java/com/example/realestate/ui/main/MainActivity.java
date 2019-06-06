@@ -72,8 +72,6 @@ public class MainActivity extends BaseActivity
 
     private MainPresenter mPresenter;
 
-    private ActionBarDrawerToggle mDrawerListener;
-
     private Unbinder mUnbinder;
 
     private GoogleManager mGoogleManager;
@@ -115,7 +113,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void setupNavigationLayout() {
-        mDrawerListener = new ActionBarDrawerToggle(this, mDrawerLayout, null, R.string.drawer_opened, R.string.drawer_closed) {
+        ActionBarDrawerToggle drawerListener = new ActionBarDrawerToggle(this, mDrawerLayout, null, R.string.drawer_opened, R.string.drawer_closed) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -126,7 +124,7 @@ public class MainActivity extends BaseActivity
                 super.onDrawerStateChanged(newState);
             }
         };
-        mDrawerLayout.addDrawerListener(mDrawerListener);
+        mDrawerLayout.addDrawerListener(drawerListener);
     }
 
     private void initAdapter() {

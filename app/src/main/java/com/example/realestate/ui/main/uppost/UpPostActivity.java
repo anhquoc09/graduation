@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,23 +14,32 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudinary.android.callback.ErrorInfo;
 import com.example.realestate.R;
+import com.example.realestate.User;
+import com.example.realestate.UserManager;
+import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
+import com.example.realestate.ui.widget.WorkaroundMapFragment;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.PermissionUtils;
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,37 +59,59 @@ public class UpPostActivity extends BaseActivity
         OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMarkerDragListener,
-        ImageRecyclerViewAdapter.OnImageClickListener {
+        ImageUploadListAdapter.OnImageClickListener {
 
     public static int PICK_IMAGE_MULTIPLE = 1;
 
+    @BindView(R.id.scroll_view)
+    ScrollView mScrollView;
+
     @BindView(R.id.up_title)
-    EditText mTitle;
+    TextInputLayout mTitle;
+
+    @BindView(R.id.up_investor)
+    TextInputLayout mInvestor;
+
+    @BindView(R.id.up_status)
+    Spinner mStatus;
+
+    @BindView(R.id.up_type)
+    Spinner mType;
 
     @BindView(R.id.up_price)
-    EditText mPrice;
+    TextInputLayout mPrice;
 
     @BindView(R.id.up_square)
-    EditText mSquare;
+    TextInputLayout mSquare;
 
     @BindView(R.id.up_address)
-    EditText mAddressEditText;
+    TextInputLayout mAddressEditText;
 
     @BindView(R.id.up_list_image)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.up_description)
-    EditText mDescription;
+    @BindView(R.id.empty_view)
+    TextView mEmptyImageView;
 
-    private Unbinder mUnbinder;
+    @BindView(R.id.up_description)
+    TextInputLayout mDescription;
+
+    @BindView(R.id.up_contact_name)
+    TextInputLayout mName;
+
+    @BindView(R.id.up_contact_phone)
+    TextInputLayout mPhone;
+
+    @BindView(R.id.up_contact_email)
+    TextInputLayout mEmail;
+
+    private Unbinder mUnBinder;
 
     private UpPostPresenter mPresenter;
 
-    private Geocoder mGeocoder;
+    private Geocoder mGeoCoder;
 
     private GoogleMap mGoogleMap;
-
-    private LocationManager mLocationManager;
 
     private Location mLocation;
 
@@ -93,7 +125,11 @@ public class UpPostActivity extends BaseActivity
 
     private MarkerOptions mMarkerOptions = new MarkerOptions();
 
-    private ImageRecyclerViewAdapter mImageAdapter;
+    private ImageUploadListAdapter mImageAdapter;
+
+    private int[] typeCode;
+
+    private int[] statusCode;
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -124,38 +160,67 @@ public class UpPostActivity extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_post);
-        mUnbinder = ButterKnife.bind(this);
+        mUnBinder = ButterKnife.bind(this);
         initView();
         initPresenter();
+        fillData();
+    }
+
+    private void fillData() {
+        User user = UserManager.getCurrentUser();
+        mInvestor.getEditText().setText(user.getFullname());
+        mName.getEditText().setText(user.getFullname());
+        mPhone.getEditText().setText(user.getPhone());
+        mEmail.getEditText().setText(user.getEmail());
     }
 
     private void initView() {
+        initSpinner();
         initMap();
         initGeoCoder();
         initAddressListener();
         initRecyclerView();
     }
 
+    private void initSpinner() {
+        String[] typeList = getResources().getStringArray(R.array.type_name);
+
+        typeCode = getResources().getIntArray(R.array.type_code);
+
+        String[] statusList = getResources().getStringArray(R.array.status_name);
+
+        statusCode = getResources().getIntArray(R.array.status_code);
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusList);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        mStatus.setAdapter(statusAdapter);
+
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, typeList);
+        typeAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        mType.setAdapter(typeAdapter);
+    }
+
     private void initMap() {
-        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.up_map);
+        WorkaroundMapFragment supportMapFragment = (WorkaroundMapFragment) getSupportFragmentManager().findFragmentById(R.id.up_map);
         if (supportMapFragment != null) {
             supportMapFragment.getMapAsync(this);
+            supportMapFragment.setListener(() -> mScrollView.requestDisallowInterceptTouchEvent(true));
         }
     }
 
     private void initGeoCoder() {
-        mGeocoder = new Geocoder(this, Locale.getDefault());
+        mGeoCoder = new Geocoder(this, Locale.getDefault());
     }
 
     private void initAddressListener() {
-        mDebounceEditText = new DebounceEditText(mAddressEditText, result -> {
+        mDebounceEditText = new DebounceEditText(mAddressEditText.getEditText(), result -> {
             mAddress = result.toString();
             updateLocation();
         });
     }
 
     private void initRecyclerView() {
-        mImageAdapter = new ImageRecyclerViewAdapter();
+        mImageAdapter = new ImageUploadListAdapter();
         mImageAdapter.setOnImageClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -183,6 +248,7 @@ public class UpPostActivity extends BaseActivity
         mMarker.setDraggable(true);
         mMarker.showInfoWindow();
         moveMarker(mLatLng);
+        mAddressEditText.getEditText().setText(getAddressFromLocation(mLocation));
     }
 
     private void updateLocation() {
@@ -201,16 +267,33 @@ public class UpPostActivity extends BaseActivity
         }
     }
 
-    private LatLng getLocationFromAddress(String strAddress) {
-        if (!TextUtils.isEmpty(strAddress) && mGeocoder != null) {
-            List<Address> address;
+    private String getAddressFromLocation(Location location) {
+        if (location != null) {
+            List<Address> addressList;
             try {
-                address = mGeocoder.getFromLocationName(mAddress, 5);
-                if (address != null && !address.isEmpty()) {
-                    Address location = address.get(0);
+                addressList = mGeoCoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                if (addressList != null && !addressList.isEmpty()) {
+                    Address address = addressList.get(0);
+                    return address.getAddressLine(0);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    private LatLng getLocationFromAddress(String strAddress) {
+        if (!TextUtils.isEmpty(strAddress) && mGeoCoder != null) {
+            List<Address> addressList;
+            try {
+                addressList = mGeoCoder.getFromLocationName(mAddress, 1);
+                if (addressList != null && !addressList.isEmpty()) {
+                    Address location = addressList.get(0);
                     return new LatLng(location.getLatitude(), location.getLongitude());
                 }
             } catch (IOException e) {
+                AndroidUtilities.showToast(getString(R.string.no_address));
                 e.printStackTrace();
             }
         }
@@ -228,7 +311,7 @@ public class UpPostActivity extends BaseActivity
         mLocation.setLatitude(10.763147);
         mLocation.setLongitude(106.682203);
 
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -237,8 +320,8 @@ public class UpPostActivity extends BaseActivity
 
         } else {
             mGoogleMap.setMyLocationEnabled(true);
-            mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
+            mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
         }
         initMyLocation();
         initMarker();
@@ -284,8 +367,8 @@ public class UpPostActivity extends BaseActivity
 
     @Override
     protected void onDestroy() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
+        if (mUnBinder != null) {
+            mUnBinder.unbind();
         }
         if (mDebounceEditText != null) {
             mDebounceEditText.destroy();
@@ -304,10 +387,13 @@ public class UpPostActivity extends BaseActivity
     @Override
     public void setImageList(List<Uri> imageListUri) {
         mImageAdapter.setImageList(imageListUri);
+        if (!CollectionUtils.isEmpty(imageListUri)) {
+            mEmptyImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onPostSuccess() {
+    public void onPostSuccess(EstateDetail estateDetail) {
         AndroidUtilities.showToast("Your post is upload success!");
     }
 
@@ -339,7 +425,56 @@ public class UpPostActivity extends BaseActivity
 
     @OnClick(R.id.btn_up_post)
     public void onUpClick() {
-        mPresenter.upPost();
+
+        if (canSubmit()) {
+            mPresenter.submit(mTitle.getEditText().getText().toString(),
+                    mInvestor.getEditText().getText().toString(),
+                    Float.valueOf(mPrice.getEditText().getText().toString()),
+                    "Triệu",
+                    Float.valueOf(mSquare.getEditText().getText().toString()),
+                    typeCode[mType.getSelectedItemPosition()],
+                    mAddress,
+                    mDescription.getEditText().getText().toString(),
+                    mLatLng.latitude,
+                    mLatLng.longitude,
+                    statusCode[mStatus.getSelectedItemPosition()],
+                    mName.getEditText().getText().toString(),
+                    mPhone.getEditText().getText().toString(),
+                    mEmail.getEditText().getText().toString());
+        }
+    }
+
+    private boolean isNotBlank(TextInputLayout textInputLayout, String error) {
+        if (TextUtils.isEmpty(textInputLayout.getEditText().getText())) {
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(error);
+        } else {
+            textInputLayout.setErrorEnabled(false);
+            textInputLayout.setError(null);
+        }
+        return !textInputLayout.isErrorEnabled();
+    }
+
+    private boolean canSubmit() {
+        boolean canSubmit = isEmptyImage();
+        canSubmit = isNotBlank(mTitle, getString(R.string.error_no_title)) && canSubmit;
+        canSubmit = isNotBlank(mPrice, getString(R.string.error_no_price)) && canSubmit;
+        canSubmit = isNotBlank(mSquare, getString(R.string.error_no_square)) && canSubmit;
+        canSubmit = isNotBlank(mAddressEditText, getString(R.string.error_no_address)) && canSubmit;
+        canSubmit = isNotBlank(mName, getString(R.string.error_no_name)) && canSubmit;
+        canSubmit = isNotBlank(mPhone, getString(R.string.error_no_phone)) && canSubmit;
+        canSubmit = isNotBlank(mEmail, getString(R.string.error_no_email)) && canSubmit;
+        return canSubmit;
+    }
+
+    private boolean isEmptyImage() {
+        if (mImageAdapter.getItemCount() <= 0) {
+            mEmptyImageView.setTextColor(Color.RED);
+            mEmptyImageView.setText(R.string.error_no_picture);
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @OnClick(R.id.btn_add_image)
@@ -361,5 +496,8 @@ public class UpPostActivity extends BaseActivity
     @Override
     public void onDeleteImageClick(int position) {
         mPresenter.deleteImage(position);
+        if (mImageAdapter.getItemCount() <= 0) {
+            mEmptyImageView.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -9,11 +9,22 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CodeList {
 
+    @SerializedName("_id")
+    private String id;
+
     @SerializedName("code")
     private String code;
 
     @SerializedName("sold")
     private Boolean sold;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;

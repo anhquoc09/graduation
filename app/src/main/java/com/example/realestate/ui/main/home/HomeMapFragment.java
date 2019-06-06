@@ -24,7 +24,11 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
@@ -57,8 +61,9 @@ import butterknife.Unbinder;
 public class HomeMapFragment extends Fragment
         implements HomePagerView,
         OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener,
         GoogleMap.OnCameraIdleListener,
-        GoogleMap.OnInfoWindowClickListener {
+        HomeMapEstateListAdapter.OnItemClickListener {
 
     public static final String TAG = HomeMapFragment.class.getSimpleName();
 
@@ -79,6 +84,12 @@ public class HomeMapFragment extends Fragment
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.tv_show_list)
+    View mBtnShowList;
+
+    @BindView(R.id.list_layout)
+    View mListLayout;
+
     private Unbinder mUnbinder;
 
     private HomeMapPresenter mPresenter;
@@ -93,7 +104,15 @@ public class HomeMapFragment extends Fragment
 
     private Location mOldCamLocation;
 
+    private int mPreMarkerSelectedIndex = -1;
+
+    private HomeMapEstateListAdapter mListAdapter;
+
+    private SnapHelper mSnapHelper = new LinearSnapHelper();
+
     private final List<EstateDetail> mList = new ArrayList<>();
+
+    private final List<Marker> mMarkers = new ArrayList<>();
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -146,9 +165,49 @@ public class HomeMapFragment extends Fragment
         mMyLocation.setLatitude(10.763147);
         mMyLocation.setLongitude(106.682203);
 
+        initRecyclerView();
         initSearchBox();
         initPresenter();
         initMap();
+    }
+
+    private void initRecyclerView() {
+        mListAdapter = new HomeMapEstateListAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mListAdapter);
+        mListAdapter.setItemClickListener(this);
+        mSnapHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setOnScrollListener(mScrollListener);
+    }
+
+    private OnScrollListener mScrollListener = new OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int state) {
+            if (state == RecyclerView.SCROLL_STATE_IDLE) {
+                int position = getSnapPosition(recyclerView);
+                if (position < mMarkers.size() && position != mPreMarkerSelectedIndex) {
+                    mMarkers.get(position).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    if (mPreMarkerSelectedIndex != -1 && mPreMarkerSelectedIndex < mMarkers.size()) {
+                        mMarkers.get(mPreMarkerSelectedIndex).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    }
+                    mPreMarkerSelectedIndex = position;
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarkers.get(position).getPosition(), 15));
+                }
+            }
+        }
+    };
+
+    private int getSnapPosition(RecyclerView recyclerView) {
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        View snapView;
+
+        if (layoutManager == null) {
+            return RecyclerView.NO_POSITION;
+        } else {
+            snapView = mSnapHelper.findSnapView(layoutManager);
+            return snapView == null ? RecyclerView.NO_POSITION : layoutManager.getPosition(snapView);
+        }
     }
 
     @Override
@@ -207,11 +266,10 @@ public class HomeMapFragment extends Fragment
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
-        mGoogleMap.setInfoWindowAdapter(new CustomGoogleMapAdapter(getContext()));
-        mGoogleMap.setOnInfoWindowClickListener(this);
         mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnMarkerClickListener(this);
         initMyLocation();
-        notifyDataChange();
+        notifyMapChange();
     }
 
     private void fetchData(double latitude, double longitude) {
@@ -224,22 +282,23 @@ public class HomeMapFragment extends Fragment
         mList.clear();
         if (!CollectionUtils.isEmpty(list)) {
             mList.addAll(list);
-            notifyDataChange();
+            mListAdapter.setData(mList);
+            notifyMapChange();
         }
     }
 
-    private void notifyDataChange() {
+    private void notifyMapChange() {
         if (mGoogleMap != null) {
             mGoogleMap.clear();
+            mMarkers.clear();
 
             for (EstateDetail estate : mList) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(estate.getLat(), estate.getLong()))
-                        .title(estate.getName())
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
                 Marker marker = mGoogleMap.addMarker(markerOptions);
-                marker.setTag(estate);
+                mMarkers.add(marker);
             }
         }
     }
@@ -252,11 +311,20 @@ public class HomeMapFragment extends Fragment
             boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            if (!gps_enabled && !network_enabled) {
+            if (!gps_enabled) {
                 new AlertDialog.Builder(activity)
                         .setTitle(R.string.gps_not_found_title)
                         .setMessage(R.string.gps_not_found_message)
                         .setPositiveButton(R.string.yes, (dialogInterface, i) -> activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            }
+
+            if (!network_enabled) {
+                new AlertDialog.Builder(activity)
+                        .setTitle(R.string.no_network_connection)
+                        .setMessage(R.string.no_network_message)
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> activity.startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)))
                         .setNegativeButton(R.string.no, null)
                         .show();
             }
@@ -299,16 +367,21 @@ public class HomeMapFragment extends Fragment
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
-        EstateDetail estateDetail = (EstateDetail) marker.getTag();
-        if (estateDetail != null) {
-            startActivity(EstateDetailActivity.intentFor(getActivity(), estateDetail));
+    public boolean onMarkerClick(Marker marker) {
+        if (mListLayout.getVisibility() == View.GONE) {
+            mListLayout.setVisibility(View.VISIBLE);
         }
-    }
 
-    @OnClick(R.id.btn_my_location)
-    public void onMyLocationClick() {
-        animateToMyLocation();
+        int index = mMarkers.indexOf(marker);
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+        if (mPreMarkerSelectedIndex != -1 && mPreMarkerSelectedIndex != index && mPreMarkerSelectedIndex < mMarkers.size()) {
+            mMarkers.get(mPreMarkerSelectedIndex).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        }
+
+        mRecyclerView.smoothScrollToPosition(index);
+        mPreMarkerSelectedIndex = index;
+        return false;
     }
 
     @Override
@@ -317,12 +390,39 @@ public class HomeMapFragment extends Fragment
         Location newLocation = new Location("");
         newLocation.setLatitude(target.latitude);
         newLocation.setLongitude(target.longitude);
-        float distance = mOldCamLocation.distanceTo(new Location(newLocation));
 
-        if (distance >= LOAD_DISTANCE) {
-            mOldCamLocation = newLocation;
-            fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+        if (mOldCamLocation.distanceTo(newLocation) >= LOAD_DISTANCE) {
+            if (mPreMarkerSelectedIndex != -1 && mPreMarkerSelectedIndex < mMarkers.size()) {
+                Location selectedMarker = new Location("");
+                LatLng selectedPosition = mMarkers.get(mPreMarkerSelectedIndex).getPosition();
+                selectedMarker.setLatitude(selectedPosition.latitude);
+                selectedMarker.setLongitude(selectedPosition.longitude);
+                if (newLocation.distanceTo(selectedMarker) > 100) {
+                    mOldCamLocation = newLocation;
+                    fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+                }
+            } else {
+                mOldCamLocation = newLocation;
+                fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+            }
         }
+    }
+
+    @OnClick(R.id.btn_my_location)
+    public void onMyLocationClick() {
+        animateToMyLocation();
+    }
+
+    @OnClick(R.id.tv_show_list)
+    public void onShowListClick() {
+        mBtnShowList.setVisibility(View.GONE);
+        mListLayout.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.tv_hide_list)
+    public void onHideListClick() {
+        mListLayout.setVisibility(View.GONE);
+        mBtnShowList.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.btn_more_filter)
@@ -359,5 +459,10 @@ public class HomeMapFragment extends Fragment
     @Override
     public void fetchDataSuccess(List<EstateDetail> list) {
         setData(list);
+    }
+
+    @Override
+    public void onItemSelected(EstateDetail item) {
+        startActivity(EstateDetailActivity.intentFor(getActivity(), item));
     }
 }

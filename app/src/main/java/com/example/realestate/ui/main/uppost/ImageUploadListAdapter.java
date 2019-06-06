@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecyclerViewAdapter.ImageViewHolder> {
+public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadListAdapter.ImageViewHolder> {
 
     private final List<ImageInfoItem> mImageList = new ArrayList<>();
 
@@ -124,6 +124,7 @@ public class ImageRecyclerViewAdapter extends RecyclerView.Adapter<ImageRecycler
                         .into(mPhotoImageView);
 
                 if (image.isUploadSuccess()) {
+                    mPhotoImageView.setAlpha(1f);
                     mIconDeletePhoto.setVisibility(View.GONE);
                     mProgressBar.setVisibility(View.GONE);
                     mIconError.setVisibility(View.GONE);

@@ -5,6 +5,12 @@
     </style>
 
     <style name="counterOverride">
-        <item name="android:textColor">#ff0000</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">italic</item>
     </style>
 </resources>

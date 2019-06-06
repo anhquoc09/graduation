@@ -124,28 +124,24 @@ public class EstateDetailActivity extends BaseActivity {
             setImageSlider(mEstateDetail.getUrl());
             setEstateTitle(mEstateDetail.getName());
             setEstatePrice(mEstateDetail.getPrice().toString());
+
             switch (mEstateDetail.getType()) {
                 case 1:
                     setEstateType(context.getString(R.string.estate_apartment));
                     break;
                 case 2:
-                    setEstateType(context.getString(R.string.estate_townhouse));
+                    setEstateType(context.getString(R.string.estate_house));
                     break;
                 case 3:
-                    setEstateType(context.getString(R.string.estate_villa));
-                    break;
-                case 4:
                     setEstateType(context.getString(R.string.estate_land));
                     break;
-                case 5:
+                case 4:
                     setEstateType(context.getString(R.string.estate_office));
-                    break;
-                case 6:
-                    setEstateType(context.getString(R.string.estate_warehouse));
                     break;
                 default:
                     break;
             }
+
             setEstateAddress(mEstateDetail.getAddress());
             setEstateSquare(mEstateDetail.getArea().toString());
             setEstateContact(mEstateDetail.getPhone());

@@ -177,7 +177,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/bg_white_fill_green_stroke"
+        android:background="@drawable/bg_blue_stroke"
         android:text="@string/button_cancel"
         android:textColor="@color/green"
         android:textSize="12sp"

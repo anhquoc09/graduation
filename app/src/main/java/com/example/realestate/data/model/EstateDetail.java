@@ -30,7 +30,7 @@ public class EstateDetail implements Serializable {
     private String unit;
 
     @SerializedName("area")
-    private Integer area;
+    private Float area;
 
     @SerializedName("address")
     private String address;
@@ -60,10 +60,10 @@ public class EstateDetail implements Serializable {
     private Integer v;
 
     @SerializedName("createTime")
-    private Integer createTime;
+    private Long createTime;
 
     @SerializedName("updateTime")
-    private Integer updateTime;
+    private Long updateTime;
 
     @SerializedName("verify")
     private Boolean verify;
@@ -142,11 +142,11 @@ public class EstateDetail implements Serializable {
         this.unit = unit;
     }
 
-    public Integer getArea() {
+    public Float getArea() {
         return area;
     }
 
-    public void setArea(Integer area) {
+    public void setArea(Float area) {
         this.area = area;
     }
 
@@ -222,19 +222,19 @@ public class EstateDetail implements Serializable {
         this.v = v;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
 

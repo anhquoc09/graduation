@@ -9,6 +9,8 @@ import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.NetworkUtils;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import rx.Subscriber;
@@ -44,6 +46,7 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         if (!NetworkUtils.isNetworkConnected(EstateApplication.getInstance().getApplicationContext())) {
             showConnectionFailedLayout();
+            return;
         }
 
         mSub = mService.getEstatesByPosition(RADIUS, String.valueOf(latitude), String.valueOf(longitude))
@@ -79,7 +82,9 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         @Override
         public void onError(Throwable e) {
-            showConnectionFailedLayout();
+            if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
+                showConnectionFailedLayout();
+            }
         }
 
         @Override

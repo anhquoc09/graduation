@@ -3,16 +3,16 @@ package com.example.realestate.ui.main.uppost;
 import android.net.Uri;
 
 import com.cloudinary.android.callback.ErrorInfo;
+import com.example.realestate.data.model.EstateDetail;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UpPostView {
     void addImage(Uri imageUri);
 
     void setImageList(List<Uri> imageListUri);
 
-    void onPostSuccess();
+    void onPostSuccess(EstateDetail estateDetail);
 
     void onPostFailed(String message);
 
