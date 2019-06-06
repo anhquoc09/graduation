@@ -74,8 +74,9 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         }
     }
 
-    private void onLoginSuccess(Profile profile, String accessToken) {
+    private void onLoginSuccess(Profile profile, Long expireTime, String accessToken) {
         User user = new User(profile);
+        user.setTokenExpiredTime(expireTime * 1000 - 60000);
         user.setAccessToken(accessToken);
         UserManager.setCurrentUser(user);
         mView.onLoginSuccess();
@@ -93,7 +94,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     Log.e(TAG, loginResponse.getMessage());
                     showLoginError(mContext.getString(R.string.login_fail));
                 } else {
-                    onLoginSuccess(profile, loginResponse.getToken());
+                    onLoginSuccess(profile, loginResponse.getExpireTime(), loginResponse.getToken());
                 }
             }
         }

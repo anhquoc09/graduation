@@ -9,19 +9,15 @@ import com.example.realestate.data.model.Profile;
 public class User {
 
     private Profile mProfile;
+    private long mTokenExpiredTime;
     private String mAccessToken;
-
-//    private Credentials mCredentials;
 
     public User() {
         mProfile = new Profile();
-//        mCredentials = new Credentials();
     }
 
     public User(Profile profile) {
         mProfile = profile;
-
-//        mCredentials = new Credentials(loginData.getAccessToken(), loginData.getTokenExpiredTime());
     }
 
     public Profile getProfile() {
@@ -136,11 +132,35 @@ public class User {
         mProfile.setLock(lock);
     }
 
+    public Integer getHash() {
+        return mProfile.getHash();
+    }
+
+    public void setHash(Integer hash) {
+        mProfile.setHash(hash);
+    }
+
+    public Integer getV() {
+        return mProfile.getV();
+    }
+
+    public void setV(Integer v) {
+        mProfile.setV(v);
+    }
+
     public String getAccessToken() {
         return mAccessToken;
     }
 
     public void setAccessToken(String accessToken) {
         mAccessToken = accessToken;
+    }
+
+    public long getTokenExpiredTime() {
+        return mTokenExpiredTime;
+    }
+
+    public void setTokenExpiredTime(long tokenExpiredTime) {
+        mTokenExpiredTime = tokenExpiredTime;
     }
 }

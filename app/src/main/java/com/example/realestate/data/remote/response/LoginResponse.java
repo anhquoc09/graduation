@@ -19,6 +19,9 @@ public class LoginResponse {
     @SerializedName("user")
     private Profile data;
 
+    @SerializedName("expireTime")
+    private Long expireTime;
+
     @SerializedName("token")
     private String token;
 
@@ -44,6 +47,13 @@ public class LoginResponse {
 
     public void setProfile(Profile data) {
         this.data = data;
+    }
+
+    public Long getExpireTime() {
+        return expireTime;
+    }
+    public void setExpireTime(Long expireTime) {
+        this.expireTime = expireTime;
     }
 
     public String getToken() {

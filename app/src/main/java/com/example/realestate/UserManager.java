@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import com.example.realestate.data.model.Profile;
 
+import java.util.Calendar;
+
 /**
  * @author anhquoc09
  * @since 06/03/2019
@@ -41,7 +43,7 @@ public final class UserManager {
 
     public static synchronized boolean isUserLoggedIn() {
         final User user = getCurrentUser();
-        return user != null && !TextUtils.isEmpty(user.getAccessToken());
+        return user != null && Calendar.getInstance().getTimeInMillis() < user.getTokenExpiredTime() && !TextUtils.isEmpty(user.getAccessToken());
     }
 
     public static synchronized void setAccessToken(String token) {
@@ -70,6 +72,7 @@ public final class UserManager {
 
         private static final String NAME = "user_prefs";
 
+        private static final String PREF_USER_TOKEN_EXPIRED_TIME = "key_user_session_expired_time";
         private static final String PREF_USER_SESSION = "key_user_session";
 
         private static final String PREF_USER_IDENTIFY = "key_user_identify";
@@ -85,6 +88,8 @@ public final class UserManager {
         private static final String PREF_USER_COMPANY = "key_user_company";
         private static final String PREF_USER_VERIFY = "key_user_verify";
         private static final String PREF_USER_LOCK = "key_user_lock";
+        private static final String PREF_USER_HASH = "key_user_hash";
+        private static final String PREF_USER_V = "key_user_v";
 
         private SharedPreferences sSettings;
 
@@ -104,6 +109,7 @@ public final class UserManager {
             if (user == null) {
                 return;
             }
+            sSettings.edit().putLong(PREF_USER_TOKEN_EXPIRED_TIME, user.getTokenExpiredTime()).apply();
             sSettings.edit().putString(PREF_USER_SESSION, user.getAccessToken()).apply();
 
             saveProfile(user.getProfile());
@@ -111,6 +117,7 @@ public final class UserManager {
 
         public synchronized User loadUser() {
             User user = new User();
+            user.setTokenExpiredTime(sSettings.getLong(PREF_USER_TOKEN_EXPIRED_TIME, 0));
             user.setAccessToken(sSettings.getString(PREF_USER_SESSION, ""));
             user.setProfile(loadProfile());
             return user;
@@ -132,6 +139,8 @@ public final class UserManager {
                 editor.putString(PREF_USER_COMPANY, profile.getCompany());
                 editor.putBoolean(PREF_USER_VERIFY, profile.getVerify());
                 editor.putBoolean(PREF_USER_LOCK, profile.getLock());
+                editor.putInt(PREF_USER_HASH, profile.getHash());
+                editor.putInt(PREF_USER_V, profile.getV());
 
                 editor.apply();
             }
@@ -152,11 +161,22 @@ public final class UserManager {
             profile.setCompany(sSettings.getString(PREF_USER_COMPANY, ""));
             profile.setVerify(sSettings.getBoolean(PREF_USER_VERIFY, false));
             profile.setLock(sSettings.getBoolean(PREF_USER_LOCK, false));
+            profile.setHash(sSettings.getInt(PREF_USER_HASH, 0));
+            profile.setV(sSettings.getInt(PREF_USER_V, 0));
+
             return profile;
         }
 
         public synchronized void clear() {
             sSettings.edit().clear().apply();
+        }
+
+        public synchronized void saveTokenExpiredTime(Long time) {
+            sSettings.edit().putLong(PREF_USER_SESSION, time).apply();
+        }
+
+        public synchronized Long getTokenExpiredTime() {
+            return sSettings.getLong(PREF_USER_SESSION, 0);
         }
 
         public synchronized void saveAccessToken(String token) {

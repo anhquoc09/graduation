@@ -45,6 +45,12 @@ public class Profile implements Serializable {
     @SerializedName("lock")
     private Boolean lock;
 
+    @SerializedName("hash")
+    private Integer hash;
+
+    @SerializedName("__v")
+    private Integer v;
+
     public String getIdentify() {
         return identify;
     }
@@ -147,5 +153,21 @@ public class Profile implements Serializable {
 
     public void setLock(Boolean lock) {
         this.lock = lock;
+    }
+
+    public Integer getHash() {
+        return hash;
+    }
+
+    public void setHash(Integer hash) {
+        this.hash = hash;
+    }
+
+    public Integer getV() {
+        return v;
+    }
+
+    public void setV(Integer v) {
+        this.v = v;
     }
 }

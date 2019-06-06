@@ -32,17 +32,14 @@ public class SplashScreenActivity extends AppCompatActivity implements SplashScr
         mPresenter = new SplashScreenPresenter();
         mPresenter.attachView(this);
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    if (UserManager.isUserLoggedIn()) {
-                        startActivity(MainActivity.intentFor(SplashScreenActivity.this));
-                    } else {
-                        startActivity(LoginActivity.intentFor(SplashScreenActivity.this));
-                    }
-                    finish();
+        mHandler.postDelayed(() -> {
+            if (!isFinishing()) {
+                if (UserManager.isUserLoggedIn()) {
+                    startActivity(MainActivity.intentFor(SplashScreenActivity.this));
+                } else {
+                    startActivity(LoginActivity.intentFor(SplashScreenActivity.this));
                 }
+                finish();
             }
         }, SPLASH_SCREEN_DURATION);
     }
