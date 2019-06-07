@@ -24,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void initDialogLoading() {
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setTitle(R.string.loading);
+        mProgressDialog.setTitle(R.string.login);
         mProgressDialog.setCanceledOnTouchOutside(false);
     }
 

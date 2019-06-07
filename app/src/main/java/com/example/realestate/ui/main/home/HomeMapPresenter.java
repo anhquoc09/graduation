@@ -26,7 +26,7 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
     public static final String TAG = HomeMapPresenter.class.getSimpleName();
 
-    public static final String RADIUS = "5";
+    public static final String RADIUS = "3";
 
     private EstateService mService;
 

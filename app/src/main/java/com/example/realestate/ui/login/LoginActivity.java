@@ -1,5 +1,6 @@
 package com.example.realestate.ui.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
     private GoogleManager mGoogleManager;
 
+    private ProgressDialog mProgressDialog;
+
     private LoginPresenter mPresenter;
 
     public static Intent intentFor(Context context) {
@@ -47,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
         mUnbinder = ButterKnife.bind(this);
 
+        initProgressDialog();
         initPresenter();
         initGoogle();
     }
@@ -55,11 +59,20 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
     protected void onDestroy() {
         mPresenter.detachView();
 
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
 
         super.onDestroy();
+    }
+
+    private void initProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle(R.string.login);
     }
 
     private void initPresenter() {
@@ -76,6 +89,18 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
     private void goToHome() {
         startActivity(MainActivity.intentFor(this));
         finish();
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.show();
+        }
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
@@ -108,6 +133,16 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
     @Override
     public void showNoNetworkConnection() {
         AndroidUtilities.showToast(getString(R.string.no_network_connection));
+    }
+
+    @Override
+    public void hideLoginProgress() {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void showLoginProgress() {
+        showProgressDialog();
     }
 
     @Override

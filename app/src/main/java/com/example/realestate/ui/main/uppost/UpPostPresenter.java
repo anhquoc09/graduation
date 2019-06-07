@@ -9,6 +9,7 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.example.realestate.EstateApplication;
+import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.SubmitEstateResponse;
@@ -28,6 +29,8 @@ import java.util.Map;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.example.realestate.EstateApplication.BEARER_TOKEN;
 
 class UpPostPresenter extends BasePresenter<UpPostView> {
 
@@ -94,7 +97,7 @@ class UpPostPresenter extends BasePresenter<UpPostView> {
 
     private void checkSubmit() {
         if (canSubmit()) {
-            mSub = mService.submitEstate(UserManager.getAccessToken(),
+            mSub = mService.submitEstate(BEARER_TOKEN + UserManager.getAccessToken(),
                     mTitle, mInvestor, mPrice, mUnit, mSquare, mType, mAddress, mDescription, mLatitude, mLongitude,
                     UserManager.getCurrentUser().getId(), mStatus, Calendar.getInstance().getTimeInMillis() / 1000,
                     Calendar.getInstance().getTimeInMillis() / 1000, mContactName, mContactPhone, mContactEmail,
@@ -234,12 +237,22 @@ class UpPostPresenter extends BasePresenter<UpPostView> {
             ClipData clipData = data.getClipData();
             for (int i = 0; i < clipData.getItemCount(); i++) {
 
+                if (mUriList.size() >= 5) {
+                    AndroidUtilities.showToast(AndroidUtilities.getString(R.string.image_limited));
+                    break;
+                }
+
                 Uri uri = clipData.getItemAt(i).getUri();
                 mUriList.add(uri);
             }
         } else if (data.getData() != null) {
-            Uri imageUri = data.getData();
-            mUriList.add(imageUri);
+            if (mUriList.size() < 5) {
+                Uri imageUri = data.getData();
+                mUriList.add(imageUri);
+            } else {
+                AndroidUtilities.showToast(AndroidUtilities.getString(R.string.image_limited));
+                return;
+            }
         }
 
         mView.setImageList(mUriList);
@@ -250,7 +263,7 @@ class UpPostPresenter extends BasePresenter<UpPostView> {
     }
 
     public void deleteImage(int position) {
-        if (position > 0 && position < mUriList.size()) {
+        if (position >= 0 && position < mUriList.size()) {
             mUriList.remove(position);
         }
     }
@@ -277,7 +290,7 @@ class UpPostPresenter extends BasePresenter<UpPostView> {
             hideProgressLayout();
 
             if (submitEstateResponse != null) {
-                mView.onPostSuccess(submitEstateResponse.getEstateDetail());
+                mView.onSubmitSuccess(submitEstateResponse.getEstateDetail());
             }
         }
     }

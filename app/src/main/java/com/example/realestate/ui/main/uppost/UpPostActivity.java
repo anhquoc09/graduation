@@ -1,6 +1,7 @@
 package com.example.realestate.ui.main.uppost;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +14,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,11 +31,18 @@ import com.example.realestate.User;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
+import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.ui.widget.WorkaroundMapFragment;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +50,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -48,6 +60,7 @@ import java.util.Locale;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +75,9 @@ public class UpPostActivity extends BaseActivity
         ImageUploadListAdapter.OnImageClickListener {
 
     public static int PICK_IMAGE_MULTIPLE = 1;
+
+    @BindView(R.id.btn_submit)
+    ImageView mBtnSubmit;
 
     @BindView(R.id.scroll_view)
     ScrollView mScrollView;
@@ -121,6 +137,8 @@ public class UpPostActivity extends BaseActivity
 
     private String mAddress;
 
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
     private DebounceEditText mDebounceEditText;
 
     private MarkerOptions mMarkerOptions = new MarkerOptions();
@@ -130,25 +148,6 @@ public class UpPostActivity extends BaseActivity
     private int[] typeCode;
 
     private int[] statusCode;
-
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            mLocation = location;
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-    };
 
     public static Intent intentFor(Context context) {
         Intent intent = new Intent(context, UpPostActivity.class);
@@ -233,9 +232,46 @@ public class UpPostActivity extends BaseActivity
     }
 
     private void initMyLocation() {
-        mGoogleMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!gps_enabled) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.gps_not_found_title)
+                    .setMessage(R.string.gps_not_found_message)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        }
+
+        if (!network_enabled) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.no_network_connection)
+                    .setMessage(R.string.no_network_message)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            PermissionUtils.Request_FINE_LOCATION(this, 1);
+
+        } else {
+            mGoogleMap.setMyLocationEnabled(true);
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    mLocation = location;
+                }
+                mAddressEditText.getEditText().setText(getAddressFromLocation(mLocation));
+                moveMarker(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
+            });
+        }
     }
 
     private void initMarker() {
@@ -247,8 +283,9 @@ public class UpPostActivity extends BaseActivity
         mMarker = mGoogleMap.addMarker(mMarkerOptions);
         mMarker.setDraggable(true);
         mMarker.showInfoWindow();
-        moveMarker(mLatLng);
-        mAddressEditText.getEditText().setText(getAddressFromLocation(mLocation));
+        if (mGoogleMap != null) {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15));
+        }
     }
 
     private void updateLocation() {
@@ -310,21 +347,8 @@ public class UpPostActivity extends BaseActivity
         mLocation = new Location("HCMUS");
         mLocation.setLatitude(10.763147);
         mLocation.setLongitude(106.682203);
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            PermissionUtils.Request_FINE_LOCATION(this, 1);
-
-        } else {
-            mGoogleMap.setMyLocationEnabled(true);
-            mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
-        }
-        initMyLocation();
         initMarker();
+        initMyLocation();
     }
 
     @Override
@@ -393,12 +417,15 @@ public class UpPostActivity extends BaseActivity
     }
 
     @Override
-    public void onPostSuccess(EstateDetail estateDetail) {
-        AndroidUtilities.showToast("Your post is upload success!");
+    public void onSubmitSuccess(EstateDetail estateDetail) {
+        AndroidUtilities.showToast(getString(R.string.submit_success));
+        startActivity(EstateDetailActivity.intentFor(this, estateDetail));
+        finish();
     }
 
     @Override
-    public void onPostFailed(String message) {
+    public void onSubmitFailed(String message) {
+        mBtnSubmit.setImageResource(R.drawable.ic_submit);
         AndroidUtilities.showToast(message);
     }
 
@@ -423,8 +450,17 @@ public class UpPostActivity extends BaseActivity
         mImageAdapter.updatePercent(percent, position);
     }
 
-    @OnClick(R.id.btn_up_post)
+    @OnClick(R.id.btn_submit)
     public void onUpClick() {
+
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+
+        CircularProgressDrawable progressDrawable = new CircularProgressDrawable(this);
+        progressDrawable.setStrokeWidth(5f);
+        progressDrawable.setCenterRadius(20f);
+        progressDrawable.setColorSchemeColors(Color.WHITE);
+        progressDrawable.start();
+        mBtnSubmit.setImageDrawable(progressDrawable);
 
         if (canSubmit()) {
             mPresenter.submit(mTitle.getEditText().getText().toString(),
@@ -441,6 +477,10 @@ public class UpPostActivity extends BaseActivity
                     mName.getEditText().getText().toString(),
                     mPhone.getEditText().getText().toString(),
                     mEmail.getEditText().getText().toString());
+
+            AndroidUtilities.showToast(getString(R.string.wait_for_submitting));
+        } else {
+            AndroidUtilities.showToast(getString(R.string.error_can_not_submit));
         }
     }
 

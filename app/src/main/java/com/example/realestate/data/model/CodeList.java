@@ -2,12 +2,14 @@ package com.example.realestate.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Copyright (C) 2019, VNG Corporation.
  * Created by quocha2
  * On 03/06/2019
  */
-public class CodeList {
+public class CodeList implements Serializable {
 
     @SerializedName("_id")
     private String id;

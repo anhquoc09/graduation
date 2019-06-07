@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.User;
@@ -49,7 +51,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                 mView.showNoNetworkConnection();
             }
         }
-        showLoadingProgress();
+        showLoginProgress();
         Subscription subscription = mEstateService.loginGoogle(idToken)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
@@ -61,11 +63,12 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         return !TextUtils.isEmpty(accessToken) && NetworkUtils.isNetworkConnected(mContext);
     }
 
-    private void showLoadingProgress() {
+    private void showLoginProgress() {
+        mView.showLoginProgress();
     }
 
-
     private void hideLoginProgress() {
+        mView.hideLoginProgress();
     }
 
     private void showLoginError(String string) {

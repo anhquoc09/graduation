@@ -8,7 +8,7 @@
     <string name="slow_network_connection">Hãy kiểm tra kết nối mạng và thử lại</string>
     <string name="message_cannot_connect_server">Kết nối đến máy chủ thất bại</string>
     <string name="message_login_fail">Đăng nhập Google thất bại. Lỗi: %1$s</string>
-    <string name="loading">Đang tải</string>
+    <string name="login">Đăng nhập...</string>
     <string name="navigation_home">Trang chủ</string>
     <string name="navigation_new_post">Tin mới nhất</string>
     <string name="navigation_construct">Kiến trúc</string>
@@ -41,7 +41,7 @@
     <string name="address">Địa chỉ</string>
     <string name="description">Mô tả</string>
     <string name="image">Hình ảnh</string>
-    <string name="estate_location">Giữ và di chuyển đến vị trí bất động sản của bạn</string>
+    <string name="estate_location">Di chuyển đến vị trí bất động sản của bạn</string>
     <string name="gps_not_found_title">Định vị GPS đã tắt</string>
     <string name="gps_not_found_message">Bạn có muốn kích hoạt định vị?</string>
     <string name="no">Không</string>
@@ -57,7 +57,7 @@
     <string name="edit_profile_success">Thông tin của bạn đã được lưu</string>
     <string name="no_network_message">Bạn có muốn bật kết nối mạng không?</string>
     <string name="investor">Nhà đầu tư</string>
-    <string name="address_required">(*) Hãy nhập địa chỉ chính xác của bạn để dễ dàng tìm kiếm hơn. Giữ và kéo điểm đánh dấu bên dưới nếu không đúng vị trí của bạn trên bản đồ.</string>
+    <string name="address_required">(*) Hãy nhập địa chỉ chính xác của bạn để dễ dàng tìm kiếm hơn. Di chuyển điểm đánh dấu bên dưới nếu không đúng vị trí của bạn trên bản đồ.</string>
     <string name="contact_email">Email</string>
     <string name="contact_name">Tên liên hệ</string>
     <string name="contact_phone">Số điện thoại</string>
@@ -74,4 +74,8 @@
     <string name="no_address">Không tìm thấy vị trí của bạn. Hãy kéo điểm đánh dấu tới vị trí của bạn.</string>
     <string name="error_no_picture">Hãy thêm một vài ảnh về bất động sản của bạn</string>
     <string name="hide_list">Ẩn danh sách</string>
+    <string name="image_limited">Bạn chỉ có thể thêm tối đa 5 ảnh.</string>
+    <string name="error_can_not_submit">Không thể đăng bài, hãy đảm bảo nội dung đầy đủ</string>
+    <string name="wait_for_submitting">Đang đăng bài, xin đợi một lát...</string>
+    <string name="submit_success">Bài viết của bạn được gửi thành công!</string>
 </resources>

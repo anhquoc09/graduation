@@ -9,14 +9,14 @@ import com.google.gson.annotations.SerializedName;
  * On 05/06/2019
  */
 public class SubmitEstateResponse {
+
     @SerializedName("status")
-
     private Integer status;
+
     @SerializedName("message")
-
     private String message;
-    @SerializedName("project")
 
+    @SerializedName("project")
     private EstateDetail project;
 
     public Integer getStatus() {

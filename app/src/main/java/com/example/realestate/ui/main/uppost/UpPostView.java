@@ -12,9 +12,9 @@ public interface UpPostView {
 
     void setImageList(List<Uri> imageListUri);
 
-    void onPostSuccess(EstateDetail estateDetail);
+    void onSubmitSuccess(EstateDetail estateDetail);
 
-    void onPostFailed(String message);
+    void onSubmitFailed(String message);
 
     void uploadError(ErrorInfo error, int position);
 

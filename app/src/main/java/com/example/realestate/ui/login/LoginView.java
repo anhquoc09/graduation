@@ -8,6 +8,10 @@ package com.example.realestate.ui.login;
 public interface LoginView {
     void showNoNetworkConnection();
 
+    void hideLoginProgress();
+
+    void showLoginProgress();
+
     void onLoginSuccess();
 
     void showLoginError(String message);

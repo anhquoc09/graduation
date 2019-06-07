@@ -5,6 +5,7 @@ import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.response.LoginResponse;
 import com.example.realestate.data.remote.response.SubmitEstateResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.http.Field;
@@ -54,5 +55,5 @@ public interface EstateService {
                                                   @Field("avatar") String avatarUrl,
                                                   @Field("url") String[] urls,
                                                   @Field("publicId") String[] publicIds,
-                                                  @Field("codeList") CodeList[] codeList);
+                                                  @Field("codelist") CodeList[] codeList);
 }

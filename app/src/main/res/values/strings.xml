@@ -17,7 +17,7 @@
     <string name="message_cannot_connect_server">Failed to connect to server.</string>
     <string name="message_login_fail">Failed to login Google. Error: %1$s.</string>
 
-    <string name="loading">Loading...</string>
+    <string name="login">Login...</string>
 
     <!-- Navigation Title -->
     <string name="navigation_profile">Profile</string>
@@ -56,7 +56,7 @@
     <string name="address">Address</string>
     <string name="description">Description</string>
     <string name="image">Image</string>
-    <string name="estate_location">Hold and drag to your estate location</string>
+    <string name="estate_location">Move to your estate location</string>
     <string name="gps_not_found_title">Location service is disabled</string>
     <string name="gps_not_found_message">Do you want to enable Location service?</string>
     <string name="no_network_message">Do you want to turn on your network?</string>
@@ -73,7 +73,7 @@
     <string name="contact_now">Contact now</string>
     <string name="contact_mess">Select the method to contact the owner</string>
     <string name="edit_profile_success">Your profile is saved</string>
-    <string name="address_required">(*) Please enter your exactly address to find your location easier. Hold and drag below marker to your exactly location on map.</string>
+    <string name="address_required">(*) Please enter your exactly address to find your location easier. Move below marker to your exactly location on map.</string>
     <string name="error_no_address">Enter your estate address</string>
     <string name="error_no_title">Enter a title</string>
     <string name="error_no_price">Enter expected price</string>
@@ -88,5 +88,8 @@
     <string name="no_address">Can not find your location. Please drag a marker on map to your location.</string>
     <string name="error_no_picture">Please add some picture of your estate</string>
     <string name="hide_list">Hide list</string>
-
+    <string name="image_limited">You can add maximum 5 pictures.</string>
+    <string name="error_can_not_submit">Can not submit, check your content.</string>
+    <string name="wait_for_submitting">Submitting your post, please wait...</string>
+    <string name="submit_success">Your post is submitted success!</string>
 </resources>

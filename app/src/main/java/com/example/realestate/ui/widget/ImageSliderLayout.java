@@ -100,9 +100,11 @@ public class ImageSliderLayout extends FrameLayout {
     }
 
     public void checkIfShowIndicator(List<String> data) {
-        if (CollectionUtils.isEmpty(data)) {
+        if (data.size() < 2) {
+            disableAutoSlide();
             mPagerIndicator.setVisibility(GONE);
         } else {
+            enableAutoSlide();
             mPagerIndicator.setVisibility(VISIBLE);
         }
     }

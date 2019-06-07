@@ -20,6 +20,8 @@ import androidx.multidex.MultiDex;
 
 public class EstateApplication extends Application {
 
+    public static final String BEARER_TOKEN = "Bearer ";
+
     private static volatile EstateApplication sInstance = null;
 
     public static EstateApplication getInstance() {

@@ -274,7 +274,7 @@ public class MainActivity extends BaseActivity
         startActivity(ProfileActivity.intentFor(this, String.valueOf(user.getId())));
     }
 
-    @OnClick(R.id.btn_up_post)
+    @OnClick(R.id.btn_submit)
     public void onUpPostClick() {
         if (UserManager.isUserLoggedIn()) {
             startActivity(UpPostActivity.intentFor(this));

@@ -36,6 +36,8 @@ import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -104,6 +106,8 @@ public class HomeMapFragment extends Fragment
 
     private Location mOldCamLocation;
 
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
     private int mPreMarkerSelectedIndex = -1;
 
     private HomeMapEstateListAdapter mListAdapter;
@@ -113,30 +117,6 @@ public class HomeMapFragment extends Fragment
     private final List<EstateDetail> mList = new ArrayList<>();
 
     private final List<Marker> mMarkers = new ArrayList<>();
-
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            if (location != null) {
-                mMyLocation = location;
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
 
     public static HomeMapFragment newInstance() {
         HomeMapFragment fragment = new HomeMapFragment();
@@ -192,7 +172,7 @@ public class HomeMapFragment extends Fragment
                         mMarkers.get(mPreMarkerSelectedIndex).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     }
                     mPreMarkerSelectedIndex = position;
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarkers.get(position).getPosition(), 15));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarkers.get(position).getPosition(), 12));
                 }
             }
         }
@@ -268,6 +248,11 @@ public class HomeMapFragment extends Fragment
         mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
         mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMarkerClickListener(this);
+
+        mOldCamLocation = mMyLocation;
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude()), 12));
+        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+
         initMyLocation();
         notifyMapChange();
     }
@@ -336,34 +321,25 @@ public class HomeMapFragment extends Fragment
                 PermissionUtils.Request_FINE_LOCATION(activity, 1);
             } else {
                 mGoogleMap.setMyLocationEnabled(true);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (location != null) {
-                    mMyLocation = location;
-                }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, mLocationListener);
+                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
+                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        mMyLocation = location;
+                    }
+                    animateToMyLocation();
+                });
             }
         }
-        mOldCamLocation = mMyLocation;
-        mGoogleMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mOldCamLocation.getLatitude(),
-                                mOldCamLocation.getLongitude()),
-                        15));
-        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
     }
 
     private void animateToMyLocation() {
-        if (mGoogleMap.isMyLocationEnabled()) {
-            mOldCamLocation = mMyLocation;
-            mGoogleMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(mOldCamLocation.getLatitude(),
-                                    mOldCamLocation.getLongitude()),
-                            15));
-
-        } else {
-            initMyLocation();
-        }
+        mOldCamLocation = mMyLocation;
+        mGoogleMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(mOldCamLocation.getLatitude(),
+                                mOldCamLocation.getLongitude()),
+                        12));
+        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
     }
 
     @Override
@@ -410,7 +386,7 @@ public class HomeMapFragment extends Fragment
 
     @OnClick(R.id.btn_my_location)
     public void onMyLocationClick() {
-        animateToMyLocation();
+        initMyLocation();
     }
 
     @OnClick(R.id.tv_show_list)
