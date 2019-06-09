@@ -6,8 +6,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.realestate.R;
@@ -18,17 +25,9 @@ import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.main.ListEstateAdapter;
 import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.ui.widget.EndlessNestedScrollViewListener;
-import com.example.realestate.ui.widget.EndlessScrollDownListener;
 import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -120,6 +119,7 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
         mAdapter = new ListEstateAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setItemClickListener(this);
         mRefreshLayout.setOnRefreshListener(this);

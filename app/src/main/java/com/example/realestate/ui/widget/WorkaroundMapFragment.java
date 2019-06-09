@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.SupportMapFragment;
 
 /**
- * Copyright (C) 2019, VNG Corporation.
  * Created by quocha2
  * On 04/06/2019
  */

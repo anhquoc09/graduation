@@ -23,7 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Copyright (C) 2019, VNG Corporation.
  * Created by quocha2
  * On 06/06/2019
  */

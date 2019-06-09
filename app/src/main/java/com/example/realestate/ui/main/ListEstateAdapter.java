@@ -18,9 +18,12 @@ import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.common.util.CollectionUtils;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,17 +38,9 @@ import butterknife.ButterKnife;
 
 public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.EstateItemVH> {
 
-    private final int mImageSize;
-
     private final List<EstateDetail> mList = new ArrayList<>();
 
     private OnItemClickListener mItemClickListener;
-
-    public ListEstateAdapter() {
-        Resources resources = EstateApplication.getInstance().getResources();
-        int size = resources.getDimensionPixelSize(R.dimen.list_estate_image_size);
-        mImageSize = size == 0 ? AndroidUtilities.dp(41) : size;
-    }
 
     @NonNull
     @Override
@@ -105,11 +100,17 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         @BindView(R.id.price)
         TextView mPrice;
 
-        @BindView(R.id.status)
-        TextView mStatus;
+        @BindView(R.id.estate_type)
+        TextView mType;
 
-        @BindView(R.id.poster)
-        TextView mPoster;
+        @BindView(R.id.address)
+        TextView mAddress;
+
+        @BindView(R.id.owner)
+        TextView mName;
+
+        @BindView(R.id.btn_save)
+        ImageView mBtnSave;
 
         public EstateItemVH(@NonNull View itemView) {
             super(itemView);
@@ -129,58 +130,88 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             return null;
         }
 
-        public void setImage(String imageView) {
-            if (!TextUtils.isEmpty(imageView)) {
-                Glide.with(itemView.getContext())
-                        .load(imageView)
+        public void setImage(List<String> imageList) {
+            if (!CollectionUtils.isEmpty(imageList)) {
+                Glide.with(itemView)
+                        .load(imageList.get(0))
                         .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                        .dontAnimate()
                         .placeholder(R.color.silver)
-                        .override(mImageSize)
                         .into(mImage);
             }
         }
 
-        public void setTitle(String title) {
-            mTitle.setText(TextUtils.isEmpty(title) ? "" : title);
+        private void setEstateType(int estateType, int estateStatus) {
+            Context context = EstateApplication.getInstance().getApplicationContext();
+
+            String string = "";
+
+            switch (estateStatus) {
+                case 1:
+                    string += context.getString(R.string.estate_sell);
+                    break;
+                case 3:
+                    string += context.getString(R.string.estate_lease);
+                    break;
+            }
+
+            switch (estateType) {
+                case 1:
+                    string += " " + (context.getString(R.string.estate_apartment));
+                    break;
+                case 2:
+                    string += " " + (context.getString(R.string.estate_house));
+                    break;
+                case 3:
+                    string += " " + (context.getString(R.string.estate_land));
+                    break;
+                case 4:
+                    string += " " + (context.getString(R.string.estate_office));
+                    break;
+                default:
+                    break;
+            }
+
+            mType.setText(string);
         }
 
-        public void setTime(String time) {
-            mTime.setText(TextUtils.isEmpty(time) ? "" : time);
+        private void setOwnerName(String ownerName) {
+            mName.setText(ownerName);
         }
 
-        public void setPrice(String price) {
-            mPrice.setText(TextUtils.isEmpty(price) ? "" : price);
+        private void setEstateTitle(String estateTitle) {
+            mTitle.setText(estateTitle);
+            mTitle.setSelected(true);
         }
 
-        public void setStatus(String status) {
-            mStatus.setText(TextUtils.isEmpty(status) ? "" : status);
+        private void setEstatePrice(float estatePrice) {
+            mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(estatePrice * 1000000)));
         }
 
-        public void setPoster(String poster) {
-            mPoster.setText(TextUtils.isEmpty(poster) ? "" : poster);
+        private void setEstateTimePost(long estateDayPost) {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date date = new Date(estateDayPost * 1000);
+            mTime.setText(String.format("%s ", dateFormat.format(date)));
+        }
+
+        private void setBtnSave() {
+            mBtnSave.setVisibility(View.GONE);
+        }
+
+        private void setAddress(String address) {
+            mAddress.setText(address);
+            mAddress.setSelected(true);
         }
 
         public void bindView(EstateDetail item) {
             if (item != null) {
-                Context context = EstateApplication.getInstance().getApplicationContext();
-                if (item.getCreateTime() != null) {
-                    Date date = new Date(item.getCreateTime());
-                    DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
-                    setTime(dateFormat.format(date));
-                }
-
-                if (!item.getUrl().isEmpty()) {
-                    setImage(item.getUrl().get(0));
-                }
-                setTitle(item.getName());
-                setPrice(item.getPrice().toString());
-                if (item.getStatusProject() == 1) {
-                    setStatus(context.getResources().getString(R.string.status_available));
-                } else {
-                    setStatus(context.getResources().getString(R.string.status_sold));
-                }
-                setPoster(item.getFullName());
+                setImage(item.getUrl());
+                setEstateTitle(item.getName());
+                setEstatePrice(item.getPrice());
+                setEstateType(item.getType(), item.getStatusProject());
+                setAddress(item.getAddress());
+                setOwnerName(item.getFullName());
+                setEstateTimePost(item.getCreateTime());
+                setBtnSave();
             }
         }
     }

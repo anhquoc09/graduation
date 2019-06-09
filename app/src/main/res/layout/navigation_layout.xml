@@ -102,7 +102,7 @@
 
     <TextView
         android:id="@+id/btn_about_us"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:drawableStart="@drawable/ic_setting"
@@ -116,7 +116,7 @@
 
     <TextView
         android:id="@+id/btn_sign_out"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:drawableStart="@drawable/ic_sign_out"

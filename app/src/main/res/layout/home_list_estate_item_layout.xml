@@ -39,7 +39,7 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/list_estate"
-            app:layout_constraintEnd_toStartOf="@id/estate_status"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="@string/estate_apartment" />
 
         <!-- Status -->
@@ -57,14 +57,14 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/list_estate"
-            app:layout_constraintEnd_toEndOf="@id/list_estate"
+            app:layout_constraintEnd_toStartOf="@id/estate_type"
             tools:text="@string/estate_sell" />
 
         <!-- Avatar -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             app:civ_border_color="@color/colorAccent"
@@ -86,12 +86,22 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintBottom_toTopOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="@id/avatar"
             tools:text="Bán nhà giá rẻeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" />
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintStart_toStartOf="@id/estate_title"
+            app:layout_constraintTop_toBottomOf="@id/estate_title"
+            tools:text="Hoàng Anh Quốc" />
 
         <!-- Price -->
         <TextView
@@ -99,15 +109,37 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:drawableLeft="@drawable/ic_cash"
+            android:layout_marginEnd="5dp"
+            android:drawableStart="@drawable/ic_cash"
             android:drawablePadding="5dp"
             android:text="10.000.000.000 VNĐ"
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/estate_title"
+            app:layout_constraintEnd_toStartOf="@id/btn_save"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+        <ImageView
+            android:id="@+id/btn_save"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_like_estate"
+            app:layout_constraintBottom_toBottomOf="@id/estate_price"
+            app:layout_constraintEnd_toEndOf="@id/estate_title"
+            app:layout_constraintTop_toTopOf="@id/name" />
+
+        <!-- Time -->
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="11sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@id/estate_title"
+            app:layout_constraintTop_toTopOf="@id/estate_square"
+            tools:text="1/1/2019" />
 
         <!-- Square -->
         <TextView
@@ -115,12 +147,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:drawableLeft="@drawable/ic_square"
+            android:drawableStart="@drawable/ic_square"
             android:drawablePadding="5dp"
             android:text="100m2"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@id/estate_title"
+            app:layout_constraintEnd_toStartOf="@id/time"
             app:layout_constraintStart_toStartOf="@id/estate_price"
             app:layout_constraintTop_toBottomOf="@id/estate_price" />
 
@@ -131,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
-            android:drawableLeft="@drawable/ic_location"
+            android:drawableStart="@drawable/ic_location"
             android:drawablePadding="5dp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"

@@ -4,7 +4,6 @@ import com.example.realestate.data.model.EstateDetail;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Copyright (C) 2019, VNG Corporation.
  * Created by quocha2
  * On 05/06/2019
  */

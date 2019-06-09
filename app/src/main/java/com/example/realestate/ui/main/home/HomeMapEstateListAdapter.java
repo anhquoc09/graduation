@@ -18,8 +18,11 @@ import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.google.android.gms.common.util.CollectionUtils;
 
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Copyright (C) 2019, VNG Corporation.
  * Created by quocha2
  * On 06/06/2019
  */
@@ -92,8 +94,17 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         @BindView(R.id.estate_title)
         TextView mTitle;
 
+        @BindView(R.id.name)
+        TextView mName;
+
         @BindView(R.id.estate_price)
         TextView mPrice;
+
+        @BindView(R.id.btn_save)
+        ImageView mBtnSave;
+
+        @BindView(R.id.time)
+        TextView mTime;
 
         @BindView(R.id.estate_address)
         TextView mAddress;
@@ -196,6 +207,20 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
             mTitle.setSelected(true);
         }
 
+        private void setName(String fullName) {
+            mName.setText(fullName);
+        }
+
+        private void setSaved() {
+            mBtnSave.setVisibility(View.GONE);
+        }
+
+        private void setTime(long createTime) {
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date date = new Date(createTime * 1000);
+            mTime.setText(String.format("%s ", dateFormat.format(date)));
+        }
+
         private void setPrice(float price) {
             mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(price * 1000000)));
         }
@@ -218,7 +243,10 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
                 setType(item.getType());
                 setAvatar(item.getAvatar());
                 setTitle(item.getName());
+                setName(item.getFullName());
                 setPrice(item.getPrice());
+                setSaved();
+                setTime(item.getCreateTime());
                 setSquare(item.getArea());
                 setAddress(item.getAddress());
             }

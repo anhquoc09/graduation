@@ -155,16 +155,8 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
 
     private void bindData() {
         if (mEstateDetail != null) {
-
-            if (mEstateDetail.getCreateTime() != null) {
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                Date date = new Date(mEstateDetail.getCreateTime() * 1000);
-                setEstateTimePost(dateFormat.format(date));
-            }
-            if (mEstateDetail.getAvatar() != null) {
-                setOwnerAvatar(mEstateDetail.getAvatar());
-            }
-
+            setOwnerAvatar(mEstateDetail.getAvatar());
+            setEstateTimePost(mEstateDetail.getCreateTime());
             setOwnerName(mEstateDetail.getFullName());
             setOwnerEmail(mEstateDetail.getEmail());
             setImageSlider(mEstateDetail.getUrl());
@@ -250,11 +242,13 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     }
 
     public void setOwnerAvatar(String ownerAvatar) {
-        Glide.with(this)
-                .load(ownerAvatar)
-                .placeholder(R.color.silver)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .into(mOwnerAvatar);
+        if (!ownerAvatar.isEmpty()) {
+            Glide.with(this)
+                    .load(ownerAvatar)
+                    .placeholder(R.color.silver)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .into(mOwnerAvatar);
+        }
     }
 
     private void setOwnerName(String ownerName) {
@@ -278,8 +272,10 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
         mEstatePrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(estatePrice * 1000000)));
     }
 
-    private void setEstateTimePost(String estateDayPost) {
-        mEstateDayPost.setText(estateDayPost + " ");
+    private void setEstateTimePost(long estateDayPost) {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Date date = new Date(estateDayPost * 1000);
+        mEstateDayPost.setText(String.format("%s ", dateFormat.format(date)));
     }
 
     private void setEstateAddress(String estateAddress) {
