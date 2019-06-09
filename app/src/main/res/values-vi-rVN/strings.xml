@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="login_google">Đăng nhập với Google</string>
-    <string name="go_home">Vào trang chủ</string>
+    <string name="skip_login">Bỏ qua đăng nhập</string>
     <string name="no_network_connection">Không có kết nối mạng</string>
     <string name="google_connection_error">Không thể kết nối với Google</string>
     <string name="login_fail">Đăng nhập thất bại!</string>
     <string name="slow_network_connection">Hãy kiểm tra kết nối mạng và thử lại</string>
     <string name="message_cannot_connect_server">Kết nối đến máy chủ thất bại</string>
     <string name="message_login_fail">Đăng nhập Google thất bại. Lỗi: %1$s</string>
-    <string name="login">Đăng nhập...</string>
+    <string name="login">Đăng nhập</string>
     <string name="navigation_home">Trang chủ</string>
     <string name="navigation_new_post">Tin mới nhất</string>
     <string name="navigation_construct">Kiến trúc</string>
@@ -30,7 +30,7 @@
     <string name="navigation_saved_post">Tin đã lưu</string>
     <string name="slogan">NƠI TỐT NHẤT ĐỂ LỰA CHỌN</string>
     <string name="button_save">Lưu</string>
-    <string name="button_cancel">Huỷ bỏ</string>
+    <string name="button_cancel">Huỷ</string>
     <string name="call">Gọi</string>
     <string name="message">Nhắn tin</string>
     <string name="up_post">Đăng tin</string>
@@ -59,7 +59,7 @@
     <string name="investor">Nhà đầu tư</string>
     <string name="address_required">(*) Hãy nhập địa chỉ chính xác của bạn để dễ dàng tìm kiếm hơn. Di chuyển điểm đánh dấu bên dưới nếu không đúng vị trí của bạn trên bản đồ.</string>
     <string name="contact_email">Email</string>
-    <string name="contact_name">Tên liên hệ</string>
+    <string name="contact_name">Tên</string>
     <string name="contact_phone">Số điện thoại</string>
     <string name="contact_required">(*) Hãy nhập thông tin chính xác để người mua có thể liên hệ với bạn</string>
     <string name="error_no_address">Hãy nhập địa chỉ của bất động sản</string>
@@ -78,4 +78,11 @@
     <string name="error_can_not_submit">Không thể đăng bài, hãy đảm bảo nội dung đầy đủ</string>
     <string name="wait_for_submitting">Đang đăng bài, xin đợi một lát...</string>
     <string name="submit_success">Bài viết của bạn được gửi thành công!</string>
+    <string name="loading">Đang tải...</string>
+    <string name="setting">Cài đặt</string>
+    <string name="feature_not_support">Hi! Chức năng này chưa được hỗ trợ</string>
+    <string name="empty_info">Chưa cập nhật.</string>
+    <string name="login_now">Hãy đăng nhập để xem đầy đủ số điện thoại.</string>
+    <string name="not_login">Bạn chưa đăng nhập</string>
+    <string name="wait_for_verify">(Đang chờ duyệt)</string>
 </resources>

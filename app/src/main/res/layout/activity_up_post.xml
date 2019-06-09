@@ -317,7 +317,7 @@
                 app:errorTextAppearance="@style/error_appearance">
 
                 <EditText
-                    android:id="@+id/edt_contact_name"
+                    android:id="@+id/profile_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_blue_stroke"

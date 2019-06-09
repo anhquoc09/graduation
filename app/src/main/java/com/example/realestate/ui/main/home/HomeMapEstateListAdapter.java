@@ -1,7 +1,6 @@
 package com.example.realestate.ui.main.home;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +25,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Copyright (C) 2019, VNG Corporation.
@@ -100,6 +100,8 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
 
         @BindView(R.id.estate_square)
         TextView mSquare;
+
+        private EstateDetail mEstateDetail;
 
         private ImageListAdapter mAdapter = new ImageListAdapter();
 
@@ -195,7 +197,7 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         }
 
         private void setPrice(float price) {
-            mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(price * 1000)));
+            mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(price * 1000000)));
         }
 
         private void setSquare(float square) {
@@ -209,6 +211,7 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         }
 
         public void bindView(EstateDetail item) {
+            mEstateDetail = item;
             if (item != null) {
                 setImageList(item.getUrl());
                 setStatus(item.getStatusProject());
@@ -220,6 +223,13 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
                 setAddress(item.getAddress());
             }
         }
+
+        @OnClick(R.id.avatar)
+        public void onAvatarClick() {
+            if (mItemClickListener != null && mEstateDetail != null) {
+                mItemClickListener.onAvatarClick(mEstateDetail.getOwnerid());
+            }
+        }
     }
 
     /**
@@ -227,5 +237,7 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
      */
     public interface OnItemClickListener {
         void onItemSelected(EstateDetail item);
+
+        void onAvatarClick(String userId);
     }
 }

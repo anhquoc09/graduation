@@ -10,8 +10,10 @@ import java.util.List;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import rx.Observable;
 
 /**
@@ -56,4 +58,15 @@ public interface EstateService {
                                                   @Field("url") String[] urls,
                                                   @Field("publicId") String[] publicIds,
                                                   @Field("codelist") CodeList[] codeList);
+
+    @GET("users/danhsachproject/{page}")
+    Observable<UserListEstateResponse> getCurrentUserListEstate(@Header("authorization") String accessToken,
+                                                                @Path("page") int page);
+
+    @GET("users/profile/{user_id}")
+    Observable<UserProfileEstateResponse> getProfileById(@Path("user_id") String id);
+
+    @GET("users/projectlist/{id}/{page}")
+    Observable<UserListEstateResponse> getUserListEstateById(@Path("id") String id,
+                                                             @Path("page") int next);
 }

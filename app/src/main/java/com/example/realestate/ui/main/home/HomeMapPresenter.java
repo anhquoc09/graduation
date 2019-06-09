@@ -1,7 +1,6 @@
 package com.example.realestate.ui.main.home;
 
 import com.example.realestate.EstateApplication;
-import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.rest.EstateService;
@@ -11,7 +10,6 @@ import com.example.realestate.utils.NetworkUtils;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -26,7 +24,7 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
     public static final String TAG = HomeMapPresenter.class.getSimpleName();
 
-    public static final String RADIUS = "3";
+    public static final String RADIUS = "5";
 
     private EstateService mService;
 
@@ -59,11 +57,14 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
     @Override
     public void detachView() {
-        mSubscription.clear();
+        mSubscription.unsubscribe();
         super.detachView();
     }
 
     private void showConnectionFailedLayout() {
+        if (isViewAttached()) {
+            mView.showNoConnection();
+        }
     }
 
     private void hideConnectionFailedLayout() {
@@ -74,6 +75,9 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
         @Override
         public void onStart() {
             hideConnectionFailedLayout();
+            if (isViewAttached()) {
+                mView.showProgress();
+            }
         }
 
         @Override
@@ -82,6 +86,10 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         @Override
         public void onError(Throwable e) {
+            if (isViewAttached()) {
+                mView.hideProgress();
+            }
+
             if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
                 showConnectionFailedLayout();
             }
@@ -89,10 +97,9 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         @Override
         public void onNext(EstateListResponse estateListResponse) {
-            List<EstateDetail> estateList = estateListResponse.getEstateDetails();
-
             if (isViewAttached()) {
-                mView.fetchDataSuccess(estateList);
+                mView.hideProgress();
+                mView.fetchDataSuccess(estateListResponse.getEstateDetails());
             }
         }
     }

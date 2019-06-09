@@ -24,6 +24,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -75,10 +76,17 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         notifyDataSetChanged();
     }
 
+    public void appendData(List<EstateDetail> data) {
+        int index = mList.size();
+        if (!CollectionUtils.isEmpty(data)) {
+            mList.addAll(data);
+            notifyItemRangeInserted(index, data.size());
+        }
+    }
+
     public void setItemClickListener(OnItemClickListener itemClickListener) {
         mItemClickListener = itemClickListener;
     }
-
 
     /**
      * {@link EstateDetail}
@@ -167,7 +175,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
                 }
                 setTitle(item.getName());
                 setPrice(item.getPrice().toString());
-                if (item.getStatusProject() == 1){
+                if (item.getStatusProject() == 1) {
                     setStatus(context.getResources().getString(R.string.status_available));
                 } else {
                     setStatus(context.getResources().getString(R.string.status_sold));

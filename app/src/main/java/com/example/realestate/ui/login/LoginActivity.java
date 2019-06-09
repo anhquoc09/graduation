@@ -9,11 +9,13 @@ import android.widget.TextView;
 import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
 import com.example.realestate.ui.main.MainActivity;
+import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -28,6 +30,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
     public static final String TAG = LoginActivity.class.getSimpleName();
 
+    private static final String INTENT_NOT_NAVIGATE = "intent_not_navigate";
+
     @BindView(R.id.tv_go_home)
     TextView mTvGoHome;
 
@@ -39,14 +43,29 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
     private LoginPresenter mPresenter;
 
+    private boolean isNotNavigate = false;
+
     public static Intent intentFor(Context context) {
         return new Intent(context, LoginActivity.class);
+    }
+
+    public static Intent intentFor(Context context, boolean isNotNavigate) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(INTENT_NOT_NAVIGATE, isNotNavigate);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isNotNavigate = bundle.getBoolean(INTENT_NOT_NAVIGATE);
+        }
 
         mUnbinder = ButterKnife.bind(this);
 
@@ -111,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-//    GoogleManager Callback
+    //    GoogleManager Callback
     @Override
     public void startForResult(Intent signInIntent, int loginGgRequestCode) {
         startActivityForResult(signInIntent, loginGgRequestCode);
@@ -129,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
         }
     }
 
-//    Presenter callback
+    //    Presenter callback
     @Override
     public void showNoNetworkConnection() {
         AndroidUtilities.showToast(getString(R.string.no_network_connection));
@@ -147,7 +166,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
     @Override
     public void onLoginSuccess() {
-        goToHome();
+        if (isNotNavigate) {
+            onBackPressed();
+        } else {
+            goToHome();
+        }
     }
 
     @Override
@@ -170,7 +193,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView, Googl
 
     @OnClick(R.id.tv_go_home)
     public void goHome() {
-        goToHome();
+        if (isNotNavigate) {
+            onBackPressed();
+        } else {
+            goToHome();
+        }
         mTvGoHome.setClickable(false);
     }
 }

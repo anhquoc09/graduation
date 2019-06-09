@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class CustomListLayout extends FrameLayout {
     private static final String TAG = CustomListLayout.class.getSimpleName();
 
-    @BindView(R.id.refresh_layout)
+    @BindView(R.id.custom_refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
     @BindView(R.id.recycler)
@@ -55,6 +55,12 @@ public class CustomListLayout extends FrameLayout {
     public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
         if (mRefreshLayout != null) {
             mRefreshLayout.setOnRefreshListener(listener);
+        }
+    }
+
+    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
+        if (mRecyclerView != null) {
+            mRecyclerView.addOnScrollListener(listener);
         }
     }
 

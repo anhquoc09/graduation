@@ -10,5 +10,11 @@ import java.util.List;
  */
 
 public interface HomePagerView {
+    void showNoConnection();
+
+    void showProgress();
+
+    void hideProgress();
+
     void fetchDataSuccess(List<EstateDetail> list);
 }

@@ -24,6 +24,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -68,6 +69,9 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.tv_app_name)
     View mAppName;
 
+    @BindView(R.id.btn_sign_out)
+    TextView mSignOutBtn;
+
     private MainPagerAdapter mAdapter;
 
     private MainPresenter mPresenter;
@@ -89,8 +93,6 @@ public class MainActivity extends BaseActivity
         PermissionUtils.Request_FINE_LOCATION(this, 1);
         PermissionUtils.Request_COARSE_LOCATION(this, 2);
 
-        initView();
-
         initAdapter();
 
         setupTabLayout();
@@ -104,7 +106,13 @@ public class MainActivity extends BaseActivity
         initGoogle();
     }
 
-    private void initView() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupProfileView();
+    }
+
+    private void setupProfileView() {
         if (UserManager.isUserLoggedIn()) {
             showProfileView();
         } else {
@@ -175,6 +183,7 @@ public class MainActivity extends BaseActivity
 
     private void hideProfileView() {
         if (mProfileView != null) {
+            mSignOutBtn.setVisibility(View.GONE);
             mProfileView.setVisibility(View.GONE);
         }
         if (mAppName != null) {
@@ -184,6 +193,7 @@ public class MainActivity extends BaseActivity
 
     private void showProfileView() {
         if (mProfileView != null) {
+            mSignOutBtn.setVisibility(View.VISIBLE);
             mProfileView.setVisibility(View.VISIBLE);
             mProfileName.setText(UserManager.getCurrentUser().getFullname());
             Glide.with(this)
@@ -192,9 +202,8 @@ public class MainActivity extends BaseActivity
                     .into(mProfileAvatar);
         }
         if (mAppName != null) {
-            mAppName.setVisibility(mProfileView == null ? View.VISIBLE : View.GONE);
+            mAppName.setVisibility(View.GONE);
         }
-
     }
 
     private void goToLoginScreen() {

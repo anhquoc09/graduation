@@ -343,6 +343,7 @@ public class UpPostActivity extends BaseActivity
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap.setOnMapClickListener(this);
         mGoogleMap.setOnMarkerDragListener(this);
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
 
         mLocation = new Location("HCMUS");
         mLocation.setLatitude(10.763147);

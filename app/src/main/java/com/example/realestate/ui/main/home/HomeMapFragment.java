@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
+import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
@@ -46,6 +48,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,12 @@ public class HomeMapFragment extends Fragment
     public static final String TAG = HomeMapFragment.class.getSimpleName();
 
     private static final float LOAD_DISTANCE = 2000;
+
+    @BindView(R.id.coordination_layout)
+    CoordinatorLayout mCoordinatorLayout;
+
+    @BindView(R.id.loading_layout)
+    View mProgress;
 
     @BindView(R.id.ic_delete_search)
     ImageView mIconClear;
@@ -193,6 +202,7 @@ public class HomeMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        fetchData(mMyLocation.getLatitude(), mMyLocation.getLongitude());
     }
 
     @Override
@@ -251,7 +261,6 @@ public class HomeMapFragment extends Fragment
 
         mOldCamLocation = mMyLocation;
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude()), 12));
-        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
 
         initMyLocation();
         notifyMapChange();
@@ -266,9 +275,12 @@ public class HomeMapFragment extends Fragment
     public void setData(List<EstateDetail> list) {
         mList.clear();
         if (!CollectionUtils.isEmpty(list)) {
+            showList();
             mList.addAll(list);
             mListAdapter.setData(mList);
             notifyMapChange();
+        } else {
+            hideList();
         }
     }
 
@@ -309,7 +321,7 @@ public class HomeMapFragment extends Fragment
                 new AlertDialog.Builder(activity)
                         .setTitle(R.string.no_network_connection)
                         .setMessage(R.string.no_network_message)
-                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> activity.startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS)))
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)))
                         .setNegativeButton(R.string.no, null)
                         .show();
             }
@@ -323,10 +335,12 @@ public class HomeMapFragment extends Fragment
                 mGoogleMap.setMyLocationEnabled(true);
                 mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
                 mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                    if (location != null) {
+                    if (location != null && location.distanceTo(mMyLocation) >= LOAD_DISTANCE) {
                         mMyLocation = location;
+                        Log.d("haq", "initMyLocation");
+
+                        animateToMyLocation();
                     }
-                    animateToMyLocation();
                 });
             }
         }
@@ -340,6 +354,16 @@ public class HomeMapFragment extends Fragment
                                 mOldCamLocation.getLongitude()),
                         12));
         fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+    }
+
+    private void showList() {
+        mBtnShowList.setVisibility(View.GONE);
+        mListLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideList() {
+        mBtnShowList.setVisibility(View.VISIBLE);
+        mListLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -375,10 +399,13 @@ public class HomeMapFragment extends Fragment
                 selectedMarker.setLongitude(selectedPosition.longitude);
                 if (newLocation.distanceTo(selectedMarker) > 100) {
                     mOldCamLocation = newLocation;
+                    Log.d("haq", "camIdle");
+
                     fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
                 }
             } else {
                 mOldCamLocation = newLocation;
+                Log.d("haq", "camIdle");
                 fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
             }
         }
@@ -391,14 +418,12 @@ public class HomeMapFragment extends Fragment
 
     @OnClick(R.id.tv_show_list)
     public void onShowListClick() {
-        mBtnShowList.setVisibility(View.GONE);
-        mListLayout.setVisibility(View.VISIBLE);
+        showList();
     }
 
     @OnClick(R.id.tv_hide_list)
     public void onHideListClick() {
-        mListLayout.setVisibility(View.GONE);
-        mBtnShowList.setVisibility(View.VISIBLE);
+        hideList();
     }
 
     @OnClick(R.id.btn_more_filter)
@@ -433,6 +458,30 @@ public class HomeMapFragment extends Fragment
     }
 
     @Override
+    public void showNoConnection() {
+        Snackbar snackbar = Snackbar
+                .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.setting), view -> {
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                    }
+                });
+
+        snackbar.show();
+    }
+
+    @Override
+    public void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        mProgress.setVisibility(View.GONE);
+    }
+
+    @Override
     public void fetchDataSuccess(List<EstateDetail> list) {
         setData(list);
     }
@@ -440,5 +489,10 @@ public class HomeMapFragment extends Fragment
     @Override
     public void onItemSelected(EstateDetail item) {
         startActivity(EstateDetailActivity.intentFor(getActivity(), item));
+    }
+
+    @Override
+    public void onAvatarClick(String userId) {
+        startActivity(ProfileActivity.intentFor(getActivity(), userId));
     }
 }

@@ -8,7 +8,7 @@
 
     <string name="slogan">BEST PLACE FOR DECISION</string>
     <string name="login_google">Login with Google</string>
-    <string name="go_home">GO TO HOMEPAGE</string>
+    <string name="skip_login">SKIP LOGIN</string>
 
     <string name="no_network_connection">No network connection</string>
     <string name="google_connection_error">Cannot connect to Google Service.</string>
@@ -17,7 +17,7 @@
     <string name="message_cannot_connect_server">Failed to connect to server.</string>
     <string name="message_login_fail">Failed to login Google. Error: %1$s.</string>
 
-    <string name="login">Login...</string>
+    <string name="login">Login</string>
 
     <!-- Navigation Title -->
     <string name="navigation_profile">Profile</string>
@@ -67,8 +67,8 @@
     <string name="estate_apartment">Apartment</string>
     <string name="estate_house">House</string>
     <string name="estate_office">Office</string>
-    <string name="estate_sell">For sell</string>
-    <string name="estate_lease">For lease</string>
+    <string name="estate_sell">Sell</string>
+    <string name="estate_lease">Lease</string>
     <string name="estate_land">Land</string>
     <string name="contact_now">Contact now</string>
     <string name="contact_mess">Select the method to contact the owner</string>
@@ -92,4 +92,11 @@
     <string name="error_can_not_submit">Can not submit, check your content.</string>
     <string name="wait_for_submitting">Submitting your post, please wait...</string>
     <string name="submit_success">Your post is submitted success!</string>
+    <string name="loading">Loading...</string>
+    <string name="setting">Setting</string>
+    <string name="feature_not_support">\"Hi! This feature is not yet supported</string>
+    <string name="empty_info">Not update yet.</string>
+    <string name="not_login">You are not logged in</string>
+    <string name="login_now">Please login to view full phone number.</string>
+    <string name="wait_for_verify">(Waiting for inspection)</string>
 </resources>
