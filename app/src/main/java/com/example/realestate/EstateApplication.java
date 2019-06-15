@@ -7,7 +7,9 @@ import android.content.res.Configuration;
 import com.cloudinary.android.MediaManager;
 import com.example.realestate.utils.PlatformUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ import androidx.multidex.MultiDex;
 public class EstateApplication extends Application {
 
     public static final String BEARER_TOKEN = "Bearer ";
+
+    private static List<String> mSavedList = new ArrayList<>();
 
     private static volatile EstateApplication sInstance = null;
 
@@ -66,5 +70,20 @@ public class EstateApplication extends Application {
         }
 
 //        LocaleController.applyLanguage(this, newLocale);
+    }
+
+    public static void addSavedProjectId(String projectId) {
+        mSavedList.add(projectId);
+    }
+
+    public static void removeSavedProjectId(String projectId) {
+        int index = mSavedList.indexOf(projectId);
+        if (index > -1) {
+            mSavedList.remove(index);
+        }
+    }
+
+    public static boolean savedContain(String projectId) {
+        return mSavedList.contains(projectId);
     }
 }

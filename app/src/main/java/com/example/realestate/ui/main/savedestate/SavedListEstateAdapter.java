@@ -1,4 +1,4 @@
-package com.example.realestate.ui.main;
+package com.example.realestate.ui.main.savedestate;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.data.model.SavedProject;
 import com.example.realestate.ui.login.LoginActivity;
 import com.google.android.gms.common.util.CollectionUtils;
 
@@ -24,9 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,9 +40,9 @@ import static com.example.realestate.utils.AndroidUtilities.getString;
  * @since 24/03/2019
  */
 
-public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.EstateItemVH> {
+public class SavedListEstateAdapter extends RecyclerView.Adapter<SavedListEstateAdapter.EstateItemVH> {
 
-    private final List<EstateDetail> mList = new ArrayList<>();
+    private final List<SavedProject> mList = new ArrayList<>();
 
     private OnItemClickListener mItemClickListener;
 
@@ -55,7 +56,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
     @Override
     public void onBindViewHolder(@NonNull EstateItemVH holder, int position) {
-        EstateDetail item = mList.get(position);
+        EstateDetail item = mList.get(position).getEstateDetail();
         if (item != null) {
             holder.bindView(item);
         }
@@ -66,7 +67,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         return mList.size();
     }
 
-    public void setData(List<EstateDetail> list) {
+    public void setData(List<SavedProject> list) {
         mList.clear();
         if (!CollectionUtils.isEmpty(list)) {
             mList.addAll(list);
@@ -74,7 +75,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         notifyDataSetChanged();
     }
 
-    public void appendData(List<EstateDetail> data) {
+    public void appendData(List<SavedProject> data) {
         int index = mList.size();
         if (!CollectionUtils.isEmpty(data)) {
             mList.addAll(data);
@@ -86,9 +87,10 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         mItemClickListener = itemClickListener;
     }
 
-    public void saveSuccess(int position) {
+    public void unSaveSuccess(int position) {
         if (position >= 0 && position < mList.size()) {
-            notifyItemChanged(position);
+            mList.remove(position);
+            notifyItemRemoved(position);
         }
     }
 

@@ -2,7 +2,7 @@ package com.example.realestate.ui.widget;
 
 public abstract class AbstractPaging implements EndlessScrollPaging {
 
-    protected static final int DEFAULT_PAGE_SIZE = 20;
+    protected static final int DEFAULT_PAGE_SIZE = 10;
 
     protected final int mPageSize;
 

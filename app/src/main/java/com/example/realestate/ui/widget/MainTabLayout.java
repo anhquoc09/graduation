@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -84,13 +85,14 @@ public class MainTabLayout extends LinearLayout {
 
         setOrientation(VERTICAL);
 
-        final TextView[] iconViews = {mHomeTab, mNewestTab, mSavedTab, mSketchTab, mExteriorTab, mGeomancyTab};
+        final TextView[] tabViews = {mHomeTab, mNewestTab, mSavedTab};
 
-        int count = iconViews.length;
+        int count = tabViews.length;
         mTabs = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             Tab tab = new Tab();
-            tab.setTextView(iconViews[i]);
+            tab.setTextView(tabViews[i]);
+            tabViews[i].setVisibility(VISIBLE);
             mTabs.add(tab);
         }
 
@@ -182,9 +184,9 @@ public class MainTabLayout extends LinearLayout {
             if (selected) {
                 mView.setBackgroundColor(
                         EstateApplication.getInstance()
-                        .getApplicationContext()
-                        .getResources()
-                        .getColor(R.color.tab_selected));
+                                .getApplicationContext()
+                                .getResources()
+                                .getColor(R.color.tab_selected));
             } else {
                 mView.setBackgroundColor(Color.WHITE);
             }

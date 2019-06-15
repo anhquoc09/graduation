@@ -3,6 +3,7 @@ package com.example.realestate.ui.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,8 +20,10 @@ import com.example.realestate.ui.main.uppost.UpPostActivity;
 import com.example.realestate.ui.widget.MainTabLayout;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.PermissionUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -41,6 +44,9 @@ public class MainActivity extends BaseActivity
         GoogleManager.LogoutResultCallback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    @BindView(R.id.coordination_layout)
+    CoordinatorLayout mCoordinatorLayout;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -72,6 +78,9 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.btn_sign_out)
     TextView mSignOutBtn;
 
+    @BindView(R.id.progress_layout)
+    View mProgress;
+
     private MainPagerAdapter mAdapter;
 
     private MainPresenter mPresenter;
@@ -79,6 +88,8 @@ public class MainActivity extends BaseActivity
     private Unbinder mUnbinder;
 
     private GoogleManager mGoogleManager;
+
+    private Snackbar mSnackBar;
 
     public static Intent intentFor(Context context) {
         return new Intent(context, MainActivity.class);
@@ -93,17 +104,23 @@ public class MainActivity extends BaseActivity
         PermissionUtils.Request_FINE_LOCATION(this, 1);
         PermissionUtils.Request_COARSE_LOCATION(this, 2);
 
-        initAdapter();
-
         setupTabLayout();
 
         setupNavigationLayout();
 
-        setToolbarTitle(mViewPager.getCurrentItem());
-
         initPresenter();
 
         initGoogle();
+
+        mSnackBar = Snackbar
+                .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.setting), view -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
+
+        if (UserManager.isUserLoggedIn()) {
+            mPresenter.fetchData();
+        } else {
+            initAdapter();
+        }
     }
 
     @Override
@@ -159,6 +176,7 @@ public class MainActivity extends BaseActivity
         });
 
         mViewPager.setCurrentItem(mAdapter.getHomeIndex());
+        setToolbarTitle(mViewPager.getCurrentItem());
     }
 
     private void setupTabLayout() {
@@ -241,6 +259,31 @@ public class MainActivity extends BaseActivity
         if (mGoogleManager != null) {
             mGoogleManager.logoutGoogle();
         }
+    }
+
+    @Override
+    public void showProgress() {
+        mProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        mProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideNoNetwork() {
+        mSnackBar.dismiss();
+    }
+
+    @Override
+    public void showNoNetwork() {
+        mSnackBar.show();
+    }
+
+    @Override
+    public void fetchSavedListSuccess() {
+        initAdapter();
     }
 
     @Override

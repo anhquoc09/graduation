@@ -1,12 +1,26 @@
-package com.example.realestate.ui.main.savedestate;
+package com.example.realestate.ui.main.newestate;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.realestate.R;
+import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.ui.main.ListEstateAdapter;
+import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
+import com.example.realestate.ui.main.profile.ProfileActivity;
+import com.example.realestate.ui.widget.CustomListLayout;
+import com.example.realestate.ui.widget.EndlessNestedScrollViewListener;
+import com.example.realestate.ui.widget.EndlessScrollDownListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,31 +31,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.realestate.R;
-import com.example.realestate.UserManager;
-import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.data.model.SavedProject;
-import com.example.realestate.ui.login.LoginActivity;
-import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
-import com.example.realestate.ui.main.profile.ProfileActivity;
-import com.google.android.gms.common.util.CollectionUtils;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
  * @author anhquoc09
- * @since 30/03/2019
+ * @since 24/03/2019
  */
 
-public class SavedEstateFragment extends Fragment
-        implements SavedEstateView,
-        SavedListEstateAdapter.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+public class ListNewEstateFragment extends Fragment
+        implements ListNewEstateView,
+        SwipeRefreshLayout.OnRefreshListener,
+        ListEstateAdapter.OnItemClickListener {
+
+    public static final String TAG = ListNewEstateFragment.class.getSimpleName();
 
     @BindView(R.id.coordination_layout)
     CoordinatorLayout mCoordinatorLayout;
@@ -60,14 +64,14 @@ public class SavedEstateFragment extends Fragment
 
     private Unbinder mUnbinder;
 
-    private SavedListEstateAdapter mAdapter;
+    private ListEstateAdapter mAdapter;
 
-    private SavedEstatePresenter mPresenter;
+    private ListNewEstatePresenter mPresenter;
 
     private Snackbar mSnackBar;
 
     public static Fragment newInstance() {
-        SavedEstateFragment fragment = new SavedEstateFragment();
+        ListNewEstateFragment fragment = new ListNewEstateFragment();
         fragment.setArguments(new Bundle());
         return fragment;
     }
@@ -91,48 +95,29 @@ public class SavedEstateFragment extends Fragment
 
         initView();
         initPresenter();
+        EndlessScrollDownListener listener = new EndlessScrollDownListener(mPresenter.getPaging(), mRecyclerView.getLayoutManager());
+        listener.setPageLoader(() -> mPresenter.fetchData());
+        mRecyclerView.addOnScrollListener(listener);
     }
 
     private void initPresenter() {
-        mPresenter = new SavedEstatePresenter();
+        mPresenter = new ListNewEstatePresenter();
         mPresenter.attachView(this);
+        mPresenter.fetchData();
     }
 
     private void initView() {
-        mAdapter = new SavedListEstateAdapter();
+        mAdapter = new ListEstateAdapter();
         mAdapter.setItemClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mSnackBar = Snackbar
                 .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getString(R.string.setting), view -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!UserManager.isUserLoggedIn()) {
-            mEmptyView.setVisibility(View.VISIBLE);
-
-            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-            alertDialog.setTitle(getString(R.string.not_login));
-            alertDialog.setMessage(getString(R.string.login_now));
-
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> alertDialog.dismiss());
-
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) ->
-                    getActivity().startActivity(LoginActivity.intentFor(getContext(), true)));
-
-            alertDialog.setCancelable(true);
-            alertDialog.show();
-
-        } else {
-            mPresenter.fetchData();
-        }
     }
 
     @Override
@@ -149,7 +134,7 @@ public class SavedEstateFragment extends Fragment
     @Override
     public void onRefresh() {
         if (mPresenter != null) {
-            mPresenter.fetchData();
+            mPresenter.reset();
         }
     }
 
@@ -165,6 +150,7 @@ public class SavedEstateFragment extends Fragment
 
     @Override
     public void saveProject(EstateDetail item, int position) {
+        mPresenter.saveProject(item.getFullName(), item.getId(), item.getCreateTime(), position);
     }
 
     @Override
@@ -173,7 +159,7 @@ public class SavedEstateFragment extends Fragment
     }
 
     @Override
-    public void fetchDataSuccess(List<SavedProject> list) {
+    public void fetchDataSuccess(List<EstateDetail> list) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -184,6 +170,14 @@ public class SavedEstateFragment extends Fragment
             mEmptyView.setVisibility(View.GONE);
         }
         mAdapter.setData(list);
+    }
+
+    @Override
+    public void loadMoreDataSuccess(List<EstateDetail> estateDetails) {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+        mAdapter.appendData(estateDetails);
     }
 
     @Override
@@ -207,7 +201,12 @@ public class SavedEstateFragment extends Fragment
     }
 
     @Override
+    public void saveEstateSuccess(int position) {
+        mAdapter.saveSuccess(position);
+    }
+
+    @Override
     public void unSaveEstateSuccess(int position) {
-        mAdapter.unSaveSuccess(position);
+        mAdapter.saveSuccess(position);
     }
 }

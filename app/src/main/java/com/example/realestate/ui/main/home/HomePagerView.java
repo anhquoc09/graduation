@@ -10,6 +10,11 @@ import java.util.List;
  */
 
 public interface HomePagerView {
+
+    void saveEstateSuccess(int position);
+
+    void unSaveEstateSuccess(int position);
+
     void showNoConnection();
 
     void showProgress();

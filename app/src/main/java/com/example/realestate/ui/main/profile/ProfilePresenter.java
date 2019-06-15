@@ -9,7 +9,6 @@ import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.data.remote.rest.UserListEstateResponse;
 import com.example.realestate.data.remote.rest.UserProfileEstateResponse;
 import com.example.realestate.ui.BasePresenter;
-import com.example.realestate.ui.widget.EndlessScrollPaging;
 import com.example.realestate.ui.widget.Paging;
 import com.example.realestate.utils.NetworkUtils;
 
@@ -45,7 +44,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
     public ProfilePresenter() {
         mService = ServiceProvider.getEstateService();
         mUser = UserManager.getCurrentUser();
-        mPaging = new Paging(20);
+        mPaging = new Paging();
         mSubscriptions = new CompositeSubscription();
     }
 

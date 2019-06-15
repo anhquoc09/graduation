@@ -1,6 +1,6 @@
 package com.example.realestate.ui.main.savedestate;
 
-import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.data.model.SavedProject;
 
 import java.util.List;
 
@@ -10,5 +10,15 @@ import java.util.List;
  */
 
 public interface SavedEstateView {
-    void fetchDataSuccess(List<EstateDetail> list);
+    void fetchDataSuccess(List<SavedProject> list);
+
+    void showProgress();
+
+    void hideProgress();
+
+    void hideNoNetwork();
+
+    void showNoNetwork();
+
+    void unSaveEstateSuccess(int position);
 }

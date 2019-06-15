@@ -1,10 +1,26 @@
 package com.example.realestate.ui.main;
 
+import com.example.realestate.EstateApplication;
+import com.example.realestate.User;
+import com.example.realestate.UserManager;
+import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.data.model.SavedEstateListResponse;
+import com.example.realestate.data.model.SavedProject;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.rest.EstateService;
+import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
+import com.example.realestate.ui.main.savedestate.SavedEstatePresenter;
+import com.example.realestate.utils.NetworkUtils;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
+import rx.Subscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.example.realestate.EstateApplication.BEARER_TOKEN;
 
 /**
  * @author anhquoc09
@@ -13,12 +29,36 @@ import rx.subscriptions.CompositeSubscription;
 public class MainPresenter extends BasePresenter<MainView> {
     public static final String TAG = MainPresenter.class.getSimpleName();
 
+    private User mUser;
+
     private EstateService mEstateService;
 
-    private CompositeSubscription mSubscription = new CompositeSubscription();
+    private Subscription mSub;
+
+    private CompositeSubscription mSubscription;
 
     public MainPresenter() {
+        mUser = UserManager.getCurrentUser();
         mEstateService = ServiceProvider.getEstateService();
+        mSubscription = new CompositeSubscription();
+    }
+
+    public void fetchData() {
+        if (mSub != null && !mSub.isUnsubscribed()) {
+            mSub.unsubscribe();
+        }
+
+        if (!NetworkUtils.isNetworkConnected(EstateApplication.getInstance().getApplicationContext())) {
+            showNoNetwork();
+            return;
+        }
+
+        mSub = mEstateService.getSavedList(BEARER_TOKEN + mUser.getAccessToken())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new SavedEstateListSubscriber());
+
+        mSubscription.add(mSub);
     }
 
     public void logout() {
@@ -37,5 +77,60 @@ public class MainPresenter extends BasePresenter<MainView> {
             mSubscription.unsubscribe();
         }
         super.detachView();
+    }
+
+    private void showProgress() {
+        if (isViewAttached()) {
+            mView.showProgress();
+        }
+    }
+
+    private void hideProgress() {
+        if (isViewAttached()) {
+            mView.hideProgress();
+        }
+    }
+
+    private void hideNoNetwork() {
+        if (isViewAttached()) {
+            mView.hideNoNetwork();
+        }
+    }
+
+    private void showNoNetwork() {
+        if (isViewAttached()) {
+            mView.showNoNetwork();
+        }
+    }
+
+    private class SavedEstateListSubscriber extends Subscriber<SavedEstateListResponse> {
+
+        @Override
+        public void onStart() {
+            showProgress();
+        }
+
+        @Override
+        public void onCompleted() {
+            hideProgress();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
+                showNoNetwork();
+            }
+        }
+
+        @Override
+        public void onNext(SavedEstateListResponse savedListEstateResponse) {
+            for (SavedProject project : savedListEstateResponse.getSavedListResult().getSavedProjects()) {
+                EstateApplication.addSavedProjectId(project.getEstateDetail().getId());
+            }
+
+            if (isViewAttached()) {
+                mView.fetchSavedListSuccess();
+            }
+        }
     }
 }

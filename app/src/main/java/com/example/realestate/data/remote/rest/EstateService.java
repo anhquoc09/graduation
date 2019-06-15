@@ -1,12 +1,12 @@
 package com.example.realestate.data.remote.rest;
 
 import com.example.realestate.data.model.CodeList;
+import com.example.realestate.data.model.SaveEstateResponse;
+import com.example.realestate.data.model.SavedEstateListResponse;
+import com.example.realestate.data.model.UnSaveEstateResponse;
 import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.response.LoginResponse;
 import com.example.realestate.data.remote.response.SubmitEstateResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -59,6 +59,12 @@ public interface EstateService {
                                                   @Field("publicId") String[] publicIds,
                                                   @Field("codelist") CodeList[] codeList);
 
+    @GET("projects/all/{page}")
+    Observable<UserListEstateResponse> getListNewEstate(@Path("page") int page);
+
+    @GET("users/listSaved")
+    Observable<SavedEstateListResponse> getSavedList(@Header("authorization") String accessToken);
+
     @GET("users/danhsachproject/{page}")
     Observable<UserListEstateResponse> getCurrentUserListEstate(@Header("authorization") String accessToken,
                                                                 @Path("page") int page);
@@ -69,4 +75,16 @@ public interface EstateService {
     @GET("users/projectlist/{id}/{page}")
     Observable<UserListEstateResponse> getUserListEstateById(@Path("id") String id,
                                                              @Path("page") int next);
+
+    @FormUrlEncoded
+    @POST("users/follow")
+    Observable<SaveEstateResponse> saveProject(@Header("authorization") String accessToken,
+                                               @Field("fullname") String name,
+                                               @Field("projectid") String projectId,
+                                               @Field("createTime") long createTime);
+
+    @FormUrlEncoded
+    @POST("users/unfollow")
+    Observable<UnSaveEstateResponse> unSaveProject(@Header("authorization") String accessToken,
+                                                   @Field("projectid") String projectId);
 }

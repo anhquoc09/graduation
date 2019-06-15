@@ -4,7 +4,7 @@ import com.example.realestate.ui.main.construction.ConstructionFragment;
 import com.example.realestate.ui.main.exterior.ExteriorFragment;
 import com.example.realestate.ui.main.geomancy.GeomancyFragment;
 import com.example.realestate.ui.main.home.HomeMapFragment;
-import com.example.realestate.ui.main.listestate.ListNewEstateFragment;
+import com.example.realestate.ui.main.newestate.ListNewEstateFragment;
 import com.example.realestate.ui.main.savedestate.SavedEstateFragment;
 import com.example.realestate.ui.widget.MainTabLayout;
 

@@ -97,6 +97,9 @@
     <string name="feature_not_support">\"Hi! This feature is not yet supported</string>
     <string name="empty_info">Not update yet.</string>
     <string name="not_login">You are not logged in</string>
-    <string name="login_now">Please login to view full phone number.</string>
+    <string name="login_now">Please login to view full detail.</string>
     <string name="wait_for_verify">(Waiting for inspection)</string>
+    <string name="stop">Stop</string>
+    <string name="submiting">Your post is not completed.</string>
+    <string name="stop_message">Do you want to stop?</string>
 </resources>

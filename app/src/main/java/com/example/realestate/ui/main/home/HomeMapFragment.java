@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -14,7 +16,6 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.ui.main.profile.ProfileActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
+import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -50,12 +52,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import butterknife.Unbinder;
 
 /**
@@ -73,6 +78,8 @@ public class HomeMapFragment extends Fragment
     public static final String TAG = HomeMapFragment.class.getSimpleName();
 
     private static final float LOAD_DISTANCE = 2000;
+
+    private static final float ZOOM = 13;
 
     @BindView(R.id.coordination_layout)
     CoordinatorLayout mCoordinatorLayout;
@@ -111,9 +118,11 @@ public class HomeMapFragment extends Fragment
 
     private GoogleMap mGoogleMap;
 
+    private Geocoder mGeoCoder;
+
     private Location mMyLocation;
 
-    private Location mOldCamLocation;
+    private Location mOldFetchDataLocation;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -136,6 +145,7 @@ public class HomeMapFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGeoCoder = new Geocoder(getContext(), Locale.getDefault());
     }
 
     @Nullable
@@ -153,6 +163,7 @@ public class HomeMapFragment extends Fragment
         mMyLocation = new Location("HCMUS");
         mMyLocation.setLatitude(10.763147);
         mMyLocation.setLongitude(106.682203);
+        mOldFetchDataLocation = mMyLocation;
 
         initRecyclerView();
         initSearchBox();
@@ -181,7 +192,7 @@ public class HomeMapFragment extends Fragment
                         mMarkers.get(mPreMarkerSelectedIndex).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     }
                     mPreMarkerSelectedIndex = position;
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarkers.get(position).getPosition(), 12));
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMarkers.get(position).getPosition(), ZOOM));
                 }
             }
         }
@@ -202,7 +213,7 @@ public class HomeMapFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        fetchData(mMyLocation.getLatitude(), mMyLocation.getLongitude());
+        fetchData(mOldFetchDataLocation.getLatitude(), mOldFetchDataLocation.getLongitude());
     }
 
     @Override
@@ -217,7 +228,14 @@ public class HomeMapFragment extends Fragment
     }
 
     private void initSearchBox() {
-        mDebounceEditText = new DebounceEditText(mSearchText, result -> mCurrentSearchKey = result.toString());
+        mDebounceEditText = new DebounceEditText(mSearchText, result -> {
+            mCurrentSearchKey = result.toString();
+            LatLng latLng = getLocationFromAddress(mCurrentSearchKey);
+            if (latLng != null) {
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), ZOOM));
+                mPresenter.fetchData(latLng.latitude, latLng.longitude);
+            }
+        });
 
         mSearchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -251,6 +269,23 @@ public class HomeMapFragment extends Fragment
         }
     }
 
+    private LatLng getLocationFromAddress(String strAddress) {
+        if (!TextUtils.isEmpty(strAddress) && mGeoCoder != null) {
+            List<Address> addressList;
+            try {
+                addressList = mGeoCoder.getFromLocationName(strAddress, 1);
+                if (addressList != null && !addressList.isEmpty()) {
+                    Address location = addressList.get(0);
+                    return new LatLng(location.getLatitude(), location.getLongitude());
+                }
+            } catch (IOException e) {
+                AndroidUtilities.showToast(getString(R.string.no_address));
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
@@ -259,14 +294,19 @@ public class HomeMapFragment extends Fragment
         mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMarkerClickListener(this);
 
-        mOldCamLocation = mMyLocation;
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude()), 12));
+        mOldFetchDataLocation = mMyLocation;
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mOldFetchDataLocation.getLatitude(), mOldFetchDataLocation.getLongitude()), ZOOM));
 
         initMyLocation();
         notifyMapChange();
     }
 
     private void fetchData(double latitude, double longitude) {
+        if (mOldFetchDataLocation.getLatitude() != latitude && mOldFetchDataLocation.getLongitude() != longitude) {
+
+            mOldFetchDataLocation.setLatitude(latitude);
+            mOldFetchDataLocation.setLongitude(longitude);
+        }
         if (mPresenter != null) {
             mPresenter.fetchData(latitude, longitude);
         }
@@ -335,25 +375,22 @@ public class HomeMapFragment extends Fragment
                 mGoogleMap.setMyLocationEnabled(true);
                 mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
                 mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                    if (location != null && location.distanceTo(mMyLocation) >= LOAD_DISTANCE) {
+                    if (location != null) {
                         mMyLocation = location;
-                        Log.d("haq", "initMyLocation");
-
-                        animateToMyLocation();
                     }
+                    animateToMyLocation();
                 });
             }
         }
     }
 
     private void animateToMyLocation() {
-        mOldCamLocation = mMyLocation;
-        mGoogleMap.animateCamera(
-                CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(mOldCamLocation.getLatitude(),
-                                mOldCamLocation.getLongitude()),
-                        12));
-        fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+        if (mOldFetchDataLocation.distanceTo(mMyLocation) >= LOAD_DISTANCE) {
+            fetchData(mMyLocation.getLatitude(), mMyLocation.getLongitude());
+        }
+
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude()), ZOOM));
     }
 
     private void showList() {
@@ -391,22 +428,18 @@ public class HomeMapFragment extends Fragment
         newLocation.setLatitude(target.latitude);
         newLocation.setLongitude(target.longitude);
 
-        if (mOldCamLocation.distanceTo(newLocation) >= LOAD_DISTANCE) {
+        if (mOldFetchDataLocation.distanceTo(newLocation) >= LOAD_DISTANCE) {
             if (mPreMarkerSelectedIndex != -1 && mPreMarkerSelectedIndex < mMarkers.size()) {
                 Location selectedMarker = new Location("");
                 LatLng selectedPosition = mMarkers.get(mPreMarkerSelectedIndex).getPosition();
                 selectedMarker.setLatitude(selectedPosition.latitude);
                 selectedMarker.setLongitude(selectedPosition.longitude);
                 if (newLocation.distanceTo(selectedMarker) > 100) {
-                    mOldCamLocation = newLocation;
-                    Log.d("haq", "camIdle");
 
-                    fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+                    fetchData(newLocation.getLatitude(), newLocation.getLongitude());
                 }
             } else {
-                mOldCamLocation = newLocation;
-                Log.d("haq", "camIdle");
-                fetchData(mOldCamLocation.getLatitude(), mOldCamLocation.getLongitude());
+                fetchData(newLocation.getLatitude(), newLocation.getLongitude());
             }
         }
     }
@@ -458,6 +491,16 @@ public class HomeMapFragment extends Fragment
     }
 
     @Override
+    public void saveEstateSuccess(int position) {
+        mListAdapter.saveSuccess(position);
+    }
+
+    @Override
+    public void unSaveEstateSuccess(int position) {
+        mListAdapter.saveSuccess(position);
+    }
+
+    @Override
     public void showNoConnection() {
         Snackbar snackbar = Snackbar
                 .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
@@ -494,5 +537,27 @@ public class HomeMapFragment extends Fragment
     @Override
     public void onAvatarClick(String userId) {
         startActivity(ProfileActivity.intentFor(getActivity(), userId));
+    }
+
+    @Override
+    public void saveProject(EstateDetail item, int position) {
+        mPresenter.saveProject(item.getFullName(), item.getId(), item.getCreateTime(), position);
+    }
+
+    @Override
+    public void unSaveProject(EstateDetail item, int position) {
+        mPresenter.unSaveProject(item.getId(), position);
+    }
+
+    @OnClick(R.id.ic_delete_search)
+    public void onClearSearch() {
+        mSearchText.setText("");
+    }
+
+    @OnFocusChange(R.id.search_text)
+    public void onSearch() {
+        if (mListLayout.getVisibility() == View.VISIBLE) {
+            hideList();
+        }
     }
 }

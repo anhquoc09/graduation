@@ -85,7 +85,7 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
 
     private Unbinder mUnbinder;
 
-    private Snackbar mSnackbar;
+    private Snackbar mSnackBar;
 
     public static Intent intentFor(Context context, String profileId) {
         Intent intent = new Intent(context, ProfileActivity.class);
@@ -97,7 +97,7 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_profile_layout);
+        setContentView(R.layout.activity_profile_layout);
         mUnbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
@@ -129,7 +129,7 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
 
         mScrollView.setOnScrollChangeListener(listener);
 
-        mSnackbar = Snackbar
+        mSnackBar = Snackbar
                 .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getString(R.string.setting), view -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
     }
@@ -194,12 +194,12 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
 
     @Override
     public void hideNoNetwork() {
-        mSnackbar.dismiss();
+        mSnackBar.dismiss();
     }
 
     @Override
     public void showNoNetwork() {
-        mSnackbar.show();
+        mSnackBar.show();
     }
 
     @Override
@@ -249,6 +249,21 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     @Override
     public void onItemSelected(EstateDetail item) {
         startActivity(EstateDetailActivity.intentFor(this, item));
+    }
+
+    @Override
+    public void onOwnerClick(String userId) {
+        
+    }
+
+    @Override
+    public void saveProject(EstateDetail item, int position) {
+
+    }
+
+    @Override
+    public void unSaveProject(EstateDetail item, int position) {
+
     }
 
     @Override

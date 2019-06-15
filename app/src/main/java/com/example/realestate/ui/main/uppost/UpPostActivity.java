@@ -284,7 +284,7 @@ public class UpPostActivity extends BaseActivity
         mMarker.setDraggable(true);
         mMarker.showInfoWindow();
         if (mGoogleMap != null) {
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15));
         }
     }
 
@@ -451,6 +451,18 @@ public class UpPostActivity extends BaseActivity
         mImageAdapter.updatePercent(percent, position);
     }
 
+    @OnClick(R.id.btn_back)
+    @Override
+    public void onBackPressed() {
+        AlertDialog contactDialog = new AlertDialog.Builder(this).create();
+        contactDialog.setTitle(getString(R.string.submiting));
+        contactDialog.setMessage(getString(R.string.stop_message));
+        contactDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> dismissDialog());
+        contactDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.stop), (dialog, which) -> super.onBackPressed());
+        contactDialog.setCancelable(true);
+        contactDialog.show();
+    }
+
     @OnClick(R.id.btn_submit)
     public void onUpClick() {
 
@@ -461,9 +473,10 @@ public class UpPostActivity extends BaseActivity
         progressDrawable.setCenterRadius(20f);
         progressDrawable.setColorSchemeColors(Color.WHITE);
         progressDrawable.start();
-        mBtnSubmit.setImageDrawable(progressDrawable);
 
         if (canSubmit()) {
+            mBtnSubmit.setImageDrawable(progressDrawable);
+
             mPresenter.submit(mTitle.getEditText().getText().toString(),
                     mInvestor.getEditText().getText().toString(),
                     Float.valueOf(mPrice.getEditText().getText().toString()),

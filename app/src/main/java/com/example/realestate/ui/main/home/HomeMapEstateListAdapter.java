@@ -1,6 +1,9 @@
 package com.example.realestate.ui.main.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
+import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
+import com.example.realestate.ui.login.LoginActivity;
 import com.google.android.gms.common.util.CollectionUtils;
 
 import java.text.DateFormat;
@@ -29,6 +35,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.example.realestate.utils.AndroidUtilities.getString;
 
 /**
  * Created by quocha2
@@ -73,6 +81,11 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         mItemClickListener = itemClickListener;
     }
 
+    public void saveSuccess(int position) {
+        if (position >= 0 && position < mList.size()) {
+            notifyItemChanged(position);
+        }
+    }
 
     /**
      * {@link ItemViewHolder}
@@ -212,7 +225,8 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         }
 
         private void setSaved() {
-            mBtnSave.setVisibility(View.GONE);
+            mBtnSave.setVisibility(View.VISIBLE);
+            mBtnSave.setSelected(EstateApplication.savedContain(mEstateDetail.getId()));
         }
 
         private void setTime(long createTime) {
@@ -258,6 +272,32 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
                 mItemClickListener.onAvatarClick(mEstateDetail.getOwnerid());
             }
         }
+
+        @OnClick(R.id.btn_save)
+        public void onSaveClick() {
+            if (!UserManager.isUserLoggedIn()) {
+                AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext()).create();
+                alertDialog.setTitle(getString(R.string.not_login));
+                alertDialog.setMessage(getString(R.string.login_now));
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> alertDialog.dismiss());
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) ->
+                        itemView.getContext().startActivity(LoginActivity.intentFor(itemView.getContext(), true)));
+
+                alertDialog.setCancelable(true);
+                alertDialog.show();
+
+            } else {
+                if (!mBtnSave.isSelected()) {
+                    mBtnSave.setSelected(true);
+                    mItemClickListener.saveProject(mEstateDetail, getAdapterPosition());
+                } else {
+                    mBtnSave.setSelected(false);
+                    mItemClickListener.unSaveProject(mEstateDetail, getAdapterPosition());
+                }
+            }
+        }
     }
 
     /**
@@ -267,5 +307,9 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         void onItemSelected(EstateDetail item);
 
         void onAvatarClick(String userId);
+
+        void saveProject(EstateDetail item, int position);
+
+        void unSaveProject(EstateDetail item, int position);
     }
 }

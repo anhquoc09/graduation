@@ -82,7 +82,10 @@
     <string name="setting">Cài đặt</string>
     <string name="feature_not_support">Hi! Chức năng này chưa được hỗ trợ</string>
     <string name="empty_info">Chưa cập nhật.</string>
-    <string name="login_now">Hãy đăng nhập để xem đầy đủ số điện thoại.</string>
+    <string name="login_now">Hãy đăng nhập để xem đầy đủ thông tin.</string>
     <string name="not_login">Bạn chưa đăng nhập</string>
     <string name="wait_for_verify">(Đang chờ duyệt)</string>
+    <string name="stop">Dừng</string>
+    <string name="submiting">Bài đăng chưa hoàn tất.</string>
+    <string name="stop_message">Bạn có muốn dừng?</string>
 </resources>

@@ -6,4 +6,14 @@ package com.example.realestate.ui.main;
  */
 public interface MainView {
     void logoutFinished();
+
+    void showProgress();
+
+    void hideProgress();
+
+    void hideNoNetwork();
+
+    void showNoNetwork();
+
+    void fetchSavedListSuccess();
 }

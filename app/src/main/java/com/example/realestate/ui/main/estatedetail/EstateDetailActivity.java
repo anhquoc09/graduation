@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -17,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
-import com.example.realestate.User;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
@@ -32,15 +33,13 @@ import com.example.realestate.ui.widget.ImageSliderLayout;
 import com.example.realestate.ui.widget.InfinitePagerAdapter;
 import com.example.realestate.ui.widget.WorkaroundMapFragment;
 import com.example.realestate.utils.PermissionUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -50,17 +49,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.Nullable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class EstateDetailActivity extends BaseActivity implements OnMapReadyCallback {
+public class EstateDetailActivity extends BaseActivity implements OnMapReadyCallback, EstateDetailView {
     public static final String TAG = EstateDetailActivity.class.getCanonicalName();
 
     public static final String ESTATE_DETAIL = "estate_detail";
+
+    @BindView(R.id.coordination_layout)
+    CoordinatorLayout mCoordinatorLayout;
 
     @BindView(R.id.scroll_view)
     ScrollView mScrollView;
@@ -104,6 +104,9 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @BindView(R.id.estate_verify)
     TextView mVerify;
 
+    @BindView(R.id.btn_save)
+    ImageView mBtnSave;
+
     private EstateDetail mEstateDetail;
 
     private ImageSliderAdapter mImageSliderAdapter;
@@ -113,6 +116,10 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     private Location mLocation;
 
     private GoogleMap mGoogleMap;
+
+    private EstateDetailPresenter mPresenter;
+
+    private Snackbar mSnackbar;
 
     public static Intent intentFor(Context context, Serializable estateDetail) {
         Intent intent = new Intent(context, EstateDetailActivity.class);
@@ -129,9 +136,18 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
         Intent intent = getIntent();
         mEstateDetail = (EstateDetail) intent.getSerializableExtra(ESTATE_DETAIL);
 
+        mSnackbar = Snackbar
+                .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.setting), view -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
+
         initImageSlider();
         initMap();
+        initPresenter();
+    }
 
+    private void initPresenter() {
+        mPresenter = new EstateDetailPresenter();
+        mPresenter.attachView(this);
     }
 
     @Override
@@ -185,6 +201,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mGoogleMap.getUiSettings().setMapToolbarEnabled(true);
         initMarker();
         initMyLocation();
     }
@@ -233,9 +250,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
         markerOptions.position(latLng)
                 .title(mEstateDetail.getName())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        Marker marker = mGoogleMap.addMarker(markerOptions);
-        marker.showInfoWindow();
-        mGoogleMap.getUiSettings().setMapToolbarEnabled(true);
+        mGoogleMap.addMarker(markerOptions);
         if (mGoogleMap != null) {
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
@@ -330,7 +345,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
                     string += estateContact.substring(0, estateContact.length() - 3);
                 }
                 string += "***";
-                mEstateContact.setText(string);
+                mEstateContact.setText(String.format("%s ", string));
             }
         }
     }
@@ -350,6 +365,15 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @OnClick(R.id.btn_edit_estate_detail)
     public void onEditEstateClick() {
 
+    }
+
+    @OnClick(R.id.btn_save)
+    public void onSaveClick() {
+        if (!mBtnSave.isSelected()) {
+            mPresenter.saveProject(mEstateDetail.getFullName(), mEstateDetail.getId(), mEstateDetail.getCreateTime());
+        } else {
+            mPresenter.unSaveProject(mEstateDetail.getId());
+        }
     }
 
     @OnClick(R.id.estate_contact)
@@ -374,20 +398,20 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
             contactDialog.setCancelable(true);
             contactDialog.show();
         } else {
-            AlertDialog contactDialog = new AlertDialog.Builder(this).create();
-            contactDialog.setTitle(getString(R.string.not_login));
-            contactDialog.setMessage(getString(R.string.login_now));
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle(getString(R.string.not_login));
+            alertDialog.setMessage(getString(R.string.login_now));
 
-            contactDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> {
-                dismissDialog();
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> {
+                alertDialog.dismiss();
             });
 
-            contactDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> {
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> {
                 startActivity(LoginActivity.intentFor(this, true));
             });
 
-            contactDialog.setCancelable(true);
-            contactDialog.show();
+            alertDialog.setCancelable(true);
+            alertDialog.show();
         }
     }
 
@@ -405,5 +429,25 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void saveEstateSuccess() {
+        mBtnSave.setSelected(true);
+    }
+
+    @Override
+    public void unSaveEstateSuccess() {
+        mBtnSave.setSelected(false);
+    }
+
+    @Override
+    public void showNoNetworkConnection() {
+        mSnackbar.show();
+    }
+
+    @Override
+    public void hideNoNetworkConnection() {
+        mSnackbar.dismiss();
     }
 }
