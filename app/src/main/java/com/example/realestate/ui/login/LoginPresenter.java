@@ -4,8 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.User;
@@ -18,10 +16,10 @@ import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
-import com.example.realestate.utils.SimpleSubscriber;
 
 import java.net.SocketTimeoutException;
 
+import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -85,7 +83,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         mView.onLoginSuccess();
     }
 
-    private class LoginSubscriber extends SimpleSubscriber<LoginResponse> {
+    private class LoginSubscriber extends Subscriber<LoginResponse> {
 
         @Override
         public void onNext(LoginResponse loginResponse) {
@@ -100,6 +98,11 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     onLoginSuccess(profile, loginResponse.getExpireTime(), loginResponse.getToken());
                 }
             }
+        }
+
+        @Override
+        public void onCompleted() {
+
         }
 
         @Override

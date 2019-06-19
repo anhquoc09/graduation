@@ -3,18 +3,17 @@ package com.example.realestate.ui.main;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.User;
 import com.example.realestate.UserManager;
-import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.data.model.SavedEstateListResponse;
-import com.example.realestate.data.model.SavedProject;
+import com.example.realestate.data.remote.response.SavedEstateListResponse;
+import com.example.realestate.data.model.SavedPost;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.data.remote.rest.SchedulerProvider;
 import com.example.realestate.ui.BasePresenter;
-import com.example.realestate.ui.main.savedestate.SavedEstatePresenter;
 import com.example.realestate.utils.NetworkUtils;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -113,10 +112,15 @@ public class MainPresenter extends BasePresenter<MainView> {
         @Override
         public void onCompleted() {
             hideProgress();
+
+            if (isViewAttached()) {
+                mView.fetchSavedListSuccess();
+            }
         }
 
         @Override
         public void onError(Throwable e) {
+            hideProgress();
             if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
                 showNoNetwork();
             }
@@ -124,12 +128,11 @@ public class MainPresenter extends BasePresenter<MainView> {
 
         @Override
         public void onNext(SavedEstateListResponse savedListEstateResponse) {
-            for (SavedProject project : savedListEstateResponse.getSavedListResult().getSavedProjects()) {
-                EstateApplication.addSavedProjectId(project.getEstateDetail().getId());
-            }
-
-            if (isViewAttached()) {
-                mView.fetchSavedListSuccess();
+            List<SavedPost> savedPostList = savedListEstateResponse.getSavedListResult().getSavedPosts();
+            for (SavedPost project : savedPostList) {
+                if (project.getEstateDetail() != null) {
+                    EstateApplication.addSavedPostId(project.getEstateDetail().getId());
+                }
             }
         }
     }

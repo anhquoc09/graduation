@@ -133,7 +133,7 @@ public final class UserManager {
                 editor.putString(PREF_USER_PHONE, profile.getPhone());
                 editor.putString(PREF_USER_DESCRIPTION, profile.getDescription());
                 editor.putString(PREF_USER_EMAIL, profile.getEmail());
-                editor.putInt(PREF_USER_TOTAL_PROJECT, profile.getTotalProject());
+                editor.putInt(PREF_USER_TOTAL_PROJECT, profile.getTotalPost());
                 editor.putInt(PREF_USER_STATUS, profile.getStatusAccount());
                 editor.putString(PREF_USER_AVATAR, profile.getAvatar());
                 editor.putString(PREF_USER_COMPANY, profile.getCompany());
@@ -155,7 +155,7 @@ public final class UserManager {
             profile.setPhone(sSettings.getString(PREF_USER_PHONE, ""));
             profile.setDescription(sSettings.getString(PREF_USER_DESCRIPTION, ""));
             profile.setEmail(sSettings.getString(PREF_USER_EMAIL, ""));
-            profile.setTotalProject(sSettings.getInt(PREF_USER_TOTAL_PROJECT, 0));
+            profile.setTotalPost(sSettings.getInt(PREF_USER_TOTAL_PROJECT, 0));
             profile.setStatusAccount(sSettings.getInt(PREF_USER_STATUS, 0));
             profile.setAvatar(sSettings.getString(PREF_USER_AVATAR, ""));
             profile.setCompany(sSettings.getString(PREF_USER_COMPANY, ""));

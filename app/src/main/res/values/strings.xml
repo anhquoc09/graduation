@@ -30,7 +30,7 @@
 
     <!-- Home -->
     <string name="map_title">Map</string>
-    <string name="search_hint">Enter address, keyword, ....</string>
+    <string name="search_hint">Enter location to search...</string>
     <string name="view_on_map">VIEW ON MAP</string>
     <string name="show_list">Show list</string>
     <string name="empty_data">Empty data.</string>
@@ -51,7 +51,8 @@
     <string name="add_picture_text_hint">Click button on the right to add picture</string>
     <string name="title">Title</string>
     <string name="investor">Investor</string>
-    <string name="price">Price (Millions VNĐ)</string>
+    <string name="submit_sell_price">Price (Millions VND)</string>
+    <string name="submit_lease_price">Price (Millions VND/month)</string>
     <string name="square">Square (m2)</string>
     <string name="address">Address</string>
     <string name="description">Description</string>
@@ -62,14 +63,19 @@
     <string name="no_network_message">Do you want to turn on your network?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
     <string name="status_available">Available</string>
     <string name="status_sold">Sold</string>
+
+    <string name="estate_all_type">All estate type</string>
     <string name="estate_apartment">Apartment</string>
     <string name="estate_house">House</string>
+    <string name="estate_land">Land</string>
     <string name="estate_office">Office</string>
+
     <string name="estate_sell">Sell</string>
     <string name="estate_lease">Lease</string>
-    <string name="estate_land">Land</string>
+
     <string name="contact_now">Contact now</string>
     <string name="contact_mess">Select the method to contact the owner</string>
     <string name="edit_profile_success">Your profile is saved</string>
@@ -97,9 +103,37 @@
     <string name="feature_not_support">\"Hi! This feature is not yet supported</string>
     <string name="empty_info">Not update yet.</string>
     <string name="not_login">You are not logged in</string>
-    <string name="login_now">Please login to view full detail.</string>
+    <string name="login_now">Please login to use this feature.</string>
     <string name="wait_for_verify">(Waiting for inspection)</string>
     <string name="stop">Stop</string>
-    <string name="submiting">Your post is not completed.</string>
+    <string name="submitting">Your post is not completed.</string>
     <string name="stop_message">Do you want to stop?</string>
+    <string name="about_us">About us</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_login">Log In</string>
+    <string name="menu_logout">Log Out</string>
+    <string name="pressed_back_to_exit">Press back again to quit</string>
+    <string name="login_to_saved">Log in to see your saved posts.</string>
+    <string name="saved_empty">You have not saved any post.</string>
+    <string name="filter">Filter</string>
+    <string name="reset">Reset</string>
+
+    <string name="filter_sell_price_0">All price</string>
+    <string name="filter_sell_price_1"><![CDATA[<= 1 billions VND]]></string>
+    <string name="filter_sell_price_2"><![CDATA[1 – 4 billions VND]]></string>
+    <string name="filter_sell_price_3"><![CDATA[4 – 10 billions VND]]></string>
+    <string name="filter_sell_price_4"><![CDATA[10 – 20 billions VND]]></string>
+    <string name="filter_sell_price_5"><![CDATA[20 – 50 billions VND]]></string>
+    <string name="filter_sell_price_6"><![CDATA[> 50 billions VND]]></string>
+\
+    <string name="filter_lease_price_0">All price</string>
+    <string name="filter_lease_price_1"><![CDATA[<= 2 millions VND/month]]></string>
+    <string name="filter_lease_price_2"><![CDATA[2 – 5 millions VND/month]]></string>
+    <string name="filter_lease_price_3"><![CDATA[5 – 10 millions VND/month]]></string>
+    <string name="filter_lease_price_4"><![CDATA[10 – 20 millions VND/month]]></string>
+    <string name="filter_lease_price_5"><![CDATA[20 – 50 millions VND/month]]></string>
+    <string name="filter_lease_price_6"><![CDATA[> 50 millions VND/month]]></string>
+    <string name="sell_unit">VND</string>
+    <string name="lease_unit">VND/month</string>
+
 </resources>

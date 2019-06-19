@@ -19,7 +19,7 @@ public class SavedListResult {
     private String fullname;
 
     @SerializedName("projects")
-    private List<SavedProject> projects = null;
+    private List<SavedPost> projects = null;
 
     @SerializedName("__v")
     private Integer v;
@@ -49,11 +49,11 @@ public class SavedListResult {
         this.fullname = fullname;
     }
 
-    public List<SavedProject> getSavedProjects() {
+    public List<SavedPost> getSavedPosts() {
         return projects;
     }
 
-    public void setSavedProjects(List<SavedProject> projects) {
+    public void setSavedPosts(List<SavedPost> projects) {
         this.projects = projects;
     }
 

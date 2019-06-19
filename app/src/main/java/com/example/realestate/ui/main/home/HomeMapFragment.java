@@ -19,8 +19,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,11 +37,10 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import com.example.realestate.R;
 import com.example.realestate.data.model.EstateDetail;
-import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
-import com.example.realestate.ui.main.profile.ProfileActivity;
+import com.example.realestate.ui.estatedetail.EstateDetailActivity;
+import com.example.realestate.ui.profile.ProfileActivity;
 import com.example.realestate.ui.widget.DebounceEditText;
 import com.example.realestate.utils.AndroidUtilities;
-import com.example.realestate.utils.PermissionUtils;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -108,6 +110,15 @@ public class HomeMapFragment extends Fragment
     @BindView(R.id.list_layout)
     View mListLayout;
 
+    @BindView(R.id.spinner_type)
+    Spinner mType;
+
+    @BindView(R.id.spinner_status)
+    Spinner mStatus;
+
+    @BindView(R.id.spinner_price)
+    Spinner mPrice;
+
     private Unbinder mUnbinder;
 
     private HomeMapPresenter mPresenter;
@@ -130,11 +141,25 @@ public class HomeMapFragment extends Fragment
 
     private HomeMapEstateListAdapter mListAdapter;
 
+    private HomeMapDataFilterProvider mFilterProvider = new HomeMapDataFilterProvider();
+
     private SnapHelper mSnapHelper = new LinearSnapHelper();
 
     private final List<EstateDetail> mList = new ArrayList<>();
 
     private final List<Marker> mMarkers = new ArrayList<>();
+
+    private int[] mTypeCode;
+
+    private int[] mStatusCode;
+
+    private int[] mSellCode;
+
+    private int[] mLeaseCode;
+
+    private String[] mSellList;
+
+    private String[] mLeaseList;
 
     public static HomeMapFragment newInstance() {
         HomeMapFragment fragment = new HomeMapFragment();
@@ -167,8 +192,56 @@ public class HomeMapFragment extends Fragment
 
         initRecyclerView();
         initSearchBox();
+        initSpinner();
         initPresenter();
         initMap();
+    }
+
+    private void initSpinner() {
+        Activity activity = getActivity();
+        if (activity != null) {
+
+            String[] statusList = getResources().getStringArray(R.array.status_label);
+            mStatusCode = getResources().getIntArray(R.array.status_code);
+            ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, statusList);
+            statusAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+            mStatus.setAdapter(statusAdapter);
+
+            String[] typeList = getResources().getStringArray(R.array.filter_type_label);
+            mTypeCode = getResources().getIntArray(R.array.filter_type_code);
+            ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, typeList);
+            typeAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+            mType.setAdapter(typeAdapter);
+
+            mSellList = getResources().getStringArray(R.array.filter_sell_price_label);
+            mSellCode = getResources().getIntArray(R.array.filter_sell_price_value);
+            ArrayAdapter<String> priceAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mSellList);
+            priceAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+            mPrice.setAdapter(priceAdapter);
+
+            mLeaseList = getResources().getStringArray(R.array.filter_lease_price_label);
+            mLeaseCode = getResources().getIntArray(R.array.filter_lease_price_value);
+
+            mStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ArrayAdapter<String> priceAdapter;
+                    if (position == 0) {
+                        priceAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, mSellList);
+                    } else {
+                        priceAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, mLeaseList);
+                    }
+                    priceAdapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+                    mPrice.setAdapter(priceAdapter);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
     }
 
     private void initRecyclerView() {
@@ -314,13 +387,45 @@ public class HomeMapFragment extends Fragment
 
     public void setData(List<EstateDetail> list) {
         mList.clear();
-        if (!CollectionUtils.isEmpty(list)) {
-            showList();
-            mList.addAll(list);
+        mFilterProvider.setData(list);
+
+        List<EstateDetail> filteredList = filter();
+        if (filteredList != null) {
+            if (!filteredList.isEmpty()) {
+                mList.addAll(filteredList);
+            }
+        } else {
+            if (list != null && !list.isEmpty()) {
+                mList.addAll(list);
+            }
+        }
+        setFilteredData(mList, true);
+    }
+
+    private List<EstateDetail> filter() {
+        List<EstateDetail> filteredList;
+        if (mStatus.getSelectedItemPosition() == 0) {
+            filteredList = mFilterProvider.filter(mStatusCode[mStatus.getSelectedItemPosition()],
+                    mTypeCode[mType.getSelectedItemPosition()],
+                    mSellCode[mPrice.getSelectedItemPosition()]);
+        } else {
+            filteredList = mFilterProvider.filter(mStatusCode[mStatus.getSelectedItemPosition()],
+                    mTypeCode[mType.getSelectedItemPosition()],
+                    mLeaseCode[mPrice.getSelectedItemPosition()]);
+        }
+
+        return filteredList;
+    }
+
+    private void setFilteredData(List<EstateDetail> filteredList, boolean isDataChanged) {
+        if (isDataChanged) {
+            if (!CollectionUtils.isEmpty(filteredList)) {
+                showList();
+            } else {
+                hideList();
+            }
             mListAdapter.setData(mList);
             notifyMapChange();
-        } else {
-            hideList();
         }
     }
 
@@ -370,7 +475,7 @@ public class HomeMapFragment extends Fragment
                     && activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                PermissionUtils.Request_FINE_LOCATION(activity, 1);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             } else {
                 mGoogleMap.setMyLocationEnabled(true);
                 mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity);
@@ -444,52 +549,6 @@ public class HomeMapFragment extends Fragment
         }
     }
 
-    @OnClick(R.id.btn_my_location)
-    public void onMyLocationClick() {
-        initMyLocation();
-    }
-
-    @OnClick(R.id.tv_show_list)
-    public void onShowListClick() {
-        showList();
-    }
-
-    @OnClick(R.id.tv_hide_list)
-    public void onHideListClick() {
-        hideList();
-    }
-
-    @OnClick(R.id.btn_more_filter)
-    public void onMoreFilterClick() {
-        if (mMoreFilterLayout.getVisibility() == View.GONE) {
-            mMoreFilterLayout.setVisibility(View.VISIBLE);
-            mBtnMoreFilter.setSelected(true);
-        } else {
-            mMoreFilterLayout.setVisibility(View.GONE);
-            mBtnMoreFilter.setSelected(false);
-        }
-    }
-
-    @OnClick(R.id.btn_for)
-    public void onBtnForClick() {
-
-    }
-
-    @OnClick(R.id.btn_type)
-    public void onBtnTypeClick() {
-
-    }
-
-    @OnClick(R.id.btn_district)
-    public void onBtnDistrictClick() {
-
-    }
-
-    @OnClick(R.id.btn_search)
-    public void onBtnSearchClick() {
-
-    }
-
     @Override
     public void saveEstateSuccess(int position) {
         mListAdapter.saveSuccess(position);
@@ -540,13 +599,39 @@ public class HomeMapFragment extends Fragment
     }
 
     @Override
-    public void saveProject(EstateDetail item, int position) {
-        mPresenter.saveProject(item.getFullName(), item.getId(), item.getCreateTime(), position);
+    public void savePost(EstateDetail item, int position) {
+        mPresenter.savePost(item.getFullName(), item.getId(), item.getCreateTime(), position);
     }
 
     @Override
-    public void unSaveProject(EstateDetail item, int position) {
-        mPresenter.unSaveProject(item.getId(), position);
+    public void unSavePost(EstateDetail item, int position) {
+        mPresenter.unSavePost(item.getId(), position);
+    }
+
+    @OnClick(R.id.btn_my_location)
+    public void onMyLocationClick() {
+        initMyLocation();
+    }
+
+    @OnClick(R.id.tv_show_list)
+    public void onShowListClick() {
+        showList();
+    }
+
+    @OnClick(R.id.tv_hide_list)
+    public void onHideListClick() {
+        hideList();
+    }
+
+    @OnClick(R.id.btn_more_filter)
+    public void onMoreFilterClick() {
+        if (mMoreFilterLayout.getVisibility() == View.GONE) {
+            mMoreFilterLayout.setVisibility(View.VISIBLE);
+            mBtnMoreFilter.setSelected(true);
+        } else {
+            mMoreFilterLayout.setVisibility(View.GONE);
+            mBtnMoreFilter.setSelected(false);
+        }
     }
 
     @OnClick(R.id.ic_delete_search)
@@ -558,6 +643,39 @@ public class HomeMapFragment extends Fragment
     public void onSearch() {
         if (mListLayout.getVisibility() == View.VISIBLE) {
             hideList();
+        }
+    }
+
+    @OnClick(R.id.btn_filter)
+    public void onBtnSearchClick() {
+        List<EstateDetail> filteredList = filter();
+        if (filteredList != null) {
+            mList.clear();
+            if (!filteredList.isEmpty()) {
+                mList.addAll(filteredList);
+            }
+            setFilteredData(mList, true);
+
+        } else {
+            setFilteredData(mList, false);
+        }
+    }
+
+    @OnClick(R.id.btn_reset)
+    public void onResetClick() {
+        mType.setSelection(0);
+        mPrice.setSelection(0);
+
+        List<EstateDetail> filteredList = filter();
+        if (filteredList != null) {
+            mList.clear();
+            if (!filteredList.isEmpty()) {
+                mList.addAll(filteredList);
+            }
+            setFilteredData(mList, true);
+
+        } else {
+            setFilteredData(mList, false);
         }
     }
 }

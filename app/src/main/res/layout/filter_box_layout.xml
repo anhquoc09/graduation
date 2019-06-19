@@ -40,8 +40,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/bg_blue_stroke"
                 android:scaleType="center"
-                android:src="@drawable/ic_arrow_blue_spinner"
-                android:visibility="gone" />
+                android:src="@drawable/ic_arrow_blue_spinner" />
 
         </LinearLayout>
 
@@ -54,111 +53,74 @@
             android:visibility="gone"
             tool:visibility="visible">
 
-            <FrameLayout
-                android:id="@+id/btn_for"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/spinner_status"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:animateLayoutChanges="true"
-                android:background="@drawable/bg_green_fill"
-                android:elevation="2dp"
+                android:background="@drawable/bg_spinner"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinner_type"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="FOR BUY"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_arrow_white_down" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/btn_type"
+            <Spinner
+                android:id="@+id/spinner_type"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/bg_blue_stroke"
-                android:elevation="2dp"
-                app:layout_constraintEnd_toStartOf="@id/btn_district"
+                android:background="@drawable/bg_spinner"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="@id/btn_for"
-                app:layout_constraintTop_toBottomOf="@id/btn_for">
+                app:layout_constraintStart_toEndOf="@id/spinner_status"
+                app:layout_constraintTop_toTopOf="@id/spinner_status" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Choose Type"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_arrow_blue_down" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/btn_district"
+            <Spinner
+                android:id="@+id/spinner_price"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/bg_blue_stroke"
-                android:elevation="2dp"
-                app:layout_constraintEnd_toEndOf="@id/btn_for"
-                app:layout_constraintStart_toEndOf="@id/btn_type"
-                app:layout_constraintTop_toBottomOf="@id/btn_for">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Choose District"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_arrow_blue_down" />
-
-            </FrameLayout>
+                android:background="@drawable/bg_spinner"
+                app:layout_constraintEnd_toEndOf="@id/spinner_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_status" />
 
             <Button
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_filter"
                 android:layout_width="130dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/bg_green_fill"
-                android:text="SEARCH"
+                android:background="@drawable/bg_blue_fill"
+                android:text="@string/filter"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_reset"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_price" />
+
+            <Button
+                android:id="@+id/btn_reset"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/bg_blue_fill"
+                android:text="@string/reset"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_district" />
+                app:layout_constraintStart_toEndOf="@id/btn_filter"
+                app:layout_constraintTop_toBottomOf="@id/spinner_price" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

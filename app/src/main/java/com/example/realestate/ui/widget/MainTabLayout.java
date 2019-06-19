@@ -32,12 +32,6 @@ public class MainTabLayout extends LinearLayout {
 
     public static final int SAVED_INDEX = 2;
 
-    public static final int CONSTRUCTION_INDEX = 3;
-
-    public static final int EXTERIOR_INDEXT = 4;
-
-    public static final int GEOMANCY_INDEX = 5;
-
     @BindView(R.id.tab_home)
     TextView mHomeTab;
 
@@ -46,15 +40,6 @@ public class MainTabLayout extends LinearLayout {
 
     @BindView(R.id.tab_saved)
     TextView mSavedTab;
-
-    @BindView(R.id.tab_construction)
-    TextView mSketchTab;
-
-    @BindView(R.id.tab_exterior)
-    TextView mExteriorTab;
-
-    @BindView(R.id.tab_geomancy)
-    TextView mGeomancyTab;
 
     private int mSelectedIndex = -1;
 
@@ -152,21 +137,6 @@ public class MainTabLayout extends LinearLayout {
     @OnClick(R.id.tab_saved)
     public void onSavedClick() {
         setSelected(SAVED_INDEX, true);
-    }
-
-    @OnClick(R.id.tab_construction)
-    public void onSketchClick() {
-        setSelected(CONSTRUCTION_INDEX, true);
-    }
-
-    @OnClick(R.id.tab_exterior)
-    public void onExteriorClick() {
-        setSelected(EXTERIOR_INDEXT, true);
-    }
-
-    @OnClick(R.id.tab_geomancy)
-    public void onGeomancyClick() {
-        setSelected(GEOMANCY_INDEX, true);
     }
 
     /**

@@ -182,8 +182,15 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             mTitle.setSelected(true);
         }
 
-        private void setEstatePrice(float estatePrice) {
-            mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(estatePrice * 1000000)));
+        private void setEstatePrice(float estatePrice, int status) {
+            String unit;
+            if (status == 1) {
+                unit = getString(R.string.sell_unit);
+            } else {
+                unit = getString(R.string.lease_unit);
+            }
+
+            mPrice.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.getDefault()).format(estatePrice * 1000000), unit));
         }
 
         private void setEstateTimePost(long estateDayPost) {
@@ -210,8 +217,8 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             mDetail = item;
             setImage(item.getUrl());
             setEstateTitle(item.getName());
-            setEstatePrice(item.getPrice());
-            setEstateType(item.getType(), item.getStatusProject());
+            setEstatePrice(item.getPrice(), item.getStatusPost());
+            setEstateType(item.getType(), item.getStatusPost());
             setAddress(item.getAddress());
             setOwnerName(item.getFullName());
             setEstateTimePost(item.getCreateTime());
@@ -246,10 +253,10 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             } else {
                 if (!mBtnSave.isSelected()) {
                     mBtnSave.setSelected(true);
-                    mItemClickListener.saveProject(mDetail, getAdapterPosition());
+                    mItemClickListener.savePost(mDetail, getAdapterPosition());
                 } else {
                     mBtnSave.setSelected(false);
-                    mItemClickListener.unSaveProject(mDetail, getAdapterPosition());
+                    mItemClickListener.unSavePost(mDetail, getAdapterPosition());
                 }
             }
         }
@@ -263,8 +270,8 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         void onOwnerClick(String userId);
 
-        void saveProject(EstateDetail item, int position);
+        void savePost(EstateDetail item, int position);
 
-        void unSaveProject(EstateDetail item, int position);
+        void unSavePost(EstateDetail item, int position);
     }
 }

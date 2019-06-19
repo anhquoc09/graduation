@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
 import com.example.realestate.ui.main.MainActivity;
-import com.example.realestate.ui.main.estatedetail.EstateDetailActivity;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
 

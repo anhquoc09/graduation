@@ -1,9 +1,9 @@
 package com.example.realestate.data.remote.rest;
 
 import com.example.realestate.data.model.CodeList;
-import com.example.realestate.data.model.SaveEstateResponse;
-import com.example.realestate.data.model.SavedEstateListResponse;
-import com.example.realestate.data.model.UnSaveEstateResponse;
+import com.example.realestate.data.remote.response.SaveEstateResponse;
+import com.example.realestate.data.remote.response.SavedEstateListResponse;
+import com.example.realestate.data.remote.response.UnSaveEstateResponse;
 import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.response.LoginResponse;
 import com.example.realestate.data.remote.response.SubmitEstateResponse;
@@ -78,13 +78,13 @@ public interface EstateService {
 
     @FormUrlEncoded
     @POST("users/follow")
-    Observable<SaveEstateResponse> saveProject(@Header("authorization") String accessToken,
-                                               @Field("fullname") String name,
-                                               @Field("projectid") String projectId,
-                                               @Field("createTime") long createTime);
+    Observable<SaveEstateResponse> savePost(@Header("authorization") String accessToken,
+                                            @Field("fullname") String name,
+                                            @Field("projectid") String projectId,
+                                            @Field("createTime") long createTime);
 
     @FormUrlEncoded
     @POST("users/unfollow")
-    Observable<UnSaveEstateResponse> unSaveProject(@Header("authorization") String accessToken,
-                                                   @Field("projectid") String projectId);
+    Observable<UnSaveEstateResponse> unSavePost(@Header("authorization") String accessToken,
+                                                @Field("projectid") String projectId);
 }

@@ -67,19 +67,19 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
-            android:name=".ui.main.profile.ProfileActivity"
+            android:name=".ui.profile.ProfileActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
-            android:name=".ui.main.estatedetail.EstateDetailActivity"
+            android:name=".ui.estatedetail.EstateDetailActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
-            android:name=".ui.main.uppost.UpPostActivity"
+            android:name=".ui.submit.SubmitPostActivity"
             android:label=""
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />

@@ -2,8 +2,6 @@ package com.example.realestate.ui.main.home;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -235,8 +233,14 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
             mTime.setText(String.format("%s ", dateFormat.format(date)));
         }
 
-        private void setPrice(float price) {
-            mPrice.setText(String.format("%s VNĐ", NumberFormat.getNumberInstance(Locale.getDefault()).format(price * 1000000)));
+        private void setPrice(float price, int status) {
+            String unit;
+            if (status == 1) {
+                unit = getString(R.string.sell_unit);
+            } else {
+                unit = getString(R.string.lease_unit);
+            }
+            mPrice.setText(String.format("%s %s", NumberFormat.getNumberInstance(Locale.getDefault()).format(price * 1000000), unit));
         }
 
         private void setSquare(float square) {
@@ -253,12 +257,12 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
             mEstateDetail = item;
             if (item != null) {
                 setImageList(item.getUrl());
-                setStatus(item.getStatusProject());
+                setStatus(item.getStatusPost());
                 setType(item.getType());
                 setAvatar(item.getAvatar());
                 setTitle(item.getName());
                 setName(item.getFullName());
-                setPrice(item.getPrice());
+                setPrice(item.getPrice(), item.getStatusPost());
                 setSaved();
                 setTime(item.getCreateTime());
                 setSquare(item.getArea());
@@ -291,10 +295,10 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
             } else {
                 if (!mBtnSave.isSelected()) {
                     mBtnSave.setSelected(true);
-                    mItemClickListener.saveProject(mEstateDetail, getAdapterPosition());
+                    mItemClickListener.savePost(mEstateDetail, getAdapterPosition());
                 } else {
                     mBtnSave.setSelected(false);
-                    mItemClickListener.unSaveProject(mEstateDetail, getAdapterPosition());
+                    mItemClickListener.unSavePost(mEstateDetail, getAdapterPosition());
                 }
             }
         }
@@ -308,8 +312,8 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
 
         void onAvatarClick(String userId);
 
-        void saveProject(EstateDetail item, int position);
+        void savePost(EstateDetail item, int position);
 
-        void unSaveProject(EstateDetail item, int position);
+        void unSavePost(EstateDetail item, int position);
     }
 }

@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-      <string-array name="home_title">
-        <item>@string/view_on_map</item>
-        <item>@string/show_list</item>
-    </string-array>
 
-    <string-array name="profile_title">
-        <item>@string/profile_detail</item>
-        <item>@string/profile_activities</item>
-    </string-array>
-
-    <string-array name="type_name">
+    <string-array name="type_label">
         <item>@string/estate_apartment</item>
         <item>@string/estate_house</item>
         <item>@string/estate_land</item>
@@ -24,13 +15,69 @@
         <item>4</item>
     </integer-array>
 
-    <string-array name="status_name">
+    <string-array name="status_label">
         <item>@string/estate_sell</item>
         <item>@string/estate_lease</item>
     </string-array>
 
-    <string-array name="status_code">
+    <integer-array name="status_code">
         <item>1</item>
         <item>3</item>
+    </integer-array>
+
+    <integer-array name="filter_type_code">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </integer-array>
+
+    <string-array name="filter_type_label">
+        <item>@string/estate_all_type</item>
+        <item>@string/estate_apartment</item>
+        <item>@string/estate_house</item>
+        <item>@string/estate_land</item>
+        <item>@string/estate_office</item>
     </string-array>
+
+    <string-array name="filter_sell_price_label">
+        <item>@string/filter_sell_price_0</item>
+        <item>@string/filter_sell_price_1</item>
+        <item>@string/filter_sell_price_2</item>
+        <item>@string/filter_sell_price_3</item>
+        <item>@string/filter_sell_price_4</item>
+        <item>@string/filter_sell_price_5</item>
+        <item>@string/filter_sell_price_6</item>
+    </string-array>
+
+    <integer-array name="filter_sell_price_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </integer-array>
+
+    <string-array name="filter_lease_price_label">
+        <item>@string/filter_lease_price_0</item>
+        <item>@string/filter_lease_price_1</item>
+        <item>@string/filter_lease_price_2</item>
+        <item>@string/filter_lease_price_3</item>
+        <item>@string/filter_lease_price_4</item>
+        <item>@string/filter_lease_price_5</item>
+        <item>@string/filter_lease_price_6</item>
+    </string-array>
+
+    <integer-array name="filter_lease_price_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </integer-array>
 </resources>

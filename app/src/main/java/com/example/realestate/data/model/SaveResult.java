@@ -25,11 +25,11 @@ public class SaveResult {
         this.id = id;
     }
 
-    public String getProject() {
+    public String getPost() {
         return project;
     }
 
-    public void setProject(String project) {
+    public void setPost(String project) {
         this.project = project;
     }
 

@@ -107,11 +107,11 @@ public class Profile implements Serializable {
         this.email = email;
     }
 
-    public Integer getTotalProject() {
+    public Integer getTotalPost() {
         return totalProject;
     }
 
-    public void setTotalProject(Integer totalProject) {
+    public void setTotalPost(Integer totalProject) {
         this.totalProject = totalProject;
     }
 

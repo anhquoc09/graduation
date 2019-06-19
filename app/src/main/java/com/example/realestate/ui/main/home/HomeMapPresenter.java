@@ -3,8 +3,8 @@ package com.example.realestate.ui.main.home;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.User;
 import com.example.realestate.UserManager;
-import com.example.realestate.data.model.SaveEstateResponse;
-import com.example.realestate.data.model.UnSaveEstateResponse;
+import com.example.realestate.data.remote.response.SaveEstateResponse;
+import com.example.realestate.data.remote.response.UnSaveEstateResponse;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.EstateListResponse;
 import com.example.realestate.data.remote.rest.EstateService;
@@ -81,8 +81,8 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
     private void hideConnectionFailedLayout() {
     }
 
-    public void saveProject(String fullName, String projectId, long createTime, int position) {
-        mSaveSub = mService.saveProject(BEARER_TOKEN + mUser.getAccessToken(), fullName, projectId, createTime)
+    public void savePost(String fullName, String projectId, long createTime, int position) {
+        mSaveSub = mService.savePost(BEARER_TOKEN + mUser.getAccessToken(), fullName, projectId, createTime)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(new SaveEstateSubscriber(position));
@@ -90,8 +90,8 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
         mSubscriptions.add(mSaveSub);
     }
 
-    public void unSaveProject(String projectId, int position) {
-        mSaveSub = mService.unSaveProject(BEARER_TOKEN + mUser.getAccessToken(), projectId)
+    public void unSavePost(String projectId, int position) {
+        mSaveSub = mService.unSavePost(BEARER_TOKEN + mUser.getAccessToken(), projectId)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(new UnSaveEstateSubscriber(position, projectId));
@@ -155,7 +155,7 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         @Override
         public void onNext(SaveEstateResponse saveEstateResponse) {
-            EstateApplication.addSavedProjectId(saveEstateResponse.getSaveResult().getProject());
+            EstateApplication.addSavedPostId(saveEstateResponse.getSaveResult().getPost());
             if (isViewAttached()) {
                 mView.saveEstateSuccess(mPosition);
             }
@@ -165,11 +165,11 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
     class UnSaveEstateSubscriber extends Subscriber<UnSaveEstateResponse> {
         private int mPosition;
 
-        private String mProjectId;
+        private String mPostId;
 
-        public UnSaveEstateSubscriber(int position, String projectId) {
+        public UnSaveEstateSubscriber(int position, String postId) {
             mPosition = position;
-            mProjectId = projectId;
+            mPostId = postId;
         }
 
         @Override
@@ -186,7 +186,7 @@ public class HomeMapPresenter extends BasePresenter<HomePagerView> {
 
         @Override
         public void onNext(UnSaveEstateResponse saveEstateResponse) {
-            EstateApplication.removeSavedProjectId(mProjectId);
+            EstateApplication.removeSavedPostId(mPostId);
             if (isViewAttached()) {
                 mView.unSaveEstateSuccess(mPosition);
             }

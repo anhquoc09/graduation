@@ -1,20 +1,18 @@
 package com.example.realestate.ui.main;
 
-import com.example.realestate.ui.main.construction.ConstructionFragment;
-import com.example.realestate.ui.main.exterior.ExteriorFragment;
-import com.example.realestate.ui.main.geomancy.GeomancyFragment;
-import com.example.realestate.ui.main.home.HomeMapFragment;
-import com.example.realestate.ui.main.newestate.ListNewEstateFragment;
-import com.example.realestate.ui.main.savedestate.SavedEstateFragment;
-import com.example.realestate.ui.widget.MainTabLayout;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.realestate.ui.main.home.HomeMapFragment;
+import com.example.realestate.ui.main.newestlist.ListNewEstateFragment;
+import com.example.realestate.ui.main.savedlist.SavedListFragment;
+import com.example.realestate.ui.widget.MainTabLayout;
+
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
     private MainTabLayout mTabs;
+
     public MainPagerAdapter(FragmentManager fm, MainTabLayout tabs) {
         super(fm);
         mTabs = tabs;
@@ -29,18 +27,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return ListNewEstateFragment.newInstance();
 
             case MainTabLayout.SAVED_INDEX:
-                return SavedEstateFragment.newInstance();
+                return SavedListFragment.newInstance();
 
-            case MainTabLayout.CONSTRUCTION_INDEX:
-                return ConstructionFragment.newInstance();
-
-            case MainTabLayout.EXTERIOR_INDEXT:
-                return ExteriorFragment.newInstance();
-
-            case MainTabLayout.GEOMANCY_INDEX:
-                return GeomancyFragment.newInstance();
-
-            case MainTabLayout.HOME_INDEX:
             default:
                 return HomeMapFragment.newInstance();
         }

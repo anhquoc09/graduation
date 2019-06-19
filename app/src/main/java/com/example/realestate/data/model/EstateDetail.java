@@ -198,7 +198,7 @@ public class EstateDetail implements Serializable {
         this.ownerid = ownerid;
     }
 
-    public Integer getStatusProject() {
+    public Integer getStatusPost() {
         return statusProject;
     }
 

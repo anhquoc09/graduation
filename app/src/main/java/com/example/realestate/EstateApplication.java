@@ -2,18 +2,15 @@ package com.example.realestate;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
+
+import androidx.multidex.MultiDex;
 
 import com.cloudinary.android.MediaManager;
-import com.example.realestate.utils.PlatformUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-
-import androidx.multidex.MultiDex;
 
 /**
  * @author anhquoc09
@@ -53,30 +50,11 @@ public class EstateApplication extends Application {
         MediaManager.init(this, config);
     }
 
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        Locale newLocale;
-        if (PlatformUtils.hasNougat()) {
-            newLocale = newConfig.getLocales().get(0);
-        } else {
-            newLocale = newConfig.locale;
-        }
-
-//        LocaleController.applyLanguage(this, newLocale);
-    }
-
-    public static void addSavedProjectId(String projectId) {
+    public static void addSavedPostId(String projectId) {
         mSavedList.add(projectId);
     }
 
-    public static void removeSavedProjectId(String projectId) {
+    public static void removeSavedPostId(String projectId) {
         int index = mSavedList.indexOf(projectId);
         if (index > -1) {
             mSavedList.remove(index);
@@ -85,5 +63,9 @@ public class EstateApplication extends Application {
 
     public static boolean savedContain(String projectId) {
         return mSavedList.contains(projectId);
+    }
+
+    public static void clearSavedList() {
+        mSavedList.clear();
     }
 }

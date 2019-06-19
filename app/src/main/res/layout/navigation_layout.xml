@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -92,12 +91,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableStart="@drawable/ic_support"
+        android:drawableStart="@drawable/ic_menu_help"
         android:drawablePadding="20dp"
         android:gravity="center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Support"
+        android:text="@string/menu_help"
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -106,28 +105,40 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableStart="@drawable/ic_setting"
+        android:drawableStart="@drawable/ic_menu_about_us"
         android:drawablePadding="20dp"
         android:gravity="center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Setting"
+        android:text="@string/about_us"
         android:textColor="@color/black"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/btn_sign_out"
+        android:id="@+id/btn_log_out"
         android:layout_width="match_parent"
         android:layout_height="@dimen/navigation_item_height"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableStart="@drawable/ic_sign_out"
+        android:drawableStart="@drawable/ic_menu_log_out"
         android:drawablePadding="20dp"
         android:gravity="center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="0dp"
-        android:text="Sign out"
+        android:text="@string/menu_logout"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/btn_log_in"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_item_height"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:drawableStart="@drawable/ic_menu_log_in"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
+        android:text="@string/menu_login"
         android:textColor="@color/black"
         android:textSize="16sp" />
 </LinearLayout>

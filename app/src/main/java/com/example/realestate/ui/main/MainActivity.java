@@ -1,7 +1,10 @@
 package com.example.realestate.ui.main;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -9,17 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.realestate.EstateApplication;
 import com.example.realestate.GoogleManager;
 import com.example.realestate.R;
 import com.example.realestate.User;
 import com.example.realestate.UserManager;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
-import com.example.realestate.ui.main.profile.ProfileActivity;
-import com.example.realestate.ui.main.uppost.UpPostActivity;
+import com.example.realestate.ui.profile.ProfileActivity;
+import com.example.realestate.ui.submit.SubmitPostActivity;
 import com.example.realestate.ui.widget.MainTabLayout;
 import com.example.realestate.utils.AndroidUtilities;
-import com.example.realestate.utils.PermissionUtils;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -75,8 +78,11 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.tv_app_name)
     View mAppName;
 
-    @BindView(R.id.btn_sign_out)
-    TextView mSignOutBtn;
+    @BindView(R.id.btn_log_out)
+    TextView mLogOutBtn;
+
+    @BindView(R.id.btn_log_in)
+    TextView mLoginBtn;
 
     @BindView(R.id.progress_layout)
     View mProgress;
@@ -91,6 +97,8 @@ public class MainActivity extends BaseActivity
 
     private Snackbar mSnackBar;
 
+    private long mPressedTimeMillis;
+
     public static Intent intentFor(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -101,8 +109,10 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         mUnbinder = ButterKnife.bind(this);
 
-        PermissionUtils.Request_FINE_LOCATION(this, 1);
-        PermissionUtils.Request_COARSE_LOCATION(this, 2);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+        }
 
         setupTabLayout();
 
@@ -126,15 +136,35 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        setupProfileView();
+        setupView();
     }
 
-    private void setupProfileView() {
+    private void setupView() {
         if (UserManager.isUserLoggedIn()) {
             showProfileView();
+            hideBtnLogIn();
+            showBtnLogOut();
         } else {
             hideProfileView();
+            showBtnLogIn();
+            hideBtnLogOut();
         }
+    }
+
+    private void hideBtnLogIn() {
+        mLoginBtn.setVisibility(View.GONE);
+    }
+
+    private void showBtnLogOut() {
+        mLogOutBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void showBtnLogIn() {
+        mLoginBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void hideBtnLogOut() {
+        mLogOutBtn.setVisibility(View.GONE);
     }
 
     private void setupNavigationLayout() {
@@ -201,7 +231,7 @@ public class MainActivity extends BaseActivity
 
     private void hideProfileView() {
         if (mProfileView != null) {
-            mSignOutBtn.setVisibility(View.GONE);
+            mLogOutBtn.setVisibility(View.GONE);
             mProfileView.setVisibility(View.GONE);
         }
         if (mAppName != null) {
@@ -211,7 +241,7 @@ public class MainActivity extends BaseActivity
 
     private void showProfileView() {
         if (mProfileView != null) {
-            mSignOutBtn.setVisibility(View.VISIBLE);
+            mLogOutBtn.setVisibility(View.VISIBLE);
             mProfileView.setVisibility(View.VISIBLE);
             mProfileName.setText(UserManager.getCurrentUser().getFullname());
             Glide.with(this)
@@ -245,13 +275,22 @@ public class MainActivity extends BaseActivity
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            long currentTimeMillis = System.currentTimeMillis();
+            if (currentTimeMillis - mPressedTimeMillis <= 2000) {
+                super.onBackPressed();
+            } else {
+                AndroidUtilities.showToast(getString(R.string.pressed_back_to_exit));
+                mPressedTimeMillis = currentTimeMillis;
+            }
         }
     }
 
     @Override
     public void onTabSelect(int tabIndex) {
         mViewPager.setCurrentItem(tabIndex, true);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     @Override
@@ -288,6 +327,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onLogoutSuccess() {
+        EstateApplication.clearSavedList();
         goToLoginScreen();
     }
 
@@ -301,9 +341,15 @@ public class MainActivity extends BaseActivity
         AndroidUtilities.showToast("We are Supper Heroes!");
     }
 
-    @OnClick(R.id.btn_sign_out)
-    public void onSignOutClick() {
+    @OnClick(R.id.btn_log_out)
+    public void onLogOutClick() {
         mPresenter.logout();
+    }
+
+    @OnClick(R.id.btn_log_in)
+    public void onLogInClick() {
+        Intent intent = LoginActivity.intentFor(this);
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_open_navigation)
@@ -329,9 +375,15 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.btn_submit)
     public void onUpPostClick() {
         if (UserManager.isUserLoggedIn()) {
-            startActivity(UpPostActivity.intentFor(this));
+            startActivity(SubmitPostActivity.intentFor(this));
         } else {
-            startActivity(LoginActivity.intentFor(this));
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle(getString(R.string.not_login));
+            alertDialog.setMessage(getString(R.string.login_now));
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> alertDialog.dismiss());
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> startActivity(LoginActivity.intentFor(this, true)));
+            alertDialog.setCancelable(true);
+            alertDialog.show();
         }
     }
 }

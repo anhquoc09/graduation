@@ -84,12 +84,12 @@ public class User {
         mProfile.setEmail(email);
     }
 
-    public Integer getTotalProject() {
-        return mProfile.getTotalProject();
+    public Integer getTotalPost() {
+        return mProfile.getTotalPost();
     }
 
-    public void setTotalProject(Integer totalProject) {
-        mProfile.setTotalProject(totalProject);
+    public void setTotalPost(Integer totalPost) {
+        mProfile.setTotalPost(totalPost);
     }
 
     public Integer getStatusAccount() {

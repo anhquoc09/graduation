@@ -15,7 +15,7 @@
     <string name="navigation_exterior">Ngoại thất - Nội thất</string>
     <string name="navigation_geomancy">Phong thuỷ</string>
     <string name="map_title">Bản đồ</string>
-    <string name="search_hint">Nhập địa chỉ, từ khoá,...</string>
+    <string name="search_hint">Nhập địa điểm cần tìm...</string>
     <string name="view_on_map">XEM TRÊN BẢN ĐỒ</string>
     <string name="show_list">XEM DANH SÁCH</string>
     <string name="empty_data">Chưa có bài đăng nào</string>
@@ -36,7 +36,7 @@
     <string name="up_post">Đăng tin</string>
     <string name="add_picture_text_hint">Bấm nút bên phải để thêm ảnh</string>
     <string name="title">Tiêu đề</string>
-    <string name="price">Giá bán (Triệu VNĐ)</string>
+    <string name="submit_sell_price">Giá bán (Triệu VNĐ)</string>
     <string name="square">Diện tích (m2)</string>
     <string name="address">Địa chỉ</string>
     <string name="description">Mô tả</string>
@@ -82,10 +82,37 @@
     <string name="setting">Cài đặt</string>
     <string name="feature_not_support">Hi! Chức năng này chưa được hỗ trợ</string>
     <string name="empty_info">Chưa cập nhật.</string>
-    <string name="login_now">Hãy đăng nhập để xem đầy đủ thông tin.</string>
+    <string name="login_now">Hãy đăng nhập để thực hiện chức năng này.</string>
     <string name="not_login">Bạn chưa đăng nhập</string>
     <string name="wait_for_verify">(Đang chờ duyệt)</string>
     <string name="stop">Dừng</string>
-    <string name="submiting">Bài đăng chưa hoàn tất.</string>
+    <string name="submitting">Bài đăng chưa hoàn tất.</string>
     <string name="stop_message">Bạn có muốn dừng?</string>
+    <string name="menu_help">Trợ giúp</string>
+    <string name="menu_login">Đăng nhập</string>
+    <string name="menu_logout">Đăng xuất</string>
+    <string name="pressed_back_to_exit">Bấm trở về một lần nữa để đóng ứng dụng</string>
+    <string name="about_us">Về chúng tôi</string>
+    <string name="login_to_saved">Đăng nhập để xem những bài đăng đã lưu của bạn.</string>
+    <string name="saved_empty">Bạn chưa lưu bài viết nào</string>
+    <string name="estate_all_type">Tất cả các loại</string>
+    <string name="filter">Lọc</string>
+    <string name="reset">Làm mới</string>
+    <string name="filter_sell_price_0">Mọi mức giá</string>
+    <string name="filter_sell_price_1"><![CDATA[<= 1 tỷ VNĐ]]></string>
+    <string name="filter_sell_price_2"><![CDATA[1 – 4 tỷ VNĐ]]></string>
+    <string name="filter_sell_price_3"><![CDATA[4 – 10 tỷ VNĐ]]></string>
+    <string name="filter_sell_price_4"><![CDATA[10 – 20 tỷ VNĐ]]></string>
+    <string name="filter_sell_price_5"><![CDATA[20 – 50 tỷ VNĐ]]></string>
+    <string name="submit_lease_price">Giá thuê (Triệu VNĐ/tháng)</string>
+    <string name="filter_sell_price_6"><![CDATA[> 50 tỷ VNĐ]]></string>
+    <string name="filter_lease_price_2"><![CDATA[2 – 5 triệu VNĐ]]></string>
+    <string name="filter_lease_price_3"><![CDATA[5 – 10 triệu VNĐ]]></string>
+    <string name="filter_lease_price_4"><![CDATA[10 – 20 triệu VNĐ]]></string>
+    <string name="filter_lease_price_5"><![CDATA[20 – 50 triệu VNĐ]]></string>
+    <string name="filter_lease_price_6"><![CDATA[> 50 triệu VNĐ]]></string>
+    <string name="filter_lease_price_1"><![CDATA[<= 2 triệu VNĐ/tháng]]></string>
+    <string name="filter_lease_price_0">Mọi mức giá</string>
+    <string name="lease_unit">VNĐ/tháng</string>
+    <string name="sell_unit">VNĐ</string>
 </resources>

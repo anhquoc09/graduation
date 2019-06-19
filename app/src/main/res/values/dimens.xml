@@ -5,7 +5,5 @@
     <dimen name="toolbar_height">50dp</dimen>
 
     <dimen name="navigation_item_height">50dp</dimen>
-    <dimen name="list_estate_image_size">41dp</dimen>
 
-    <dimen name="profile_tab_height">40dp</dimen>
 </resources>
