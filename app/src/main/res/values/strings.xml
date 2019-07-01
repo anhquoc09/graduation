@@ -135,5 +135,6 @@
     <string name="filter_lease_price_6"><![CDATA[> 50 millions VND/month]]></string>
     <string name="sell_unit">VND</string>
     <string name="lease_unit">VND/month</string>
+    <string name="delete_estate_message">Do you want to delete this post?</string>
 
 </resources>

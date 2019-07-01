@@ -1,5 +1,6 @@
 package com.example.realestate.ui.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -92,6 +93,12 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         }
     }
 
+    public void deleteSuccess(int position) {
+        if (position >= 0 && position < mList.size()) {
+            notifyItemRemoved(position);
+        }
+    }
+
     /**
      * {@link EstateDetail}
      */
@@ -120,6 +127,9 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         @BindView(R.id.btn_save)
         ImageView mBtnSave;
+
+        @BindView(R.id.btn_delete)
+        ImageView mBtnDelete;
 
         private EstateDetail mDetail;
 
@@ -199,12 +209,14 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             mTime.setText(String.format("%s ", dateFormat.format(date)));
         }
 
-        private void setBtnSave() {
-            if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mDetail.getId())) {
+        private void setActionButton() {
+            if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mDetail.getOwnerid())) {
                 mBtnSave.setVisibility(View.GONE);
+                mBtnDelete.setVisibility(View.VISIBLE);
             } else {
                 mBtnSave.setVisibility(View.VISIBLE);
                 mBtnSave.setSelected(EstateApplication.savedContain(mDetail.getId()));
+                mBtnDelete.setVisibility(View.GONE);
             }
         }
 
@@ -222,7 +234,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
             setAddress(item.getAddress());
             setOwnerName(item.getFullName());
             setEstateTimePost(item.getCreateTime());
-            setBtnSave();
+            setActionButton();
         }
 
         @Override
@@ -260,6 +272,11 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
                 }
             }
         }
+
+        @OnClick(R.id.btn_delete)
+        public void onDeleteClick() {
+            mItemClickListener.deletePost(mDetail, getAdapterPosition());
+        }
     }
 
     /**
@@ -273,5 +290,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
         void savePost(EstateDetail item, int position);
 
         void unSavePost(EstateDetail item, int position);
+
+        void deletePost(EstateDetail item, int position);
     }
 }

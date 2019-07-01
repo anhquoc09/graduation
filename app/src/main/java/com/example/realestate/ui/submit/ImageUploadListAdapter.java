@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.R;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadListAdapter.ImageViewHolder> {
+
+    private final List<String> mUrlList = new ArrayList<>();
 
     private final List<ImageInfoItem> mImageList = new ArrayList<>();
 
@@ -36,12 +39,16 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.bindView(mImageList.get(position));
+        if (position < mUrlList.size()) {
+            holder.bindView(mUrlList.get(position));
+        } else {
+            holder.bindView(mImageList.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return (mImageList.size());
+        return (mUrlList.size() + mImageList.size());
     }
 
     public void setOnImageClickListener(OnImageClickListener listener) {
@@ -65,12 +72,24 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
         notifyDataSetChanged();
     }
 
+    public void setUrlList(List<String> url) {
+        mUrlList.clear();
+        if (!CollectionUtils.isEmpty(url)) {
+            mUrlList.addAll(url);
+        }
+        notifyDataSetChanged();
+    }
+
     public void removeImage(int position) {
         if (position != RecyclerView.NO_POSITION) {
             mImageList.remove(position);
             notifyItemRemoved(position);
             if (mListener != null) {
-                mListener.onDeleteImageClick(position);
+                if (position < mUrlList.size()) {
+                    mListener.onDeleteImageUrl(position);
+                } else {
+                    mListener.onDeleteImageUri(position - mUrlList.size());
+                }
             }
         }
     }
@@ -78,23 +97,23 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
     public void uploadError(int position) {
         mImageList.get(position).setUploading(false);
         mImageList.get(position).setUploadError(true);
-        notifyItemChanged(position);
+        notifyItemChanged(position + mUrlList.size());
     }
 
     public void startUpload(int position) {
         mImageList.get(position).setUploading(true);
-        notifyItemChanged(position);
+        notifyItemChanged(position + mUrlList.size());
     }
 
     public void uploadImageSuccess(int position) {
         mImageList.get(position).setUploading(false);
         mImageList.get(position).setUploadSuccess(true);
-        notifyItemChanged(position);
+        notifyItemChanged(position + mUrlList.size());
     }
 
     public void updatePercent(int percent, int position) {
         mImageList.get(position).setUploadPercent(percent);
-        notifyItemChanged(position);
+        notifyItemChanged(position + mUrlList.size());
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -145,6 +164,14 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
             }
         }
 
+        public void bindView(String url) {
+            Glide.with(itemView)
+                    .load(url)
+                    .placeholder(R.color.silver)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mPhotoImageView);
+        }
+
         @OnClick(R.id.iv_photo)
         public void onViewClick() {
 
@@ -168,6 +195,8 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
     public interface OnImageClickListener {
         void onViewImageClick(List<ImageInfoItem> imageList, int position);
 
-        void onDeleteImageClick(int position);
+        void onDeleteImageUri(int position);
+
+        void onDeleteImageUrl(int position);
     }
 }

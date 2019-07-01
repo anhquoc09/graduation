@@ -12,6 +12,10 @@ public interface ProfileView {
 
     void onLoadMoreListSuccess(List<EstateDetail> data);
 
+    void editProfileSuccess();
+
+    void deleteProfileSuccess(int position);
+
     void hideListProgress();
 
     void showListProgress();

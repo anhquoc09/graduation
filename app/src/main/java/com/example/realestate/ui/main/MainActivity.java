@@ -369,13 +369,17 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.profile)
     public void onProfileClick() {
         User user = UserManager.getCurrentUser();
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
         startActivity(ProfileActivity.intentFor(this, String.valueOf(user.getId())));
+
     }
 
     @OnClick(R.id.btn_submit)
     public void onUpPostClick() {
         if (UserManager.isUserLoggedIn()) {
-            startActivity(SubmitPostActivity.intentFor(this));
+            startActivity(SubmitPostActivity.intentForNewSubmit(this));
         } else {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle(getString(R.string.not_login));

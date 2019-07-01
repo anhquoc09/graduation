@@ -11,20 +11,25 @@ import com.cloudinary.android.callback.UploadCallback;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
+import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.response.SubmitEstateResponse;
 import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.data.remote.rest.SchedulerProvider;
+import com.example.realestate.data.remote.rest.SimpleResponse;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.utils.AndroidUtilities;
 import com.example.realestate.utils.NetworkUtils;
+import com.google.android.gms.common.util.CollectionUtils;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -65,6 +70,19 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
     private String mContactName;
     private String mContactPhone;
     private String mContactEmail;
+    private List<String> mUrls = new ArrayList<>();
+    private List<String> mPublicIds = new ArrayList<>();
+    private int mSubmitType;
+    private EstateDetail mEditEstate;
+
+    public SubmitPostPresenter(int submitType, EstateDetail detail) {
+        mSubmitType = submitType;
+        mEditEstate = detail;
+        if (submitType == SubmitPostActivity.SUBMIT_TYPE_EDIT) {
+            mUrls.addAll(detail.getUrl());
+            mPublicIds.addAll(detail.getPublicId());
+        }
+    }
 
     public void submit(String title, String investor, float price, String unit, float square, int type,
                        String address, String description, double latitude, double longitude,
@@ -90,23 +108,65 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
         }
 
         hideConnectionFailedLayout();
-        showProgressLayout();
 
         uploadImage();
     }
 
     private void checkSubmit() {
         if (canSubmit()) {
-            mSub = mService.submitEstate(BEARER_TOKEN + UserManager.getAccessToken(),
-                    mTitle, mInvestor, mPrice, mUnit, mSquare, mType, mAddress, mDescription, mLatitude, mLongitude,
-                    UserManager.getCurrentUser().getId(), mStatus, Calendar.getInstance().getTimeInMillis() / 1000,
-                    Calendar.getInstance().getTimeInMillis() / 1000, mContactName, mContactPhone, mContactEmail,
-                    UserManager.getCurrentUser().getAvatar(), mUrlList, mPublicIdList, null)
-                    .subscribeOn(SchedulerProvider.io())
-                    .observeOn(SchedulerProvider.ui())
-                    .subscribe(new SubmitEstateSubscriber());
+            int urlSize = mUrls.size() + mUrlList.length;
+            String[] urls = new String[urlSize];
+            String[] publicIds = new String[urlSize];
+            for (int i = 0; i < urlSize; i++) {
+                if (i < mUrls.size()) {
+                    urls[i] = mUrls.get(i);
+                    publicIds[i] = mPublicIds.get(i);
+                }
+                if (i >= mUrls.size()) {
+                    urls[i] = mUrlList[i];
+                    publicIds[i] = mPublicIdList[i];
+                }
+            }
+
+            if (mSubmitType == SubmitPostActivity.SUBMIT_TYPE_NEW) {
+                mSub = mService.submitEstate(BEARER_TOKEN + UserManager.getAccessToken(),
+                        mTitle, mInvestor, mPrice, mUnit, mSquare, mType, mAddress, mDescription, mLatitude, mLongitude,
+                        UserManager.getCurrentUser().getId(), mStatus, Calendar.getInstance().getTimeInMillis() / 1000,
+                        Calendar.getInstance().getTimeInMillis() / 1000, mContactName, mContactPhone, mContactEmail,
+                        UserManager.getCurrentUser().getAvatar(), urls, publicIds, null)
+                        .subscribeOn(SchedulerProvider.io())
+                        .observeOn(SchedulerProvider.ui())
+                        .subscribe(new SubmitEstateSubscriber());
+            } else {
+                mSub = mService.editEstate(BEARER_TOKEN + UserManager.getAccessToken(),
+                        mTitle, mInvestor, mPrice, mUnit, mSquare, mAddress, mType, mDescription, mLatitude, mLongitude,
+                        mEditEstate.getOwnerid(), mStatus, mEditEstate.getCreateTime(),
+                        Calendar.getInstance().getTimeInMillis() / 1000, mContactName, mContactPhone, mContactEmail,
+                        mEditEstate.getAvatar(), urls, publicIds, null)
+                        .subscribeOn(SchedulerProvider.io())
+                        .observeOn(SchedulerProvider.ui())
+                        .subscribe(new EditEstateSubscriber());
+
+                mEditEstate.setName(mTitle);
+                mEditEstate.setInvestor(mInvestor);
+                mEditEstate.setPrice(mPrice);
+                mEditEstate.setUnit(mUnit);
+                mEditEstate.setArea(mSquare);
+                mEditEstate.setAddress(mAddress);
+                mEditEstate.setType(mType);
+                mEditEstate.setInfo(mDescription);
+                mEditEstate.setLat(mLatitude);
+                mEditEstate.setLong(mLongitude);
+                mEditEstate.setStatusProject(mStatus);
+                mEditEstate.setFullname(mContactName);
+                mEditEstate.setPhone(mContactPhone);
+                mEditEstate.setEmail(mContactEmail);
+                mEditEstate.setUrl(new ArrayList<>(Arrays.asList(urls)));
+                mEditEstate.setPublicId(new ArrayList<>(Arrays.asList(publicIds)));
+            }
 
             mSubscriptions.add(mSub);
+
             Log.d("haq", "Submit");
         } else {
             Log.d("haq", "can not Submit");
@@ -210,26 +270,15 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
     }
 
     private void startUploadImage(int position) {
-        Log.d("haq", "start Upload");
         if (isViewAttached()) {
             mView.startUploadImage(position);
         }
     }
 
     private void showConnectionFailedLayout() {
-
     }
 
     private void hideConnectionFailedLayout() {
-
-    }
-
-    private void showProgressLayout() {
-
-    }
-
-    private void hideProgressLayout() {
-
     }
 
     public void pickImageResultOK(Intent data) {
@@ -262,10 +311,15 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
         mImageUploadedList = new boolean[mUriList.size()];
     }
 
-    public void deleteImage(int position) {
+    public void deleteImageUri(int position) {
         if (position >= 0 && position < mUriList.size()) {
             mUriList.remove(position);
         }
+    }
+
+    public void deleteImageUrl(int position) {
+        mUrls.remove(position);
+        mPublicIds.remove(position);
     }
 
     private class SubmitEstateSubscriber extends Subscriber<SubmitEstateResponse> {
@@ -277,7 +331,6 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
 
         @Override
         public void onError(Throwable e) {
-            hideProgressLayout();
             AndroidUtilities.showToast("Submit Error");
             e.printStackTrace();
             if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
@@ -287,10 +340,34 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
 
         @Override
         public void onNext(SubmitEstateResponse submitEstateResponse) {
-            hideProgressLayout();
 
             if (submitEstateResponse != null) {
                 mView.onSubmitSuccess(submitEstateResponse.getEstateDetail());
+            }
+        }
+    }
+
+    private class EditEstateSubscriber extends Subscriber<SimpleResponse> {
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            AndroidUtilities.showToast("Submit Error");
+            e.printStackTrace();
+            if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
+                showConnectionFailedLayout();
+            }
+        }
+
+        @Override
+        public void onNext(SimpleResponse response) {
+
+            if (response != null) {
+                mView.onSubmitSuccess(mEditEstate);
             }
         }
     }

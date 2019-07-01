@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,6 +68,14 @@ public class SubmitPostActivity extends BaseActivity
         GoogleMap.OnMarkerDragListener,
         ImageUploadListAdapter.OnImageClickListener,
         AdapterView.OnItemSelectedListener {
+
+    private static String KEY_TYPE = "type";
+
+    private static String KEY_DETAIL = "detail";
+
+    public static int SUBMIT_TYPE_NEW = 0;
+
+    public static int SUBMIT_TYPE_EDIT = 1;
 
     public static int PICK_IMAGE_MULTIPLE = 1;
 
@@ -139,13 +148,24 @@ public class SubmitPostActivity extends BaseActivity
 
     private ImageUploadListAdapter mImageAdapter;
 
+    private int mSubmitType;
+
+    private EstateDetail mEditDetail;
+
     private int[] mTypeCode;
 
     private int[] mStatusCode;
 
-    public static Intent intentFor(Context context) {
+    public static Intent intentForNewSubmit(Context context) {
         Intent intent = new Intent(context, SubmitPostActivity.class);
-        intent.putExtras(new Bundle());
+        intent.putExtra(KEY_TYPE, SUBMIT_TYPE_NEW);
+        return intent;
+    }
+
+    public static Intent intentForEditSubmit(Context context, Serializable estateDetail) {
+        Intent intent = new Intent(context, SubmitPostActivity.class);
+        intent.putExtra(KEY_TYPE, SUBMIT_TYPE_EDIT);
+        intent.putExtra(KEY_DETAIL, estateDetail);
         return intent;
     }
 
@@ -154,25 +174,52 @@ public class SubmitPostActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit_post);
         mUnBinder = ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        mSubmitType = intent.getIntExtra(KEY_TYPE, SUBMIT_TYPE_NEW);
+        if (mSubmitType == SUBMIT_TYPE_EDIT) {
+            mEditDetail = (EstateDetail) intent.getSerializableExtra(KEY_DETAIL);
+        }
+
         initView();
         initPresenter();
         fillData();
     }
 
     private void fillData() {
-        User user = UserManager.getCurrentUser();
-        mInvestor.getEditText().setText(user.getFullname());
-        mName.getEditText().setText(user.getFullname());
-        mPhone.getEditText().setText(user.getPhone());
-        mEmail.getEditText().setText(user.getEmail());
+        if (mSubmitType == SUBMIT_TYPE_EDIT) {
+            if (!CollectionUtils.isEmpty(mEditDetail.getUrl())) {
+                mEmptyImageView.setVisibility(View.GONE);
+            } else {
+                mEmptyImageView.setVisibility(View.VISIBLE);
+            }
+            mImageAdapter.setUrlList(mEditDetail.getUrl());
+            mTitle.getEditText().setText(mEditDetail.getName());
+            mInvestor.getEditText().setText(mEditDetail.getInvestor());
+            mStatus.setSelection(mEditDetail.getStatusPost());
+            mType.setSelection(mEditDetail.getType());
+            mPrice.getEditText().setText(String.valueOf(mEditDetail.getPrice()));
+            mSquare.getEditText().setText(String.valueOf(mEditDetail.getArea()));
+            mAddressEditText.getEditText().setText(mEditDetail.getAddress());
+            mDescription.getEditText().setText(mEditDetail.getInfo());
+            mName.getEditText().setText(mEditDetail.getFullName());
+            mPhone.getEditText().setText(mEditDetail.getPhone());
+            mEmail.getEditText().setText(mEditDetail.getEmail());
+        } else {
+            User user = UserManager.getCurrentUser();
+            mInvestor.getEditText().setText(user.getFullname());
+            mName.getEditText().setText(user.getFullname());
+            mPhone.getEditText().setText(user.getPhone());
+            mEmail.getEditText().setText(user.getEmail());
+        }
     }
 
     private void initView() {
+        initRecyclerView();
         initSpinner();
         initMap();
         initGeoCoder();
         initAddressListener();
-        initRecyclerView();
     }
 
     private void initSpinner() {
@@ -219,7 +266,11 @@ public class SubmitPostActivity extends BaseActivity
     }
 
     private void initPresenter() {
-        mPresenter = new SubmitPostPresenter();
+        if (mSubmitType == SUBMIT_TYPE_NEW) {
+            mPresenter = new SubmitPostPresenter(mSubmitType, null);
+        } else {
+            mPresenter = new SubmitPostPresenter(mSubmitType, mEditDetail);
+        }
         mPresenter.attachView(this);
     }
 
@@ -257,7 +308,7 @@ public class SubmitPostActivity extends BaseActivity
             mGoogleMap.setMyLocationEnabled(true);
             mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
             mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
+                if (location != null && mSubmitType == SUBMIT_TYPE_NEW) {
                     mLocation = location;
                 }
                 mAddressEditText.getEditText().setText(getAddressFromLocation(mLocation));
@@ -540,8 +591,16 @@ public class SubmitPostActivity extends BaseActivity
     }
 
     @Override
-    public void onDeleteImageClick(int position) {
-        mPresenter.deleteImage(position);
+    public void onDeleteImageUri(int position) {
+        mPresenter.deleteImageUri(position);
+        if (mImageAdapter.getItemCount() <= 0) {
+            mEmptyImageView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onDeleteImageUrl(int position) {
+        mPresenter.deleteImageUrl(position);
         if (mImageAdapter.getItemCount() <= 0) {
             mEmptyImageView.setVisibility(View.VISIBLE);
         }

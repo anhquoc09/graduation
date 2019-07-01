@@ -86,6 +86,60 @@ public class EstateDetail implements Serializable {
     @SerializedName("codelist")
     private List<CodeList> codeList = null;
 
+    public EstateDetail(List<String> url,
+                        List<String> publicId,
+                        String id,
+                        String name,
+                        String investor,
+                        Float price,
+                        String unit,
+                        Float area,
+                        String address,
+                        Integer type,
+                        String info,
+                        Double lat,
+                        Double _long,
+                        String ownerid,
+                        Integer statusProject,
+                        Integer amount,
+                        Integer v,
+                        Long createTime,
+                        Long updateTime,
+                        Boolean verify,
+                        Boolean allowComment,
+                        String avatar,
+                        String email,
+                        String fullname,
+                        String phone,
+                        List<CodeList> codeList) {
+        this.url = url;
+        this.publicId = publicId;
+        this.id = id;
+        this.name = name;
+        this.investor = investor;
+        this.price = price;
+        this.unit = unit;
+        this.area = area;
+        this.address = address;
+        this.type = type;
+        this.info = info;
+        this.lat = lat;
+        this._long = _long;
+        this.ownerid = ownerid;
+        this.statusProject = statusProject;
+        this.amount = amount;
+        this.v = v;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.verify = verify;
+        this.allowComment = allowComment;
+        this.avatar = avatar;
+        this.email = email;
+        this.fullname = fullname;
+        this.phone = phone;
+        this.codeList = codeList;
+    }
+
     public List<String> getUrl() {
         return url;
     }

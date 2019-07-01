@@ -115,4 +115,5 @@
     <string name="filter_lease_price_0">Mọi mức giá</string>
     <string name="lease_unit">VNĐ/tháng</string>
     <string name="sell_unit">VNĐ</string>
+    <string name="delete_estate_message">Bạn có muốn xóa bài đăng này không?</string>
 </resources>

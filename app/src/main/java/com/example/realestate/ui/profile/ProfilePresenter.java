@@ -6,8 +6,9 @@ import com.example.realestate.UserManager;
 import com.example.realestate.data.remote.ServiceProvider;
 import com.example.realestate.data.remote.rest.EstateService;
 import com.example.realestate.data.remote.rest.SchedulerProvider;
+import com.example.realestate.data.remote.rest.SimpleResponse;
 import com.example.realestate.data.remote.rest.UserListEstateResponse;
-import com.example.realestate.data.remote.rest.UserProfileEstateResponse;
+import com.example.realestate.data.remote.rest.UserProfileResponse;
 import com.example.realestate.ui.BasePresenter;
 import com.example.realestate.ui.widget.Paging;
 import com.example.realestate.utils.NetworkUtils;
@@ -94,7 +95,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
         }
 
         if (mIsCurrentUser) {
-            mListSub = mService.getCurrentUserListEstate(BEARER_TOKEN + mUser.getAccessToken(), mPaging.getNext())
+            mListSub = mService.getUserListEstateById(mUser.getId(), mPaging.getNext())
                     .subscribeOn(SchedulerProvider.io())
                     .observeOn(SchedulerProvider.ui())
                     .subscribe(new UserListEstateSubscriber());
@@ -110,6 +111,42 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
                 mSubscriptions.add(mListSub);
             }
         }
+    }
+
+    public void submitProfile(String phone, String email, String address) {
+        if (!NetworkUtils.isNetworkConnected(EstateApplication.getInstance().getApplicationContext())) {
+            showNoNetwork();
+            return;
+        }
+        showProgress();
+
+        mProfileSub = mService.editProfile(BEARER_TOKEN + mUser.getAccessToken(),
+                mUser.getId(),
+                email,
+                mUser.getFullname(),
+                mUser.getIdentify(),
+                phone,
+                address,
+                mUser.getAvatar(),
+                mUser.getDescription())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new EditProfileSubscriber());
+
+        mSubscriptions.add(mProfileSub);
+    }
+
+    public void deleteEstate(String estateId, int posistion) {
+        if (!NetworkUtils.isNetworkConnected(EstateApplication.getInstance().getApplicationContext())) {
+            showNoNetwork();
+            return;
+        }
+        showProgress();
+
+        mSubscriptions.add(mService.deleteEstate(BEARER_TOKEN + mUser.getAccessToken(), estateId)
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new DeletePostSubscriber(posistion)));
     }
 
     @Override
@@ -158,7 +195,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
         return mPaging;
     }
 
-    private class UserProfileSubscriber extends Subscriber<UserProfileEstateResponse> {
+    private class UserProfileSubscriber extends Subscriber<UserProfileResponse> {
 
         @Override
         public void onStart() {
@@ -181,11 +218,11 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
         }
 
         @Override
-        public void onNext(UserProfileEstateResponse userProfileEstateResponse) {
+        public void onNext(UserProfileResponse userProfileResponse) {
             hideProgress();
 
             if (isViewAttached()) {
-                mView.onFetchProfileSuccess(userProfileEstateResponse.getInfo());
+                mView.onFetchProfileSuccess(userProfileResponse.getInfo());
             }
         }
     }
@@ -225,6 +262,58 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
                 } else {
                     mView.onLoadMoreListSuccess(userListEstateResponse.getEstateDetails());
                 }
+            }
+        }
+    }
+
+    private class EditProfileSubscriber extends Subscriber<SimpleResponse> {
+        @Override
+        public void onCompleted() {
+            hideProgress();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            hideProgress();
+
+            if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
+                showNoNetwork();
+            }
+        }
+
+        @Override
+        public void onNext(SimpleResponse response) {
+            if (isViewAttached()) {
+                mView.editProfileSuccess();
+            }
+        }
+    }
+
+    private class DeletePostSubscriber extends Subscriber<SimpleResponse> {
+        private int mPosition;
+
+        public DeletePostSubscriber(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onCompleted() {
+            hideProgress();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            hideProgress();
+
+            if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
+                showNoNetwork();
+            }
+        }
+
+        @Override
+        public void onNext(SimpleResponse response) {
+            if (isViewAttached()) {
+                mView.deleteProfileSuccess(mPosition);
             }
         }
     }

@@ -1,9 +1,12 @@
 package com.example.realestate.ui.profile;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +32,7 @@ import com.example.realestate.ui.widget.EndlessNestedScrollViewListener;
 import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -35,6 +40,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.example.realestate.utils.AndroidUtilities.getString;
 
 public class ProfileActivity extends BaseActivity implements ProfileView, ListEstateAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = ProfileActivity.class.getSimpleName();
@@ -59,11 +66,20 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     @BindView(R.id.profile_name)
     TextView mName;
 
+    @BindView(R.id.contact_phone)
+    TextInputLayout mPhoneLayout;
+
     @BindView(R.id.profile_phone)
     TextView mPhone;
 
+    @BindView(R.id.contact_email)
+    TextInputLayout mEmailLayout;
+
     @BindView(R.id.profile_email)
     TextView mEmail;
+
+    @BindView(R.id.contact_address)
+    TextInputLayout mAddressLayout;
 
     @BindView(R.id.profile_address)
     TextView mAddress;
@@ -109,12 +125,6 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     }
 
     private void initView() {
-        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mProfileId)) {
-            onFetchProfileSuccess(UserManager.getCurrentUser().getProfile());
-            mBtnEdit.setVisibility(View.VISIBLE);
-        } else {
-            mBtnEdit.setVisibility(View.INVISIBLE);
-        }
 
         mAdapter = new ListEstateAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -162,6 +172,12 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
             setPhone(profile.getPhone());
             setEmail(profile.getEmail());
             setAddress(profile.getAddress());
+
+            if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mProfileId)) {
+                mBtnEdit.setVisibility(View.VISIBLE);
+            } else {
+                mBtnEdit.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -180,6 +196,20 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     @Override
     public void onLoadMoreListSuccess(List<EstateDetail> data) {
         mAdapter.appendData(data);
+    }
+
+    @Override
+    public void editProfileSuccess() {
+        mRefreshLayout.setRefreshing(false);
+        mPhone.setEnabled(false);
+        mEmail.setEnabled(false);
+        mAddress.setEnabled(false);
+        mBtnEdit.setSelected(false);
+    }
+
+    @Override
+    public void deleteProfileSuccess(int position) {
+        mAdapter.deleteSuccess(position);
     }
 
     @Override
@@ -243,7 +273,36 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
 
     @OnClick(R.id.btn_edit_profile)
     public void onEditClick() {
-        AndroidUtilities.showToast(getString(R.string.feature_not_support));
+
+        if (!mBtnEdit.isSelected()) {
+            mPhone.setEnabled(true);
+            mEmail.setEnabled(true);
+            mAddress.setEnabled(true);
+            mBtnEdit.setSelected(true);
+        } else {
+            if (canSubmit()) {
+                mPresenter.submitProfile(mPhone.getText().toString(), mEmail.getText().toString(), mAddress.getText().toString());
+            }
+        }
+    }
+
+    private boolean canSubmit() {
+        boolean canSubmit = isNotBlank(mPhoneLayout, getString(R.string.error_no_phone));
+        canSubmit = isNotBlank(mEmailLayout, getString(R.string.error_no_email)) && canSubmit;
+        canSubmit = isNotBlank(mAddressLayout, getString(R.string.error_no_address)) && canSubmit;
+        return canSubmit;
+
+    }
+
+    private boolean isNotBlank(TextInputLayout textInputLayout, String error) {
+        if (TextUtils.isEmpty(textInputLayout.getEditText().getText())) {
+            textInputLayout.setErrorEnabled(true);
+            textInputLayout.setError(error);
+        } else {
+            textInputLayout.setErrorEnabled(false);
+            textInputLayout.setError(null);
+        }
+        return !textInputLayout.isErrorEnabled();
     }
 
     @Override
@@ -253,7 +312,7 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
 
     @Override
     public void onOwnerClick(String userId) {
-        
+
     }
 
     @Override
@@ -264,6 +323,19 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     @Override
     public void unSavePost(EstateDetail item, int position) {
 
+    }
+
+    @Override
+    public void deletePost(EstateDetail item, int position) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setMessage(getString(R.string.delete_estate_message));
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.no), (dialog, which) -> alertDialog.dismiss());
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.yes), (dialog, which) ->
+                mPresenter.deleteEstate(item.getId(), position));
+        alertDialog.setCancelable(true);
+        alertDialog.show();
     }
 
     @Override

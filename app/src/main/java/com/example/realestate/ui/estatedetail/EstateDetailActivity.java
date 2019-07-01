@@ -28,6 +28,7 @@ import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
 import com.example.realestate.ui.profile.ProfileActivity;
+import com.example.realestate.ui.submit.SubmitPostActivity;
 import com.example.realestate.ui.widget.ImageSliderAdapter;
 import com.example.realestate.ui.widget.ImageSliderLayout;
 import com.example.realestate.ui.widget.InfinitePagerAdapter;
@@ -105,6 +106,9 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
 
     @BindView(R.id.btn_save)
     ImageView mBtnSave;
+
+    @BindView(R.id.btn_edit_estate_detail)
+    ImageView mBtnEdit;
 
     private EstateDetail mEstateDetail;
 
@@ -184,6 +188,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
             setEstateDescription(mEstateDetail.getInfo());
             setEstateVerify(mEstateDetail.getVerify());
             setBtnSave();
+            setBtnEdit();
         }
     }
 
@@ -370,12 +375,26 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     }
 
     private void setBtnSave() {
-        mBtnSave.setSelected(EstateApplication.savedContain(mEstateDetail.getId()));
+        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mEstateDetail.getOwnerid())) {
+            mBtnSave.setVisibility(View.GONE);
+        } else {
+            mBtnSave.setVisibility(View.VISIBLE);
+            mBtnSave.setSelected(EstateApplication.savedContain(mEstateDetail.getId()));
+        }
+    }
+
+    private void setBtnEdit() {
+        if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mEstateDetail.getOwnerid())) {
+            mBtnEdit.setVisibility(View.GONE);
+        } else {
+            mBtnEdit.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.btn_edit_estate_detail)
     public void onEditEstateClick() {
-
+        startActivity(SubmitPostActivity.intentForEditSubmit(this, mEstateDetail));
+        finish();
     }
 
     @OnClick(R.id.btn_save)

@@ -155,6 +155,11 @@ public class ListNewEstateFragment extends Fragment
     }
 
     @Override
+    public void deletePost(EstateDetail item, int position) {
+
+    }
+
+    @Override
     public void fetchDataSuccess(List<EstateDetail> list) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);

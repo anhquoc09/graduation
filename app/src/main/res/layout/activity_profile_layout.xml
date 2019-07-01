@@ -70,67 +70,112 @@
                     android:layout_marginEnd="5dp"
                     android:elevation="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/ic_up_post"
+                    android:src="@drawable/btn_edit_profile"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@id/profile_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/profile_name" />
 
-                <!-- phone number -->
-                <TextView
-                    android:id="@+id/profile_phone"
+                <!-- Contact phone -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/contact_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:drawableLeft="@drawable/ic_contact_phone"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/empty_info"
-                    android:padding="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textColorHint="@color/gray"
+                    app:errorEnabled="false"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_avatar" />
+                    app:layout_constraintTop_toBottomOf="@id/profile_avatar">
 
-                <!-- email -->
-                <TextView
-                    android:id="@+id/profile_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:drawableLeft="@drawable/ic_contact_mail"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/empty_info"
-                    android:padding="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_phone"
-                    tools:text="ahihihihihihiihi" />
+                    <EditText
+                        android:id="@+id/profile_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:digits="0123456789"
+                        android:drawableLeft="@drawable/ic_contact_phone"
+                        android:drawablePadding="5dp"
+                        android:enabled="false"
+                        android:hint="@string/empty_info"
+                        android:inputType="phone"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="true"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Address -->
-                <TextView
-                    android:id="@+id/profile_address"
+                <!-- Contact email -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/contact_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginEnd="10dp"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/empty_info"
-                    android:padding="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textColorHint="@color/gray"
+                    app:errorEnabled="false"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_email"
-                    tools:text="ahihihihihihiihi" />
+                    app:layout_constraintTop_toBottomOf="@id/contact_phone">
+
+                    <EditText
+                        android:id="@+id/profile_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:digits="abcdefghijklmnopqrstuvwxyz@._"
+                        android:drawableLeft="@drawable/ic_contact_mail"
+                        android:drawablePadding="5dp"
+                        android:enabled="false"
+                        android:hint="@string/empty_info"
+                        android:inputType="textEmailAddress"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="true"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Contact address -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/contact_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textColorHint="@color/gray"
+                    app:errorEnabled="false"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/contact_email">
+
+                    <EditText
+                        android:id="@+id/profile_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:drawableLeft="@drawable/ic_location"
+                        android:drawablePadding="5dp"
+                        android:enabled="false"
+                        android:hint="@string/empty_info"
+                        android:inputType="text"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textIsSelectable="true"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <View
                     android:id="@+id/divider"
@@ -141,7 +186,7 @@
                     android:background="#272727"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/profile_address" />
+                    app:layout_constraintTop_toBottomOf="@id/contact_address" />
 
                 <!-- List -->
                 <androidx.recyclerview.widget.RecyclerView
