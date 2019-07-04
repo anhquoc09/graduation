@@ -106,8 +106,9 @@ public interface EstateService {
                                             @Path("id") String id);
 
     @FormUrlEncoded
-    @POST("projects/edit")
+    @POST("projects/edit/{id}")
     Observable<SimpleResponse> editEstate(@Header("authorization") String accessToken,
+                                          @Path("id") String id,
                                           @Field("name") String title,
                                           @Field("investor") String investor,
                                           @Field("price") float price,

@@ -23,4 +23,8 @@ public interface SubmitPostView {
     void uploadImageSuccess(int position);
 
     void updateUploadPercent(int percent, int position);
+
+    void showNoNetwork();
+
+    void hideNoNetwork();
 }

@@ -114,7 +114,7 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
 
     private void checkSubmit() {
         if (canSubmit()) {
-            int urlSize = mUrls.size() + mUrlList.length;
+            int urlSize = mUrls.size() + (mUrlList != null ? mUrlList.length : 0);
             String[] urls = new String[urlSize];
             String[] publicIds = new String[urlSize];
             for (int i = 0; i < urlSize; i++) {
@@ -122,9 +122,9 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
                     urls[i] = mUrls.get(i);
                     publicIds[i] = mPublicIds.get(i);
                 }
-                if (i >= mUrls.size()) {
-                    urls[i] = mUrlList[i];
-                    publicIds[i] = mPublicIdList[i];
+                if (i >= mUrls.size() && mUrlList != null) {
+                    urls[i] = mUrlList[i - mUrls.size()];
+                    publicIds[i] = mPublicIdList[i - mUrls.size()];
                 }
             }
 
@@ -138,7 +138,7 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
                         .observeOn(SchedulerProvider.ui())
                         .subscribe(new SubmitEstateSubscriber());
             } else {
-                mSub = mService.editEstate(BEARER_TOKEN + UserManager.getAccessToken(),
+                mSub = mService.editEstate(BEARER_TOKEN + UserManager.getAccessToken(), mEditEstate.getId(),
                         mTitle, mInvestor, mPrice, mUnit, mSquare, mAddress, mType, mDescription, mLatitude, mLongitude,
                         mEditEstate.getOwnerid(), mStatus, mEditEstate.getCreateTime(),
                         Calendar.getInstance().getTimeInMillis() / 1000, mContactName, mContactPhone, mContactEmail,
@@ -174,6 +174,10 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
     }
 
     private boolean canSubmit() {
+        if (mUriList.size() == 0 && mUrls.size() > 0) {
+            return true;
+        }
+
         for (boolean isUploadSuccess : mImageUploadedList) {
             if (!isUploadSuccess) return false;
         }
@@ -182,43 +186,50 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
 
     private void uploadImage() {
 
-        for (int i = 0; i < mUriList.size(); i++) {
-            int finalI = i;
+        if (mUriList.size() <= 0) {
+            if (mUrls.size() > 0) {
+                checkSubmit();
+            }
+        } else {
 
-            if (!mImageUploadedList[finalI]) {
-                MediaManager.get()
-                        .upload(mUriList.get(finalI))
-                        .unsigned("dels6a22")
-                        .callback(new UploadCallback() {
-                            @Override
-                            public void onStart(String requestId) {
-                                mImageUploadedList[finalI] = false;
-                                startUploadImage(finalI);
-                            }
+            for (int i = 0; i < mUriList.size(); i++) {
+                int finalI = i;
 
-                            @Override
-                            public void onProgress(String requestId, long bytes, long totalBytes) {
-                            }
+                if (!mImageUploadedList[finalI]) {
+                    MediaManager.get()
+                            .upload(mUriList.get(finalI))
+                            .unsigned("dels6a22")
+                            .callback(new UploadCallback() {
+                                @Override
+                                public void onStart(String requestId) {
+                                    mImageUploadedList[finalI] = false;
+                                    startUploadImage(finalI);
+                                }
 
-                            @Override
-                            public void onSuccess(String requestId, Map resultData) {
-                                mImageUploadedList[finalI] = true;
-                                uploadSuccess(requestId, resultData, finalI);
-                            }
+                                @Override
+                                public void onProgress(String requestId, long bytes, long totalBytes) {
+                                }
 
-                            @Override
-                            public void onError(String requestId, ErrorInfo error) {
-                                mImageUploadedList[finalI] = false;
-                                uploadError(requestId, error, finalI);
-                            }
+                                @Override
+                                public void onSuccess(String requestId, Map resultData) {
+                                    mImageUploadedList[finalI] = true;
+                                    uploadSuccess(requestId, resultData, finalI);
+                                }
 
-                            @Override
-                            public void onReschedule(String requestId, ErrorInfo error) {
-                            }
-                        })
-                        .dispatch();
-            } else {
-                uploadTaskFinished(true);
+                                @Override
+                                public void onError(String requestId, ErrorInfo error) {
+                                    mImageUploadedList[finalI] = false;
+                                    uploadError(requestId, error, finalI);
+                                }
+
+                                @Override
+                                public void onReschedule(String requestId, ErrorInfo error) {
+                                }
+                            })
+                            .dispatch();
+                } else {
+                    uploadTaskFinished(true);
+                }
             }
         }
     }
@@ -276,9 +287,16 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
     }
 
     private void showConnectionFailedLayout() {
+        if (isViewAttached()) {
+            mView.showNoNetwork();
+        }
     }
 
     private void hideConnectionFailedLayout() {
+        if (isViewAttached()) {
+            mView.hideNoNetwork();
+        }
+
     }
 
     public void pickImageResultOK(Intent data) {
@@ -356,7 +374,6 @@ class SubmitPostPresenter extends BasePresenter<SubmitPostView> {
 
         @Override
         public void onError(Throwable e) {
-            AndroidUtilities.showToast("Submit Error");
             e.printStackTrace();
             if (e instanceof UnknownHostException || e instanceof SocketTimeoutException) {
                 showConnectionFailedLayout();

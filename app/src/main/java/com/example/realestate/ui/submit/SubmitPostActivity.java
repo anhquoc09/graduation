@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
@@ -78,6 +80,9 @@ public class SubmitPostActivity extends BaseActivity
     public static int SUBMIT_TYPE_EDIT = 1;
 
     public static int PICK_IMAGE_MULTIPLE = 1;
+
+    @BindView(R.id.coordination_layout)
+    CoordinatorLayout mCoordinatorLayout;
 
     @BindView(R.id.btn_submit)
     ImageView mBtnSubmit;
@@ -125,6 +130,8 @@ public class SubmitPostActivity extends BaseActivity
     TextInputLayout mEmail;
 
     private Unbinder mUnBinder;
+
+    private Snackbar mSnackBar;
 
     private SubmitPostPresenter mPresenter;
 
@@ -196,8 +203,8 @@ public class SubmitPostActivity extends BaseActivity
             mImageAdapter.setUrlList(mEditDetail.getUrl());
             mTitle.getEditText().setText(mEditDetail.getName());
             mInvestor.getEditText().setText(mEditDetail.getInvestor());
-            mStatus.setSelection(mEditDetail.getStatusPost());
-            mType.setSelection(mEditDetail.getType());
+            mStatus.setSelection(mEditDetail.getStatusPost() == 1 ? 0 : 1);
+            mType.setSelection(mEditDetail.getType() - 1);
             mPrice.getEditText().setText(String.valueOf(mEditDetail.getPrice()));
             mSquare.getEditText().setText(String.valueOf(mEditDetail.getArea()));
             mAddressEditText.getEditText().setText(mEditDetail.getAddress());
@@ -220,6 +227,9 @@ public class SubmitPostActivity extends BaseActivity
         initMap();
         initGeoCoder();
         initAddressListener();
+        mSnackBar = Snackbar
+                .make(mCoordinatorLayout, getString(R.string.no_network_connection), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.setting), view -> startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS)));
     }
 
     private void initSpinner() {
@@ -492,6 +502,16 @@ public class SubmitPostActivity extends BaseActivity
     @Override
     public void updateUploadPercent(int percent, int position) {
         mImageAdapter.updatePercent(percent, position);
+    }
+
+    @Override
+    public void showNoNetwork() {
+        mSnackBar.show();
+    }
+
+    @Override
+    public void hideNoNetwork() {
+        mSnackBar.dismiss();
     }
 
     @OnClick(R.id.btn_back)

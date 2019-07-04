@@ -385,7 +385,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
 
     private void setBtnEdit() {
         if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mEstateDetail.getOwnerid())) {
-            mBtnEdit.setVisibility(View.GONE);
+            mBtnEdit.setVisibility(View.VISIBLE);
         } else {
             mBtnEdit.setVisibility(View.GONE);
         }

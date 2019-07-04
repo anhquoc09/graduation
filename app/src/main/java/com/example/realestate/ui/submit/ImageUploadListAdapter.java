@@ -42,7 +42,7 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
         if (position < mUrlList.size()) {
             holder.bindView(mUrlList.get(position));
         } else {
-            holder.bindView(mImageList.get(position));
+            holder.bindView(mImageList.get(position - mUrlList.size()));
         }
     }
 
@@ -82,7 +82,11 @@ public class ImageUploadListAdapter extends RecyclerView.Adapter<ImageUploadList
 
     public void removeImage(int position) {
         if (position != RecyclerView.NO_POSITION) {
-            mImageList.remove(position);
+            if (position < mUrlList.size()) {
+                mUrlList.remove(position);
+            } else {
+                mImageList.remove(position - mUrlList.size());
+            }
             notifyItemRemoved(position);
             if (mListener != null) {
                 if (position < mUrlList.size()) {
