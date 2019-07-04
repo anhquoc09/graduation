@@ -195,12 +195,8 @@ public class SavedListEstateAdapter extends RecyclerView.Adapter<SavedListEstate
         }
 
         private void setBtnSave() {
-            if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mDetail.getId())) {
-                mBtnSave.setVisibility(View.GONE);
-            } else {
-                mBtnSave.setVisibility(View.VISIBLE);
-                mBtnSave.setSelected(EstateApplication.savedContain(mDetail.getId()));
-            }
+            mBtnSave.setVisibility(View.VISIBLE);
+            mBtnSave.setSelected(EstateApplication.savedContain(mDetail.getId()));
         }
 
         private void setAddress(String address) {

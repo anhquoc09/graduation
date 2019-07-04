@@ -86,19 +86,19 @@
         android:layout_height="1dp"
         android:background="#C4C4C4" />
 
-    <TextView
-        android:id="@+id/btn_support"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navigation_item_height"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableStart="@drawable/ic_menu_help"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:paddingStart="30dp"
-        android:paddingEnd="0dp"
-        android:text="@string/menu_help"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
+    <!--<TextView-->
+        <!--android:id="@+id/btn_support"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/navigation_item_height"-->
+        <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+        <!--android:drawableStart="@drawable/ic_menu_help"-->
+        <!--android:drawablePadding="20dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingStart="30dp"-->
+        <!--android:paddingEnd="0dp"-->
+        <!--android:text="@string/menu_help"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textSize="16sp" />-->
 
     <TextView
         android:id="@+id/btn_about_us"

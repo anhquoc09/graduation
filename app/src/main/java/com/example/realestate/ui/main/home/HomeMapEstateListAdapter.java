@@ -223,8 +223,12 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
         }
 
         private void setSaved() {
-            mBtnSave.setVisibility(View.VISIBLE);
-            mBtnSave.setSelected(EstateApplication.savedContain(mEstateDetail.getId()));
+            if (UserManager.isUserLoggedIn() && UserManager.getCurrentUser().getId().equals(mEstateDetail.getOwnerid())) {
+                mBtnSave.setVisibility(View.GONE);
+            } else {
+                mBtnSave.setVisibility(View.VISIBLE);
+                mBtnSave.setSelected(EstateApplication.savedContain(mEstateDetail.getId()));
+            }
         }
 
         private void setTime(long createTime) {

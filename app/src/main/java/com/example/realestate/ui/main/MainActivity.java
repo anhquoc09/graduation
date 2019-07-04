@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import butterknife.BindView;
@@ -96,6 +97,8 @@ public class MainActivity extends BaseActivity
     private GoogleManager mGoogleManager;
 
     private Snackbar mSnackBar;
+
+    private AboutUsFragment mAboutUsFragment;
 
     private long mPressedTimeMillis;
 
@@ -331,14 +334,21 @@ public class MainActivity extends BaseActivity
         goToLoginScreen();
     }
 
-    @OnClick(R.id.btn_support)
-    public void onSupportClick() {
-        AndroidUtilities.showToast("Support Clicked!");
-    }
+//    @OnClick(R.id.btn_support)
+//    public void onSupportClick() {
+//        AndroidUtilities.showToast("Support Clicked!");
+//    }
 
     @OnClick(R.id.btn_about_us)
     public void onAboutUsClick() {
-        AndroidUtilities.showToast("We are Supper Heroes!");
+        if (mAboutUsFragment == null) {
+            mAboutUsFragment = AboutUsFragment.getInstance();
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (fragmentManager != null && !fragmentManager.isStateSaved() && !mAboutUsFragment.isAdded()) {
+            mAboutUsFragment.show(fragmentManager, AboutUsFragment.TAG);
+        }
     }
 
     @OnClick(R.id.btn_log_out)

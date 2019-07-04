@@ -116,4 +116,12 @@
     <string name="lease_unit">VNĐ/tháng</string>
     <string name="sell_unit">VNĐ</string>
     <string name="delete_estate_message">Bạn có muốn xóa bài đăng này không?</string>
+    <string name="about_us_content">REALES là sản phẩm từ quá trình thực hiện đồ án tốt nghiệp của 6 sinh viên khoa Công nghệ thông tin Trường Đại học Khoa học Tự nhiên TP.Hồ Chí Minh</string>
+    <string name="about_us_content_2">Đây là một sản phẩm dành cho những người có nhu cầu mua hoặc thuê BĐS và chí ít là muốn tìm hiểu về BĐS cho nhu cầu ở tương lai:\n
+        - Đăng bán/cho thuê bất động sản.\n
+        - Tìm kiếm bất động sản.\n
+        - Mua/Thuê bất động sản.\n
+        - Tìm kiếm thông tin về bất động sản.
+    </string>
+    <string name="facebook_contact">Mọi thắc mắc, phản hồi vui lòng liên hệ Facebook</string>
 </resources>
