@@ -1,6 +1,9 @@
 package com.example.realestate.data.remote.rest;
 
 import com.example.realestate.data.model.CodeList;
+import com.example.realestate.data.model.CommentResponseDetail;
+import com.example.realestate.data.remote.response.CommentResponse;
+import com.example.realestate.data.remote.response.ListCommentResponse;
 import com.example.realestate.data.remote.response.SaveEstateResponse;
 import com.example.realestate.data.remote.response.SavedEstateListResponse;
 import com.example.realestate.data.remote.response.UnSaveEstateResponse;
@@ -130,4 +133,32 @@ public interface EstateService {
                                           @Field("url") String[] urls,
                                           @Field("publicId") String[] publicIds,
                                           @Field("codelist") CodeList[] codeList);
+
+    @GET("comment/all/{id}")
+    Observable<ListCommentResponse> getAllComment(@Path("id") String commentId);
+
+    @FormUrlEncoded
+    @POST("comment")
+    Observable<CommentResponse> addComment(@Header("authorization") String accessToken,
+                                           @Field("user") String userId,
+                                           @Field("projectid") String projectId,
+                                           @Field("createTime") long createTime,
+                                           @Field("updateTime") long updateTime,
+                                           @Field("content") String content,
+                                           @Field("star") int star);
+
+    @FormUrlEncoded
+    @POST("comment/edit/{id}")
+    Observable<CommentResponse> editComment(@Header("authorization") String accessToken,
+                                                  @Path("id") String commentId,
+                                                  @Field("user") String userId,
+                                                  @Field("projectId") String projectId,
+                                                  @Field("createTime") long createTime,
+                                                  @Field("updateTime") long updateTime,
+                                                  @Field("content") String content,
+                                                  @Field("star") int star);
+
+    @DELETE("comment/{id}")
+    Observable<SimpleResponse> deleteComment(@Header("authorization") String accessToken,
+                                           @Path("id") String commentId);
 }

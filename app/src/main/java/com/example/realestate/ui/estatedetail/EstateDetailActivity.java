@@ -11,19 +11,28 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.EstateApplication;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
+import com.example.realestate.data.model.CommentDetail;
+import com.example.realestate.data.model.CommentResponseDetail;
 import com.example.realestate.data.model.EstateDetail;
 import com.example.realestate.ui.BaseActivity;
 import com.example.realestate.ui.login.LoginActivity;
@@ -33,6 +42,7 @@ import com.example.realestate.ui.widget.ImageSliderAdapter;
 import com.example.realestate.ui.widget.ImageSliderLayout;
 import com.example.realestate.ui.widget.InfinitePagerAdapter;
 import com.example.realestate.ui.widget.WorkaroundMapFragment;
+import com.example.realestate.utils.AndroidUtilities;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,7 +64,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class EstateDetailActivity extends BaseActivity implements OnMapReadyCallback, EstateDetailView {
+public class EstateDetailActivity extends BaseActivity implements OnMapReadyCallback, EstateDetailView, CommentListAdapter.OnCommentItemClickListener {
     public static final String TAG = EstateDetailActivity.class.getCanonicalName();
 
     public static final String ESTATE_DETAIL = "estate_detail";
@@ -110,6 +120,21 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @BindView(R.id.btn_edit_estate_detail)
     ImageView mBtnEdit;
 
+    @BindView(R.id.comment_list)
+    RecyclerView mCommentList;
+
+    @BindView(R.id.rating)
+    RatingBar mRatingBar;
+
+    @BindView(R.id.comment_box)
+    EditText mCommentBox;
+
+    @BindView(R.id.btn_send)
+    ImageView mBtnSend;
+
+    @BindView(R.id.progress)
+    View mProgress;
+
     private EstateDetail mEstateDetail;
 
     private ImageSliderAdapter mImageSliderAdapter;
@@ -123,6 +148,8 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     private EstateDetailPresenter mPresenter;
 
     private Snackbar mSnackbar;
+
+    private CommentListAdapter mCommentListAdapter;
 
     public static Intent intentFor(Context context, Serializable estateDetail) {
         Intent intent = new Intent(context, EstateDetailActivity.class);
@@ -145,7 +172,36 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
 
         initImageSlider();
         initMap();
+        initComment();
         initPresenter();
+    }
+
+    private void initComment() {
+        mCommentListAdapter = new CommentListAdapter();
+        mCommentListAdapter.setCommentClickListener(this);
+        mCommentList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mCommentList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        mCommentList.setAdapter(mCommentListAdapter);
+
+        mRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) ->
+                mBtnSend.setSelected(rating > 0 && !mCommentBox.getText().toString().isEmpty()));
+
+        mCommentBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mBtnSend.setSelected(!s.toString().isEmpty() && mRatingBar.getRating() > 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initPresenter() {
@@ -157,6 +213,7 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     protected void onResume() {
         super.onResume();
         bindData();
+        mPresenter.getAllComment(mEstateDetail.getId());
     }
 
     private void initImageSlider() {
@@ -432,13 +489,9 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
             alertDialog.setTitle(getString(R.string.not_login));
             alertDialog.setMessage(getString(R.string.login_now));
 
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> {
-                alertDialog.dismiss();
-            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> alertDialog.dismiss());
 
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> {
-                startActivity(LoginActivity.intentFor(this, true));
-            });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> startActivity(LoginActivity.intentFor(this, true)));
 
             alertDialog.setCancelable(true);
             alertDialog.show();
@@ -453,6 +506,29 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @OnClick(R.id.btn_address)
     public void onAddressClick() {
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 15));
+    }
+
+    @OnClick(R.id.btn_send)
+    public void onSendCommentClick() {
+        if (UserManager.isUserLoggedIn()) {
+            String comment = mCommentBox.getText().toString();
+            int rating = (int) mRatingBar.getRating();
+            mBtnSend.setVisibility(View.GONE);
+            mProgress.setVisibility(View.VISIBLE);
+            mCommentBox.setSelected(false);
+            mPresenter.addComment(mEstateDetail.getId(), comment, rating);
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle(getString(R.string.not_login));
+            alertDialog.setMessage(getString(R.string.login_now));
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.button_cancel), (dialog, which) -> alertDialog.dismiss());
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.login), (dialog, which) -> startActivity(LoginActivity.intentFor(this, true)));
+
+            alertDialog.setCancelable(true);
+            alertDialog.show();
+        }
     }
 
     @OnClick(R.id.btn_back)
@@ -479,5 +555,56 @@ public class EstateDetailActivity extends BaseActivity implements OnMapReadyCall
     @Override
     public void hideNoNetworkConnection() {
         mSnackbar.dismiss();
+    }
+
+    @Override
+    public void setComment(List<CommentDetail> commentList) {
+        mCommentListAdapter.setData(commentList);
+    }
+
+    @Override
+    public void addCommentSuccess(CommentResponseDetail detail) {
+        mBtnSend.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.GONE);
+        mRatingBar.setRating(0);
+        mCommentBox.setText("");
+        mCommentListAdapter.appendData(detail);
+    }
+
+    @Override
+    public void addCommentError() {
+        AndroidUtilities.showToast(getString(R.string.error_comment));
+        mBtnSend.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void editCommentSuccess(int position, CommentResponseDetail detail) {
+        mCommentListAdapter.onEditCompleted(position, true, detail);
+    }
+
+    @Override
+    public void editCommentError(int position) {
+        mCommentListAdapter.onEditCompleted(position, false, null);
+    }
+
+    @Override
+    public void deleteCommentSuccess(int position) {
+        mCommentListAdapter.onDeleteCompleted(position, true);
+    }
+
+    @Override
+    public void deleteCommentError(int position) {
+        mCommentListAdapter.onDeleteCompleted(position, false);
+    }
+
+    @Override
+    public void onEditComment(int position, CommentDetail detail) {
+        mPresenter.editComment(position, detail);
+    }
+
+    @Override
+    public void onDeleteComment(int position, String id) {
+        mPresenter.deleteComment(position, id);
     }
 }

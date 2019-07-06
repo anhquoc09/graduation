@@ -31,7 +31,9 @@ public class RestClient {
 
     public static final String TAG = RestClient.class.getSimpleName();
 
-    private static final String BASE_URL = "https://realstatebackend.herokuapp.com";
+//    private static final String BASE_URL = "https://realstatebackend.herokuapp.com";
+
+    private static final String BASE_URL = "http://myreales.tk/api/";
 
     private static final long CACHE_SIZE = 10 * 1024 * 1024;
 

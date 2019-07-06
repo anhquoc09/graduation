@@ -54,7 +54,6 @@
     <string name="estate_house">Nhà ở</string>
     <string name="contact_mess">Chọn cách liên hệ với chủ sở hữu</string>
     <string name="contact_now">Liên hệ ngay</string>
-    <string name="edit_profile_success">Thông tin của bạn đã được lưu</string>
     <string name="no_network_message">Bạn có muốn bật kết nối mạng không?</string>
     <string name="investor">Nhà đầu tư</string>
     <string name="address_required">(*) Hãy nhập địa chỉ chính xác của bạn để dễ dàng tìm kiếm hơn. Di chuyển điểm đánh dấu bên dưới nếu không đúng vị trí của bạn trên bản đồ.</string>
@@ -124,4 +123,10 @@
         - Tìm kiếm thông tin về bất động sản.
     </string>
     <string name="facebook_contact">Mọi thắc mắc, phản hồi vui lòng liên hệ Facebook</string>
+    <string name="delete">Xóa</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="edit_profile_success">Chỉnh sửa thành công</string>
+    <string name="comment_rating"><![CDATA[Bình luận & Đánh giá]]></string>
+    <string name="write_comment">Viết bình luận...</string>
+    <string name="error_comment">Không thể gửi nhiều bình luận đánh giá</string>
 </resources>

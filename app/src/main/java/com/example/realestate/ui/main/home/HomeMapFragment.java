@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -260,7 +262,9 @@ public class HomeMapFragment extends Fragment
             if (state == RecyclerView.SCROLL_STATE_IDLE) {
                 int position = getSnapPosition(recyclerView);
                 if (position < mMarkers.size() && position != mPreMarkerSelectedIndex) {
+
                     mMarkers.get(position).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
                     if (mPreMarkerSelectedIndex != -1 && mPreMarkerSelectedIndex < mMarkers.size()) {
                         mMarkers.get(mPreMarkerSelectedIndex).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     }

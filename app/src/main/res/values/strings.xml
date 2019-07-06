@@ -78,7 +78,7 @@
 
     <string name="contact_now">Contact now</string>
     <string name="contact_mess">Select the method to contact the owner</string>
-    <string name="edit_profile_success">Your profile is saved</string>
+    <string name="edit_profile_success">Edit success!</string>
     <string name="address_required">(*) Please enter your exactly address to find your location easier. Move below marker to your exactly location on map.</string>
     <string name="error_no_address">Enter your estate address</string>
     <string name="error_no_title">Enter a title</string>
@@ -144,5 +144,10 @@
         - More information about real estate.
     </string>
     <string name="facebook_contact">Any questions or feedback, please contact Facebook</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="comment_rating"><![CDATA[Comment & Rating]]></string>
+    <string name="write_comment">Write comment...</string>
+    <string name="error_comment">Cannot submit more comment rating</string>
 
 </resources>
