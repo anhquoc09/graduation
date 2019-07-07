@@ -95,6 +95,7 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
     public void deleteSuccess(int position) {
         if (position >= 0 && position < mList.size()) {
+            mList.remove(position);
             notifyItemRemoved(position);
         }
     }

@@ -194,7 +194,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
             mBtnMenu.setVisibility(mUser.getId().equals(detail.getUser().getId()) ? View.VISIBLE : View.GONE);
             mProgess.setVisibility(View.GONE);
-            mBtnMenu.setVisibility(View.VISIBLE);
             mRatingBar.setIsIndicator(true);
         }
 

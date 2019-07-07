@@ -95,7 +95,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
         }
 
         if (mIsCurrentUser) {
-            mListSub = mService.getUserListEstateById(mUser.getId(), mPaging.getNext())
+            mListSub = mService.getCurrentUserListEstate(BEARER_TOKEN + mUser.getAccessToken(), mPaging.getNext())
                     .subscribeOn(SchedulerProvider.io())
                     .observeOn(SchedulerProvider.ui())
                     .subscribe(new UserListEstateSubscriber());
@@ -313,7 +313,7 @@ public class ProfilePresenter extends BasePresenter<ProfileView> {
         @Override
         public void onNext(SimpleResponse response) {
             if (isViewAttached()) {
-                mView.deleteProfileSuccess(mPosition);
+                mView.deletePostSuccess(mPosition);
             }
         }
     }

@@ -149,5 +149,6 @@
     <string name="comment_rating"><![CDATA[Comment & Rating]]></string>
     <string name="write_comment">Write comment...</string>
     <string name="error_comment">Cannot submit more comment rating</string>
+    <string name="web_page">https://www.myreales.tk</string>
 
 </resources>

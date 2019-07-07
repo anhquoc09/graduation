@@ -14,7 +14,7 @@ public interface ProfileView {
 
     void editProfileSuccess();
 
-    void deleteProfileSuccess(int position);
+    void deletePostSuccess(int position);
 
     void hideListProgress();
 

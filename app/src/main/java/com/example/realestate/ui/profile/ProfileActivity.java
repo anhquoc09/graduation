@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.realestate.R;
 import com.example.realestate.UserManager;
 import com.example.realestate.data.model.EstateDetail;
@@ -208,8 +209,13 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     }
 
     @Override
-    public void deleteProfileSuccess(int position) {
+    public void deletePostSuccess(int position) {
         mAdapter.deleteSuccess(position);
+        if (mAdapter.getItemCount() == 0 ) {
+            mEmptyView.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -243,10 +249,13 @@ public class ProfileActivity extends BaseActivity implements ProfileView, ListEs
     }
 
     private void setAvatar(String avatar) {
+        int size = (int)(getResources().getDisplayMetrics().density * 360);
         Glide.with(this)
                 .load(avatar)
                 .placeholder(R.color.silver)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .error(R.drawable.avatar_default_small)
+                .override(size)
                 .into(mAvatar);
     }
 

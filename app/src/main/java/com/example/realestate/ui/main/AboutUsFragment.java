@@ -63,6 +63,14 @@ public class AboutUsFragment extends DialogFragment {
         dismiss();
     }
 
+    @OnClick(R.id.web_page)
+    public void onWebPageClick() {
+        Intent httpIntent = new Intent(Intent.ACTION_VIEW);
+        httpIntent.setData(Uri.parse("https://www.myreales.tk"));
+
+        startActivity(httpIntent);
+    }
+
     @OnClick(R.id.support_feedback)
     public void onFacebookClick() {
         FragmentActivity activity = getActivity();
