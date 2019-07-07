@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.realestate.ui.login.LoginActivity">
+    tools:context="com.reales.realestate.ui.login.LoginActivity">
 
     <!-- Guideline 25% -->
     <androidx.constraintlayout.widget.Guideline

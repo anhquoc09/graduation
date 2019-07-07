@@ -75,7 +75,7 @@
     </FrameLayout>
 
     <!-- Main Tab Layout -->
-    <com.example.realestate.ui.widget.MainTabLayout
+    <com.reales.realestate.ui.widget.MainTabLayout
         android:id="@+id/main_tabs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

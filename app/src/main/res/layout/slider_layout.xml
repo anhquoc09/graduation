@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.example.realestate.ui.widget.PagerIndicator
+    <com.reales.realestate.ui.widget.PagerIndicator
         android:id="@+id/pagerIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

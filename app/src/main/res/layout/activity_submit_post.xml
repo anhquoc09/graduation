@@ -269,7 +269,7 @@
                 <!-- Map -->
                 <fragment
                     android:id="@+id/up_map"
-                    android:name="com.example.realestate.ui.widget.WorkaroundMapFragment"
+                    android:name="com.reales.realestate.ui.widget.WorkaroundMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginStart="10dp"
