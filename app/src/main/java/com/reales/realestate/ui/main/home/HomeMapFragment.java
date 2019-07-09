@@ -577,12 +577,16 @@ public class HomeMapFragment extends Fragment
 
     @Override
     public void showProgress() {
-        mProgress.setVisibility(View.VISIBLE);
+        if (mProgress != null) {
+            mProgress.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideProgress() {
-        mProgress.setVisibility(View.GONE);
+        if (mProgress != null) {
+            mProgress.setVisibility(View.GONE);
+        }
     }
 
     @Override

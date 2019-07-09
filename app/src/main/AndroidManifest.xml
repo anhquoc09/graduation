@@ -40,7 +40,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCvkuPm46eA4VNlLKtPPvb6oSXCN0AoWGw" />
+            android:value="AIzaSyDfpJeFB22dFrq5n_Yk7_NznAaXgf1vRMA" />
 
         <activity
             android:name="com.reales.realestate.ui.splash.SplashScreenActivity"
@@ -84,6 +84,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1158565337f48f4b33bb8f8de827f49a5000f642" />
     </application>
 
 </manifest>
