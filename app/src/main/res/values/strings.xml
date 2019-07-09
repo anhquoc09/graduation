@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">REALES</string>
 
-    <string name="google_client_id" translatable="false">776676760586-udmhul1tgsleevrj32qvv6m9el7ltj2r.apps.googleusercontent.com</string>
+    <string name="google_client_id" translatable="false">776676760586-4s6lfj0pe924mj9tsdno834i8ldadpoj.apps.googleusercontent.com</string>
 
     <string name="drawer_opened" translatable="false">Drawer opened</string>
     <string name="drawer_closed" translatable="false">Drawer_closed</string>
