@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "776676760586-un999odlgr6r5sprovnaht2pffcjldgl.apps.googleusercontent.com",
+          "client_id": "776676760586-j7nphbk0pqgec2nbhjs6ttcuf68umegk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reales.realestate",
+            "certificate_hash": "6cbd5294f69d53b8e42131557bd8db4238e6abc3"
+          }
+        },
+        {
+          "client_id": "776676760586-p6hr2e9bp3qv0q022crhfrehqq6em3n3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.reales.realestate",
@@ -36,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "776676760586-4s6lfj0pe924mj9tsdno834i8ldadpoj.apps.googleusercontent.com",
+              "client_id": "776676760586-99c52vmtujvqebrma5bbek22ol2nbea0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
