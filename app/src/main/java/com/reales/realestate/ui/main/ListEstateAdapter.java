@@ -189,7 +189,6 @@ public class ListEstateAdapter extends RecyclerView.Adapter<ListEstateAdapter.Es
 
         private void setEstateTitle(String estateTitle) {
             mTitle.setText(estateTitle);
-            mTitle.setSelected(true);
         }
 
         private void setEstatePrice(float estatePrice, int status) {

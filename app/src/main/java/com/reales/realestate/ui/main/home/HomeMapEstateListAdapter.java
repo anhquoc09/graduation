@@ -215,7 +215,6 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
 
         private void setTitle(String title) {
             mTitle.setText(title);
-            mTitle.setSelected(true);
         }
 
         private void setName(String fullName) {
@@ -254,7 +253,6 @@ public class HomeMapEstateListAdapter extends RecyclerView.Adapter<HomeMapEstate
 
         private void setAddress(String address) {
             mAddress.setText(address);
-            mAddress.setSelected(true);
         }
 
         public void bindView(EstateDetail item) {
